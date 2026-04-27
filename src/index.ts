@@ -14,7 +14,7 @@ const REPO_DIR = process.env.REPO_DIR ?? '.'
 const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY ?? ''
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? ''
 const TELEGRAM_CHAT = process.env.TELEGRAM_CHAT_ID ?? ''
-const REVIEW_BASE_URL = process.env.REVIEW_BASE_URL ?? 'https://jayexe-leads.github.io'
+const REVIEW_BASE_URL = process.env.REVIEW_BASE_URL ?? 'https://jayslifecode.github.io/jayexe-leads'
 
 async function run(): Promise<void> {
   const today = new Date().toISOString().split('T')[0]!
