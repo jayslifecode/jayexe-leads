@@ -1,8 +1,11 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { searchBusinesses } from '../../src/discovery/google-places.js'
 import type { DiscoveredBusiness } from '../../src/types.js'
 
 describe('searchBusinesses', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
   it('returns array of DiscoveredBusiness objects', async () => {
     global.fetch = vi.fn()
       .mockResolvedValueOnce({
@@ -76,5 +79,32 @@ describe('searchBusinesses', () => {
       facebook_responds_to_messages: false,
       google_review_count: 12,
     })
+  })
+
+  it('skips businesses where detail fetch fails', async () => {
+    global.fetch = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          results: [
+            { place_id: 'abc', name: 'Good Biz', formatted_address: 'London' },
+            { place_id: 'xyz', name: 'Fail Biz', formatted_address: 'Berlin' },
+          ],
+          status: 'OK'
+        })
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ result: { name: 'Good Biz', formatted_address: 'London', user_ratings_total: 5 }, status: 'OK' })
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: async () => ({})
+      } as Response)
+
+    const results = await searchBusinesses('test query', 'key')
+    expect(results.length).toBe(1)
+    expect(results[0].name).toBe('Good Biz')
   })
 })
