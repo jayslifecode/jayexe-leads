@@ -1,27 +1,28 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { searchBusinesses } from '../../src/discovery/google-places.js'
-import type { DiscoveredBusiness } from '../../src/types.js'
 
 describe('searchBusinesses', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
+
   it('returns array of DiscoveredBusiness objects', async () => {
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          results: [{ name: "Joe's Dental", formatted_address: '123 Main St, Austin, TX', place_id: 'abc123', user_ratings_total: 47 }],
-          status: 'OK'
-        })
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          result: { name: "Joe's Dental", formatted_address: '123 Main St, Austin, TX', formatted_phone_number: '+1 512 555 0123', website: null, url: 'https://maps.google.com/?cid=abc123', user_ratings_total: 47 },
-          status: 'OK'
-        })
-      } as Response)
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        places: [
+          {
+            id: 'abc123',
+            displayName: { text: "Joe's Dental" },
+            formattedAddress: '123 Main St, Austin, TX',
+            internationalPhoneNumber: '+1 512 555 0123',
+            websiteUri: undefined,
+            googleMapsUri: 'https://maps.google.com/?cid=abc123',
+            userRatingCount: 47,
+          },
+        ],
+      }),
+    } as Response)
 
     const results = await searchBusinesses('dentist Austin Texas', 'test-api-key')
     expect(Array.isArray(results)).toBe(true)
@@ -32,38 +33,45 @@ describe('searchBusinesses', () => {
     expect(results[0].google_review_count).toBe(47)
   })
 
-  it('returns empty array when API returns no results', async () => {
+  it('returns empty array when API returns no places', async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ results: [], status: 'ZERO_RESULTS' })
+      json: async () => ({}),
     } as Response)
 
     const results = await searchBusinesses('nothing here', 'test-api-key')
     expect(results).toEqual([])
   })
 
-  it('throws when API returns error status', async () => {
+  it('throws when API returns HTTP error', async () => {
     global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ results: [], status: 'REQUEST_DENIED' })
+      ok: false,
+      status: 403,
+      text: async () => 'API key invalid',
     } as Response)
 
-    await expect(searchBusinesses('dentist London', 'bad-key')).rejects.toThrow('Google Places API error: REQUEST_DENIED')
+    await expect(searchBusinesses('dentist London', 'bad-key')).rejects.toThrow(
+      'Google Places API error 403'
+    )
   })
 
   it('maps all DiscoveredBusiness fields correctly', async () => {
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ results: [{ place_id: 'xyz', name: 'Test', formatted_address: 'London' }], status: 'OK' })
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          result: { name: 'Test Biz', formatted_address: 'London, UK', formatted_phone_number: '+44 20 1234 5678', website: 'https://test.com', url: 'https://maps.google.com/?cid=xyz', user_ratings_total: 12 },
-          status: 'OK'
-        })
-      } as Response)
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        places: [
+          {
+            id: 'xyz',
+            displayName: { text: 'Test Biz' },
+            formattedAddress: 'London, UK',
+            internationalPhoneNumber: '+44 20 1234 5678',
+            websiteUri: 'https://test.com',
+            googleMapsUri: 'https://maps.google.com/?cid=xyz',
+            userRatingCount: 12,
+          },
+        ],
+      }),
+    } as Response)
 
     const results = await searchBusinesses('test London', 'key')
     expect(results[0]).toMatchObject({
@@ -81,30 +89,19 @@ describe('searchBusinesses', () => {
     })
   })
 
-  it('skips businesses where detail fetch fails', async () => {
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          results: [
-            { place_id: 'abc', name: 'Good Biz', formatted_address: 'London' },
-            { place_id: 'xyz', name: 'Fail Biz', formatted_address: 'Berlin' },
-          ],
-          status: 'OK'
-        })
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ result: { name: 'Good Biz', formatted_address: 'London', user_ratings_total: 5 }, status: 'OK' })
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        json: async () => ({})
-      } as Response)
+  it('handles places with missing optional fields gracefully', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        places: [{ id: 'abc', displayName: { text: 'Minimal Biz' } }],
+      }),
+    } as Response)
 
     const results = await searchBusinesses('test query', 'key')
     expect(results.length).toBe(1)
-    expect(results[0].name).toBe('Good Biz')
+    expect(results[0].name).toBe('Minimal Biz')
+    expect(results[0].phone).toBeNull()
+    expect(results[0].website_url).toBeNull()
+    expect(results[0].google_review_count).toBeNull()
   })
 })
