@@ -15,7 +15,7 @@ export function generateHtmlReport(leads: Lead[], date: string): string {
   const leadCount = leads.length
   const leadRows = leads
     .map((lead) => {
-      const contactInfo = []
+      const contactInfo: string[] = []
 
       if (lead.phone) {
         contactInfo.push(`<strong>Phone:</strong> ${escapeHtml(lead.phone)}`)
@@ -25,7 +25,7 @@ export function generateHtmlReport(leads: Lead[], date: string): string {
         contactInfo.push(`<strong>Email:</strong> ${escapeHtml(lead.email)}`)
       }
 
-      const links = []
+      const links: string[] = []
 
       if (lead.google_maps_url) {
         links.push(
@@ -68,7 +68,7 @@ export function generateHtmlReport(leads: Lead[], date: string): string {
     .join('')
 
   const noLeadsMessage =
-    leads.length === 0
+    leadCount === 0
       ? '<div class="no-leads-message"><p>No leads found</p></div>'
       : ''
 
