@@ -22,9 +22,12 @@ export async function loadLeads(date: string, dir: string): Promise<Lead[]> {
 
   try {
     const content = await readFile(filePath, 'utf-8')
-    return JSON.parse(content)
-  } catch {
-    return []
+    return JSON.parse(content) as Lead[]
+  } catch (error: unknown) {
+    if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return []
+    }
+    throw error
   }
 }
 
