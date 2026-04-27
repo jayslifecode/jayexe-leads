@@ -14,7 +14,7 @@ export interface ScoreBreakdownNoWebsite {
   facebook_engagement: number
   google_business_exists: number
   google_reviews: number
-  has_contact_info: number
+  contact_info_points: number
 }
 
 export interface ScoreBreakdownHasWebsite {
