@@ -1,0 +1,2973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-08-20</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-08-20</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">68</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="15 Queen Square, Leeds LS2 8AJ, UK">15 Queen Square, Leeds LS2 8AJ, UK</option><option value="2 Infirmary St, Leeds LS1 2JP, UK">2 Infirmary St, Leeds LS1 2JP, UK</option><option value="2 Pembridge Pl, London W2 4XB, UK">2 Pembridge Pl, London W2 4XB, UK</option><option value="22 Alconbury Rd, London E5 8RH, UK">22 Alconbury Rd, London E5 8RH, UK</option><option value="226 Shaftmoor Ln, Birmingham B28 8SP, UK">226 Shaftmoor Ln, Birmingham B28 8SP, UK</option><option value="241 Wick Rd, London E9 5AF, UK">241 Wick Rd, London E9 5AF, UK</option><option value="27-33 King St W, Manchester M3 2PJ, UK">27-33 King St W, Manchester M3 2PJ, UK</option><option value="3 Grafton St, Manchester M13 9NZ, UK">3 Grafton St, Manchester M13 9NZ, UK</option><option value="3 St Peter's Sq, Manchester M1 4LF, UK">3 St Peter's Sq, Manchester M1 4LF, UK</option><option value="30 Forsythia Cl, Birmingham B31 1XN, UK">30 Forsythia Cl, Birmingham B31 1XN, UK</option><option value="36 Southwark Bridge Rd, London SE1 9EU, UK">36 Southwark Bridge Rd, London SE1 9EU, UK</option><option value="3B Arctic St, London NW5 4DJ, UK">3B Arctic St, London NW5 4DJ, UK</option><option value="4 Kennedy Rd, London W7 1JN, UK">4 Kennedy Rd, London W7 1JN, UK</option><option value="6 Hawks Nest Gardens W, Leeds LS17 7JF, UK">6 Hawks Nest Gardens W, Leeds LS17 7JF, UK</option><option value="Beeston, Leeds LS11 8UQ, UK">Beeston, Leeds LS11 8UQ, UK</option><option value="Birmingham, AL 35203, USA">Birmingham, AL 35203, USA</option><option value="Birmingham, AL 35212, USA">Birmingham, AL 35212, USA</option><option value="Birmingham, AL 35222, USA">Birmingham, AL 35222, USA</option><option value="Birmingham, AL 35233, USA">Birmingham, AL 35233, USA</option><option value="Birmingham, AL 35242, USA">Birmingham, AL 35242, USA</option><option value="Bloomington, MN 55420, USA">Bloomington, MN 55420, USA</option><option value="Bond Street, London W1G 9XZ, UK">Bond Street, London W1G 9XZ, UK</option><option value="Bramley, Leeds LS13 2JW, UK">Bramley, Leeds LS13 2JW, UK</option><option value="Chapel Allerton, Leeds LS7 4QD, UK">Chapel Allerton, Leeds LS7 4QD, UK</option><option value="Charlotte, NC 28277, USA">Charlotte, NC 28277, USA</option><option value="Chicago, IL 60614, USA">Chicago, IL 60614, USA</option><option value="Chicago, IL 60616, USA">Chicago, IL 60616, USA</option><option value="Collingdale, PA 19023, USA">Collingdale, PA 19023, USA</option><option value="Cross Gates, Leeds LS15 7NN, UK">Cross Gates, Leeds LS15 7NN, UK</option><option value="Denton, Manchester M34 3JU, UK">Denton, Manchester M34 3JU, UK</option><option value="Edina, MN 55424, USA">Edina, MN 55424, USA</option><option value="Great George St, Leeds LS1 3ED, UK">Great George St, Leeds LS1 3ED, UK</option><option value="Guiseley, Leeds LS20 8FH, UK">Guiseley, Leeds LS20 8FH, UK</option><option value="Holbeck, Leeds LS12 1EF, UK">Holbeck, Leeds LS12 1EF, UK</option><option value="Hooksett, NH 03106, USA">Hooksett, NH 03106, USA</option><option value="Horsforth, Leeds LS18 4NG, UK">Horsforth, Leeds LS18 4NG, UK</option><option value="Horsforth, Leeds LS18 5JR, UK">Horsforth, Leeds LS18 5JR, UK</option><option value="Horsforth, Leeds LS18 5PA, UK">Horsforth, Leeds LS18 5PA, UK</option><option value="Inglewood, CA 90301, USA">Inglewood, CA 90301, USA</option><option value="Jenkintown, PA 19046, USA">Jenkintown, PA 19046, USA</option><option value="Las Vegas, NV 89102, USA">Las Vegas, NV 89102, USA</option><option value="Las Vegas, NV 89118, USA">Las Vegas, NV 89118, USA</option><option value="Las Vegas, NV 89130, USA">Las Vegas, NV 89130, USA</option><option value="Lofthouse, Wakefield WF3 3NP, UK">Lofthouse, Wakefield WF3 3NP, UK</option><option value="Lofthouse, Wakefield WF3 3PN, UK">Lofthouse, Wakefield WF3 3PN, UK</option><option value="London, ON N6H 5L4, Canada">London, ON N6H 5L4, Canada</option><option value="London, is WC1N 3AX, UK">London, is WC1N 3AX, UK</option><option value="Manchester, CT 06040, USA">Manchester, CT 06040, USA</option><option value="Manchester, MO 63021, USA">Manchester, MO 63021, USA</option><option value="Matthews, NC 28105, USA">Matthews, NC 28105, USA</option><option value="Minneapolis, MN 55402, USA">Minneapolis, MN 55402, USA</option><option value="Minneapolis, MN 55408, USA">Minneapolis, MN 55408, USA</option><option value="Minneapolis, MN 55413, USA">Minneapolis, MN 55413, USA</option><option value="Minneapolis, MN 55414, USA">Minneapolis, MN 55414, USA</option><option value="Minneapolis, MN 55419, USA">Minneapolis, MN 55419, USA</option><option value="Minneapolis, MN 55423, USA">Minneapolis, MN 55423, USA</option><option value="Minneapolis, MN 55431, USA">Minneapolis, MN 55431, USA</option><option value="Morley, Leeds LS27 9EG, UK">Morley, Leeds LS27 9EG, UK</option><option value="Philadelphia, PA 19122, USA">Philadelphia, PA 19122, USA</option><option value="St Louis Park, MN 55416, USA">St Louis Park, MN 55416, USA</option><option value="St Mary’s Tower, London EC1Y 0SD, UK">St Mary’s Tower, London EC1Y 0SD, UK</option><option value="Trussville, AL 35173, USA">Trussville, AL 35173, USA</option><option value="Vernon, CT 06066, USA">Vernon, CT 06066, USA</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">68</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="50 South 6th St #1390, Minneapolis, MN 55402, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Andrew's Lawn and Snow</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55402, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-286-0161">📞 +1 612-286-0161</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12030209619955041573&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f558385f-1b2c-4a6a-b40e-91b41459576d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f558385f-1b2c-4a6a-b40e-91b41459576d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f558385f-1b2c-4a6a-b40e-91b41459576d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="5470 Cameron St #112, Las Vegas, NV 89118, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Landscape Creations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Las Vegas, NV 89118, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 702-901-2761">📞 +1 702-901-2761</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5011778138259120656&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f05a15df-2eb8-4878-ac5c-3ee6bac18e1c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f05a15df-2eb8-4878-ac5c-3ee6bac18e1c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f05a15df-2eb8-4878-ac5c-3ee6bac18e1c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="2 Pembridge Pl, London W2 4XB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Garden Services London Green</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 2 Pembridge Pl, London W2 4XB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7922 659665">📞 +44 7922 659665</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7295769800000374128&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c79b4036-0272-4f6a-bad4-56809c26246d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c79b4036-0272-4f6a-bad4-56809c26246d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c79b4036-0272-4f6a-bad4-56809c26246d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="4 Kennedy Rd, London W7 1JN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Novaterra gardens &amp; landscapes</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 4 Kennedy Rd, London W7 1JN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7793 954786">📞 +44 7793 954786</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3950474063214041674&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="23519180-8776-4764-8fde-540a731b2f17">✓ Approve</button>
+          <button class="btn btn-reject" data-id="23519180-8776-4764-8fde-540a731b2f17">✕ Reject</button>
+          <button class="btn btn-demo" data-id="23519180-8776-4764-8fde-540a731b2f17" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="108 Mammoth Rd, Hooksett, NH 03106, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Quality Landscaping LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hooksett, NH 03106, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 603-391-8147">📞 +1 603-391-8147</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17016034812915801225&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7c0e4183-f4d2-48df-a2dc-7c132a1abcb1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7c0e4183-f4d2-48df-a2dc-7c132a1abcb1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7c0e4183-f4d2-48df-a2dc-7c132a1abcb1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="270 Doug Baker Blvd, Birmingham, AL 35242, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SuperiorScape, Inc.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, AL 35242, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-678-2425">📞 +1 205-678-2425</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3490668637160479923&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9b74f4dc-f3fa-4791-8330-7509f8f37914">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9b74f4dc-f3fa-4791-8330-7509f8f37914">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9b74f4dc-f3fa-4791-8330-7509f8f37914" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="420 20th St N, Birmingham, AL 35203, USA"
+        data-score="30"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="41.5 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">30</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Birmingham Landscaping, LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, AL 35203, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-482-5675">📞 +1 205-482-5675</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9534292191517058626&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8109073b-b31d-4038-8d77-e937ab7cd948">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8109073b-b31d-4038-8d77-e937ab7cd948">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8109073b-b31d-4038-8d77-e937ab7cd948" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="30 Forsythia Cl, Birmingham B31 1XN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Green Gardeners</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 30 Forsythia Cl, Birmingham B31 1XN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 121 647 3583">📞 +44 121 647 3583</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12688656903056966494&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fbf96cca-eee2-49ac-855e-05c6b5361cf4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fbf96cca-eee2-49ac-855e-05c6b5361cf4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fbf96cca-eee2-49ac-855e-05c6b5361cf4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="6 Hawks Nest Gardens W, Leeds LS17 7JF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>GreenForge Landscape Gardeners Leeds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 6 Hawks Nest Gardens W, Leeds LS17 7JF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 490 0128">📞 +44 113 490 0128</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14098515588047319341&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="aacba6bd-c157-49bd-9b47-6f84e4ba38bd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="aacba6bd-c157-49bd-9b47-6f84e4ba38bd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="aacba6bd-c157-49bd-9b47-6f84e4ba38bd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="Great George St, Leeds LS1 3ED, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Green Connect Leeds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Great George St, Leeds LS1 3ED, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 460 3454">📞 +44 113 460 3454</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12694563409837450634&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d303f27a-4856-4264-b86f-c00881309001">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d303f27a-4856-4264-b86f-c00881309001">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d303f27a-4856-4264-b86f-c00881309001" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="R97M+H8, Bramley, Leeds LS13 2JW, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SolidWay Landscapes</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bramley, Leeds LS13 2JW, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7732 265014">📞 +44 7732 265014</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16854187258167967989&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="71012a79-7709-4797-9d56-0963412919b1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="71012a79-7709-4797-9d56-0963412919b1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="71012a79-7709-4797-9d56-0963412919b1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="103 W End Dr, Horsforth, Leeds LS18 5JR, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>West End Landscapes</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Horsforth, Leeds LS18 5JR, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7875 257329">📞 +44 7875 257329</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8105196630156890345&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="017bd81a-d618-41d1-80aa-4c75bbb3982f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="017bd81a-d618-41d1-80aa-4c75bbb3982f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="017bd81a-d618-41d1-80aa-4c75bbb3982f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="2920 Talmage Ave SE Ste 220, Minneapolis, MN 55414, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Cloverleaf Pest Control</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55414, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 651-212-3208">📞 +1 651-212-3208</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11235750008646890396&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ead52355-d2cf-45af-815d-f0ca3ce2989a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ead52355-d2cf-45af-815d-f0ca3ce2989a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ead52355-d2cf-45af-815d-f0ca3ce2989a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="2300 W Sahara Ave #800, Las Vegas, NV 89102, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Desert Squad Pest &amp; Wildlife – Pest Control and Wildlife Removal</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Las Vegas, NV 89102, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 702-707-7122">📞 +1 702-707-7122</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17582784143696006760&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dcec44e4-09a5-4817-9f4e-ee0040f16db4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dcec44e4-09a5-4817-9f4e-ee0040f16db4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dcec44e4-09a5-4817-9f4e-ee0040f16db4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="6450 Cameron St Ste 107, Las Vegas, NV 89118, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>HomeTeam Pest Defense</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Las Vegas, NV 89118, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 702-388-7500">📞 +1 702-388-7500</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16104066049328803426&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fe7ac132-a8e5-4b3c-bd5e-43f1a7a4f8d6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fe7ac132-a8e5-4b3c-bd5e-43f1a7a4f8d6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fe7ac132-a8e5-4b3c-bd5e-43f1a7a4f8d6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="36 Southwark Bridge Rd, London SE1 9EU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pescon Pest Control Limited</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 36 Southwark Bridge Rd, London SE1 9EU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7383 658058">📞 +44 7383 658058</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=539054591980461332&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c791bc52-ad09-4922-b7ac-8b720f4c61cc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c791bc52-ad09-4922-b7ac-8b720f4c61cc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c791bc52-ad09-4922-b7ac-8b720f4c61cc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="8 Gerber Blvd Unit 1, Vernon, CT 06066, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ruva Pest Control</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vernon, CT 06066, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 860-497-9144">📞 +1 860-497-9144</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8225202403043546189&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="84dd691d-267c-4858-b611-f9732962bcb9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="84dd691d-267c-4858-b611-f9732962bcb9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="84dd691d-267c-4858-b611-f9732962bcb9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="660 University Blvd Ste H, Birmingham, AL 35233, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Insight Pest Solutions</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, AL 35233, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-286-5778">📞 +1 205-286-5778</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12242899512208579596&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="feeda23c-3b61-4718-b033-909b26009eb9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="feeda23c-3b61-4718-b033-909b26009eb9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="feeda23c-3b61-4718-b033-909b26009eb9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="120 19th St N Ste 214, Birmingham, AL 35203, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Nextgen Pest Solutions</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, AL 35203, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-650-8138">📞 +1 205-650-8138</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1354544724559859541&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="eb117dc9-37be-4a3e-92f3-bfde98e3ded8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="eb117dc9-37be-4a3e-92f3-bfde98e3ded8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="eb117dc9-37be-4a3e-92f3-bfde98e3ded8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="Rentokil House, Chartists Way, Morley, Leeds LS27 9EG, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Rentokil Property Care | Leeds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Morley, Leeds LS27 9EG, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 350 0961">📞 +44 113 350 0961</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6212837220686440386&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a6cccdaf-98de-49f8-8901-2af4cddce0d0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a6cccdaf-98de-49f8-8901-2af4cddce0d0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a6cccdaf-98de-49f8-8901-2af4cddce0d0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Horsforth, Leeds LS18 5PA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Discreet Pest Control Services Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Horsforth, Leeds LS18 5PA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7481 846075">📞 +44 7481 846075</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6883372838865104993&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="85c74242-e70e-4a95-91aa-629d5c19506b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="85c74242-e70e-4a95-91aa-629d5c19506b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="85c74242-e70e-4a95-91aa-629d5c19506b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="297 Leeds Rd, Lofthouse, Wakefield WF3 3PN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pest Control DSK</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Lofthouse, Wakefield WF3 3PN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7763 043353">📞 +44 7763 043353</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9367465218773770366&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b05bb14d-d1de-41bd-80e0-b55f3aa51797">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b05bb14d-d1de-41bd-80e0-b55f3aa51797">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b05bb14d-d1de-41bd-80e0-b55f3aa51797" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2531 Jones Pl, Minneapolis, MN 55431, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fair and Square Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55431, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-314-3711">📞 +1 612-314-3711</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14120145127236100704&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6ad228f1-f11f-4af3-b462-4d5b2748351b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6ad228f1-f11f-4af3-b462-4d5b2748351b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6ad228f1-f11f-4af3-b462-4d5b2748351b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="3065 N Rancho Dr Ste 136, Las Vegas, NV 89130, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Maintenance America</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Las Vegas, NV 89130, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 702-773-8434">📞 +1 702-773-8434</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=970637720193223144&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d52ed60b-1cb0-4c97-87f2-e3fe83c4b6e6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d52ed60b-1cb0-4c97-87f2-e3fe83c4b6e6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d52ed60b-1cb0-4c97-87f2-e3fe83c4b6e6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Community House Rd, Charlotte, NC 28277, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Local Handyman Charlotte</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Charlotte, NC 28277, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 704-397-3877">📞 +1 704-397-3877</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11149225078785594752&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="08c01148-755f-4014-a359-01f6f109181b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="08c01148-755f-4014-a359-01f6f109181b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="08c01148-755f-4014-a359-01f6f109181b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="22 Alconbury Rd, London E5 8RH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Hackney Handyman</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 22 Alconbury Rd, London E5 8RH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7968 096540">📞 +44 7968 096540</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13841281655359232667&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b8d562a8-ad28-4560-9ca3-9a48141bb319">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b8d562a8-ad28-4560-9ca3-9a48141bb319">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b8d562a8-ad28-4560-9ca3-9a48141bb319" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="13 Westgate Grove, Lofthouse, Wakefield WF3 3NP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Handyman Leeds Kitchen and Bathroom Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Lofthouse, Wakefield WF3 3NP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7933 306333">📞 +44 7933 306333</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1396596059130917092&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f7e6b1b7-2dba-43d8-be63-32ef3521db5d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f7e6b1b7-2dba-43d8-be63-32ef3521db5d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f7e6b1b7-2dba-43d8-be63-32ef3521db5d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2905 E Hennepin Ave, Minneapolis, MN 55413, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Warren Drapery Co LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55413, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-877-3200">📞 +1 612-877-3200</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6357235445253357871&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="93527359-0eed-4f80-a8f3-d943d587ef8f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="93527359-0eed-4f80-a8f3-d943d587ef8f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="93527359-0eed-4f80-a8f3-d943d587ef8f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2929 Pleasant Ave #180, Minneapolis, MN 55408, USA"
+        data-score="30"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="41.5 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">30</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Curtain Depot</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55408, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-481-4491">📞 +1 612-481-4491</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7372944339337956124&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="66e51049-ce2e-4f34-8782-1cc6308d7a40">✓ Approve</button>
+          <button class="btn btn-reject" data-id="66e51049-ce2e-4f34-8782-1cc6308d7a40">✕ Reject</button>
+          <button class="btn btn-demo" data-id="66e51049-ce2e-4f34-8782-1cc6308d7a40" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2000 N Clybourn Ave, Chicago, IL 60614, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Blinds Gallery</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60614, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 773-525-1800">📞 +1 773-525-1800</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4241608013723354512&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="50b0efbf-e6fc-4505-a9cf-616da0049a1d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="50b0efbf-e6fc-4505-a9cf-616da0049a1d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="50b0efbf-e6fc-4505-a9cf-616da0049a1d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="100 Old York Rd, Jenkintown, PA 19046, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Philly Blinds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Jenkintown, PA 19046, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 215-284-2754">📞 +1 215-284-2754</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17011476010488021207&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ad10a67a-2cf7-44a0-b308-744cd66abcec">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ad10a67a-2cf7-44a0-b308-744cd66abcec">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ad10a67a-2cf7-44a0-b308-744cd66abcec" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1025 Gainsborough Rd, London, ON N6H 5L4, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Labadie Blinds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 London, ON N6H 5L4, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 519-645-8430">📞 +1 519-645-8430</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2488307183726036556&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="15aa03ec-19f3-4d79-b9b7-74858c13ea89">✓ Approve</button>
+          <button class="btn btn-reject" data-id="15aa03ec-19f3-4d79-b9b7-74858c13ea89">✕ Reject</button>
+          <button class="btn btn-demo" data-id="15aa03ec-19f3-4d79-b9b7-74858c13ea89" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="254 Old Sulphur Spring Rd, Manchester, MO 63021, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Budget Blinds of Clayton &amp; University City, West &amp; South St. Louis</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manchester, MO 63021, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 636-529-0632">📞 +1 636-529-0632</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12975699246962802732&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ab38c177-b45a-4109-9c8a-62831dd338fd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ab38c177-b45a-4109-9c8a-62831dd338fd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ab38c177-b45a-4109-9c8a-62831dd338fd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="500 W Cermak Rd, Chicago, IL 60616, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Windy City Blinds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60616, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 773-528-4244">📞 +1 773-528-4244</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12897686745331743759&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d01364d9-07e8-439e-8671-bcdbb7cfb223">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d01364d9-07e8-439e-8671-bcdbb7cfb223">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d01364d9-07e8-439e-8671-bcdbb7cfb223" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="23 Hunter Dr, Trussville, AL 35173, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Custom Blinds &amp; Shutters</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Trussville, AL 35173, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-655-1629">📞 +1 205-655-1629</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4397796710501239460&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="92f179ee-9cf2-4ba1-b376-9e2dac4b57f6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="92f179ee-9cf2-4ba1-b376-9e2dac4b57f6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="92f179ee-9cf2-4ba1-b376-9e2dac4b57f6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 15, Shaftmoor Industrial Estate, 226 Shaftmoor Ln, Birmingham B28 8SP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Paramount Blinds Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 226 Shaftmoor Ln, Birmingham B28 8SP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7984 592923">📞 +44 7984 592923</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7123890032659533939&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d6ab6a74-e528-4e0a-9be7-9264b10c0009">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d6ab6a74-e528-4e0a-9be7-9264b10c0009">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d6ab6a74-e528-4e0a-9be7-9264b10c0009" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="15 Queen Square, Leeds LS2 8AJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Shutters 4 Leeds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 15 Queen Square, Leeds LS2 8AJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 322 5272">📞 +44 113 322 5272</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10569637758929857571&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c4af9b6f-7eee-450a-b4f8-6ae8986315ed">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c4af9b6f-7eee-450a-b4f8-6ae8986315ed">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c4af9b6f-7eee-450a-b4f8-6ae8986315ed" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="226 Harrogate Rd, Chapel Allerton, Leeds LS7 4QD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Elite Curtains - Curtain Makers &amp; Made to Measure Curtains Leeds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chapel Allerton, Leeds LS7 4QD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 237 0447">📞 +44 113 237 0447</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=930221450039180733&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="eb947c7f-b75b-4c92-accd-cd3144dae0bb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="eb947c7f-b75b-4c92-accd-cd3144dae0bb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="eb947c7f-b75b-4c92-accd-cd3144dae0bb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="76 New Rd Side, Horsforth, Leeds LS18 4NG, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Prima Blinds &amp; Curtains</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Horsforth, Leeds LS18 4NG, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 258 1578">📞 +44 113 258 1578</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13858293848027262557&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ce74d0d5-63a8-4c56-96b6-100c0b7310aa">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ce74d0d5-63a8-4c56-96b6-100c0b7310aa">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ce74d0d5-63a8-4c56-96b6-100c0b7310aa" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Whitehall Rd, off Spence Ln, Holbeck, Leeds LS12 1EF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Dunelm</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Holbeck, Leeds LS12 1EF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 868 8187">📞 +44 113 868 8187</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2273703955797515264&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b8a56e23-403b-48e5-9010-e1eb1cfe03dc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b8a56e23-403b-48e5-9010-e1eb1cfe03dc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b8a56e23-403b-48e5-9010-e1eb1cfe03dc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="17 Silver Cross Way, Guiseley, Leeds LS20 8FH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Apollo Blinds Leeds Crossgates</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Guiseley, Leeds LS20 8FH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 366 0510">📞 +44 113 366 0510</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4441521258841693782&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="946f5142-53ff-4e59-bf1f-aa3b6dceffb6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="946f5142-53ff-4e59-bf1f-aa3b6dceffb6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="946f5142-53ff-4e59-bf1f-aa3b6dceffb6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Children's Area, 3249 Hennepin Ave S, Minneapolis, MN 55408, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Minneapolis Locksmiths</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55408, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-246-3925">📞 +1 612-246-3925</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9351596312492073179&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="924f4ce5-9603-40be-96e2-f68a0a2972de">✓ Approve</button>
+          <button class="btn btn-reject" data-id="924f4ce5-9603-40be-96e2-f68a0a2972de">✕ Reject</button>
+          <button class="btn btn-demo" data-id="924f4ce5-9603-40be-96e2-f68a0a2972de" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="4448 Nicollet Ave, Minneapolis, MN 55419, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Minneapolis Lock &amp; Key</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55419, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-823-8148">📞 +1 612-823-8148</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17136510809876700853&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bd644e0a-4afa-4b13-85a6-e7d11e7cee7c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bd644e0a-4afa-4b13-85a6-e7d11e7cee7c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bd644e0a-4afa-4b13-85a6-e7d11e7cee7c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="207 E Lake St, Minneapolis, MN 55408, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>24/7Key Clinic MN</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55408, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-990-1860">📞 +1 612-990-1860</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5704295294113883666&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3ccdf8ad-4f1e-43e8-90ae-0fa58c836e67">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3ccdf8ad-4f1e-43e8-90ae-0fa58c836e67">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3ccdf8ad-4f1e-43e8-90ae-0fa58c836e67" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="6312 Minnetonka Blvd, St Louis Park, MN 55416, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Reliable Locksmith</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 St Louis Park, MN 55416, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-260-2222">📞 +1 612-260-2222</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15555399723285586133&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6d786d2a-56f5-47d2-8207-67cbb2542abb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6d786d2a-56f5-47d2-8207-67cbb2542abb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6d786d2a-56f5-47d2-8207-67cbb2542abb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5775 Wayzata Blvd, St Louis Park, MN 55416, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>City Locksmiths</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 St Louis Park, MN 55416, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-204-2015">📞 +1 612-204-2015</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12872593047944754615&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="59e89893-9981-4810-96ca-442f3e4d618a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="59e89893-9981-4810-96ca-442f3e4d618a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="59e89893-9981-4810-96ca-442f3e4d618a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="10740 Lyndale Ave S #13w, Bloomington, MN 55420, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Reliable Locksmith</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bloomington, MN 55420, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 612-345-9138">📞 +1 612-345-9138</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2629068991283925016&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bc9bfbba-2710-4d0c-a897-ea77016cc426">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bc9bfbba-2710-4d0c-a897-ea77016cc426">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bc9bfbba-2710-4d0c-a897-ea77016cc426" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5200 Willson Rd, Edina, MN 55424, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MN LOCKSMITH PRO</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Edina, MN 55424, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 952-303-6948">📞 +1 952-303-6948</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17585549549854155120&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4002189d-846d-4048-84b5-0d38510d11f6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4002189d-846d-4048-84b5-0d38510d11f6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4002189d-846d-4048-84b5-0d38510d11f6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="7701 Nicollet Ave, Minneapolis, MN 55423, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>KeyMe Locksmiths</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Minneapolis, MN 55423, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 651-362-5800">📞 +1 651-362-5800</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7337906212817368366&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="718f3702-fc33-4c8e-a743-17fdd8488d2c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="718f3702-fc33-4c8e-a743-17fdd8488d2c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="718f3702-fc33-4c8e-a743-17fdd8488d2c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="430 S Freemont St, Matthews, NC 28105, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Southeast Locksmith LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Matthews, NC 28105, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 704-607-5170">📞 +1 704-607-5170</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8756614998055186665&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ed9d5b37-2749-4647-b330-f2e0cb819f5c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ed9d5b37-2749-4647-b330-f2e0cb819f5c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ed9d5b37-2749-4647-b330-f2e0cb819f5c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1446 N Franklin St, Philadelphia, PA 19122, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Express Local Locksmith - North Philadelphia</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Philadelphia, PA 19122, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 267-704-6134">📞 +1 267-704-6134</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7444385323094473619&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2925ae17-8fbc-4539-9eed-c36e96b94b08">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2925ae17-8fbc-4539-9eed-c36e96b94b08">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2925ae17-8fbc-4539-9eed-c36e96b94b08" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="29 Jackson Ave, Collingdale, PA 19023, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fast Locksmith Near Me</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Collingdale, PA 19023, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 267-629-0276">📞 +1 267-629-0276</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7917631057758697156&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="92788798-49c9-4fde-aeb1-2ad52ba346d7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="92788798-49c9-4fde-aeb1-2ad52ba346d7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="92788798-49c9-4fde-aeb1-2ad52ba346d7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="27 Old Gloucester Street, London WC1N 3AX, United Kingdom 27 Old Gloucester Street, London, is WC1N 3AX, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Locksmith In London Limited</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 London, is WC1N 3AX, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7463 873787">📞 +44 7463 873787</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12069299652042403072&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4f1f800a-0b24-455a-83a9-b7e134b45f9d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4f1f800a-0b24-455a-83a9-b7e134b45f9d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4f1f800a-0b24-455a-83a9-b7e134b45f9d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="3B Arctic St, London NW5 4DJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>TMH London Locksmiths</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3B Arctic St, London NW5 4DJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7599 809461">📞 +44 7599 809461</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8374282220913407153&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6812a911-2447-4bc2-81b2-7b15d08f5152">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6812a911-2447-4bc2-81b2-7b15d08f5152">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6812a911-2447-4bc2-81b2-7b15d08f5152" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="241 Wick Rd, London E9 5AF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Your London Locksmith</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 241 Wick Rd, London E9 5AF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6483388674670538332&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b89c03a6-b8b1-453a-ba78-2628ef96bd8d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b89c03a6-b8b1-453a-ba78-2628ef96bd8d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b89c03a6-b8b1-453a-ba78-2628ef96bd8d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="St Mary’s Tower, London EC1Y 0SD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ec1 Locksmiths</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 St Mary’s Tower, London EC1Y 0SD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 8534 4949">📞 +44 20 8534 4949</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8826611580408885369&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8192b426-e59c-4e43-9a04-566e24e1b73a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8192b426-e59c-4e43-9a04-566e24e1b73a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8192b426-e59c-4e43-9a04-566e24e1b73a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="11 Welbeck Street, Bond Street, London W1G 9XZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Expert Locksmith</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bond Street, London W1G 9XZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3983 2481">📞 +44 20 3983 2481</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14002849894190060463&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4879c682-810f-41e0-944c-2bd467f23fcd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4879c682-810f-41e0-944c-2bd467f23fcd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4879c682-810f-41e0-944c-2bd467f23fcd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Ste 3D2, Reedham House, 27-33 King St W, Manchester M3 2PJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Emergency Locksmith Manchester Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 27-33 King St W, Manchester M3 2PJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7469 196384">📞 +44 7469 196384</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15880299682206057456&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="119139ec-a7fb-4815-99df-23ac517c245c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="119139ec-a7fb-4815-99df-23ac517c245c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="119139ec-a7fb-4815-99df-23ac517c245c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1043 W Manchester Blvd, Inglewood, CA 90301, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Manchester Lock &amp; Security</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Inglewood, CA 90301, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 310-649-6222">📞 +1 310-649-6222</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10532880949230671800&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="51eeea21-65a7-41e5-afa1-4020dc892769">✓ Approve</button>
+          <button class="btn btn-reject" data-id="51eeea21-65a7-41e5-afa1-4020dc892769">✕ Reject</button>
+          <button class="btn btn-demo" data-id="51eeea21-65a7-41e5-afa1-4020dc892769" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="649 Main St, Manchester, CT 06040, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Manchester Safe and Lock LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manchester, CT 06040, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 860-643-6922">📞 +1 860-643-6922</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14070488573774811014&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="faf77ad8-c385-4d89-9314-5b52b70655bc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="faf77ad8-c385-4d89-9314-5b52b70655bc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="faf77ad8-c385-4d89-9314-5b52b70655bc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="21 Manchester Rd, Denton, Manchester M34 3JU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Locksmiths-Manchester Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Denton, Manchester M34 3JU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7552 242441">📞 +44 7552 242441</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15943343425046815093&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e2b099ee-bc47-4c06-ac45-17acc539d4db">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e2b099ee-bc47-4c06-ac45-17acc539d4db">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e2b099ee-bc47-4c06-ac45-17acc539d4db" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Peterloo House, 3 St Peter's Sq, Manchester M1 4LF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Uni-safe Access Locksmith</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3 St Peter's Sq, Manchester M1 4LF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 738 1564">📞 +44 161 738 1564</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13731150728716280312&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3b3f93a6-c852-4da0-a6ed-e661d3d96260">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3b3f93a6-c852-4da0-a6ed-e661d3d96260">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3b3f93a6-c852-4da0-a6ed-e661d3d96260" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="3 Grafton St, Manchester M13 9NZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Flag-me Safe Locksmith Limited</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3 Grafton St, Manchester M13 9NZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 738 1418">📞 +44 161 738 1418</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13871387896870428965&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7c58ea79-d5f6-4d55-b964-f2e841c5ab40">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7c58ea79-d5f6-4d55-b964-f2e841c5ab40">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7c58ea79-d5f6-4d55-b964-f2e841c5ab40" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="3809 5th Ct N, Birmingham, AL 35222, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Around The Clock Locksmith</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, AL 35222, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-225-6457">📞 +1 205-225-6457</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13376019884058138404&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1a413b30-a7d3-4f21-8f35-2f3ec351dddf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1a413b30-a7d3-4f21-8f35-2f3ec351dddf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1a413b30-a7d3-4f21-8f35-2f3ec351dddf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="112 60th St N, Birmingham, AL 35212, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Birmingham Lock &amp; Key, Inc</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, AL 35212, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-833-3333">📞 +1 205-833-3333</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7301512850201701485&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="41d69839-202e-43a0-9c9f-7eae770e9b0e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="41d69839-202e-43a0-9c9f-7eae770e9b0e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="41d69839-202e-43a0-9c9f-7eae770e9b0e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2 Infirmary St, Leeds LS1 2JP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Lock &amp; Key Leeds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 2 Infirmary St, Leeds LS1 2JP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 113 418 0506">📞 +44 113 418 0506</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14325402976002158278&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8388c3b3-150c-420c-91c9-fe877c00e4ee">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8388c3b3-150c-420c-91c9-fe877c00e4ee">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8388c3b3-150c-420c-91c9-fe877c00e4ee" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="9 Cross Heath Grove, Beeston, Leeds LS11 8UQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Neil Byrne Locksmith Leeds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Beeston, Leeds LS11 8UQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7730 478329">📞 +44 7730 478329</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5903016297463007803&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="40bc14e1-ba05-4aa8-802c-c2b8d35c5f8b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="40bc14e1-ba05-4aa8-802c-c2b8d35c5f8b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="40bc14e1-ba05-4aa8-802c-c2b8d35c5f8b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Winwaed House Business Centre, 64 Crossgates Rd, Cross Gates, Leeds LS15 7NN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>24 Hr Auto Locksmith</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Cross Gates, Leeds LS15 7NN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7724 214298">📞 +44 7724 214298</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4065053275452941197&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="40841ef1-daf5-4adf-b7f6-7e1c67470f29">✓ Approve</button>
+          <button class="btn btn-reject" data-id="40841ef1-daf5-4adf-b7f6-7e1c67470f29">✕ Reject</button>
+          <button class="btn btn-demo" data-id="40841ef1-daf5-4adf-b7f6-7e1c67470f29" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
