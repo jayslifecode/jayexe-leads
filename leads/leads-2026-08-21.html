@@ -1,0 +1,2505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-08-21</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-08-21</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">55</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="14a Whitehaugh Rd, Glasgow G53 7ZN, UK">14a Whitehaugh Rd, Glasgow G53 7ZN, UK</option><option value="156 Charles St, Glasgow G21 2QH, UK">156 Charles St, Glasgow G21 2QH, UK</option><option value="16 Yew Grove, London NW2 3AD, UK">16 Yew Grove, London NW2 3AD, UK</option><option value="167 Station Rd, London HA8 7JU, UK">167 Station Rd, London HA8 7JU, UK</option><option value="17 Alan Cres, Leeds LS15 0JA, UK">17 Alan Cres, Leeds LS15 0JA, UK</option><option value="20 Swan St, Manchester M4 5JQ, UK">20 Swan St, Manchester M4 5JQ, UK</option><option value="23 Pattishall Cl, Manchester M4 7DU, UK">23 Pattishall Cl, Manchester M4 7DU, UK</option><option value="244A York Wy, London N7 9AG, UK">244A York Wy, London N7 9AG, UK</option><option value="25 Effie Rd, London SW6 1EL, UK">25 Effie Rd, London SW6 1EL, UK</option><option value="26 Rose Gardens, London W5 4JU, UK">26 Rose Gardens, London W5 4JU, UK</option><option value="304A Ballards Ln, London N12 0EY, UK">304A Ballards Ln, London N12 0EY, UK</option><option value="37 Dumbarton Rd, Clydebank G81 1UA, UK">37 Dumbarton Rd, Clydebank G81 1UA, UK</option><option value="47 Westbourne Terrace, London W2 3UY, UK">47 Westbourne Terrace, London W2 3UY, UK</option><option value="64a Roseville Rd, Leeds LS8 5DR, UK">64a Roseville Rd, Leeds LS8 5DR, UK</option><option value="65 Young Terrace, Glasgow G21 4LN, UK">65 Young Terrace, Glasgow G21 4LN, UK</option><option value="86a Edward Rd, London E17 6LU, UK">86a Edward Rd, London E17 6LU, UK</option><option value="96 Scales Rd, London N17 9EZ, UK">96 Scales Rd, London N17 9EZ, UK</option><option value="Abbey Hey, Manchester M18 8GZ, UK">Abbey Hey, Manchester M18 8GZ, UK</option><option value="Alfred Rd, London W2 5HB, UK">Alfred Rd, London W2 5HB, UK</option><option value="Bethnal Green, London E1 4GB, UK">Bethnal Green, London E1 4GB, UK</option><option value="Biggin Hill, Westerham TN16 3YN, UK">Biggin Hill, Westerham TN16 3YN, UK</option><option value="Birmingham, AL 35242, USA">Birmingham, AL 35242, USA</option><option value="Blackett St, Manchester M12 6AE, UK">Blackett St, Manchester M12 6AE, UK</option><option value="Borehamwood, London WD6 5LN, UK">Borehamwood, London WD6 5LN, UK</option><option value="Burnage, Manchester M19 2EZ, UK">Burnage, Manchester M19 2EZ, UK</option><option value="Chadderton, Oldham OL9 8BJ, UK">Chadderton, Oldham OL9 8BJ, UK</option><option value="Clydebank, Glasgow G81 1BQ, UK">Clydebank, Glasgow G81 1BQ, UK</option><option value="Cumbernauld, Glasgow G68 9LD, UK">Cumbernauld, Glasgow G68 9LD, UK</option><option value="Droylsden, Manchester M43 7EL, UK">Droylsden, Manchester M43 7EL, UK</option><option value="East Hartford, CT 06108, USA">East Hartford, CT 06108, USA</option><option value="Eccles, Manchester M30 9QB, UK">Eccles, Manchester M30 9QB, UK</option><option value="Gilmour Ave, Clydebank G81 1QF, UK">Gilmour Ave, Clydebank G81 1QF, UK</option><option value="Glasgow, KY 42141, USA">Glasgow, KY 42141, USA</option><option value="Hamilton Mews, London W1J 7HB, UK">Hamilton Mews, London W1J 7HB, UK</option><option value="Handsworth, Birmingham B21 9PN, UK">Handsworth, Birmingham B21 9PN, UK</option><option value="Hunslet, Leeds LS10 1ED, UK">Hunslet, Leeds LS10 1ED, UK</option><option value="London, ON N6A 0A7, Canada">London, ON N6A 0A7, Canada</option><option value="London, ON N6G 0T7, Canada">London, ON N6G 0T7, Canada</option><option value="London, ON N6J 2M4, Canada">London, ON N6J 2M4, Canada</option><option value="London, ON N6L 1G3, Canada">London, ON N6L 1G3, Canada</option><option value="London, ON N6N 1E7, Canada">London, ON N6N 1E7, Canada</option><option value="Maida Hill, London W9 2AN, UK">Maida Hill, London W9 2AN, UK</option><option value="Maida Hill, London W9 2DE, UK">Maida Hill, London W9 2DE, UK</option><option value="Manchester, NH 03104, USA">Manchester, NH 03104, USA</option><option value="Middleton, Manchester M24 5TR, UK">Middleton, Manchester M24 5TR, UK</option><option value="Monroe, NC 28112, USA">Monroe, NC 28112, USA</option><option value="North Las Vegas, NV 89032, USA">North Las Vegas, NV 89032, USA</option><option value="Norwood, London SE27 0NW, UK">Norwood, London SE27 0NW, UK</option><option value="Pelham, NH 03076, USA">Pelham, NH 03076, USA</option><option value="Philadelphia, PA 19147, USA">Philadelphia, PA 19147, USA</option><option value="Pineville, NC 28134, USA">Pineville, NC 28134, USA</option><option value="Reddish, Stockport SK5 7BP, UK">Reddish, Stockport SK5 7BP, UK</option><option value="Salford, Manchester M7 4ZE, UK">Salford, Manchester M7 4ZE, UK</option><option value="Somersworth, NH 03878, USA">Somersworth, NH 03878, USA</option><option value="Stretford, Manchester M32 8DQ, UK">Stretford, Manchester M32 8DQ, UK</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">55</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="64 Andrew Gardens, Handsworth, Birmingham B21 9PN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SM PEST CONTROL LTD</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Handsworth, Birmingham B21 9PN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7440 511103">📞 +44 7440 511103</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2730113601215077839&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b97fa0d3-b049-4814-8880-b89d960b34f7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b97fa0d3-b049-4814-8880-b89d960b34f7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b97fa0d3-b049-4814-8880-b89d960b34f7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="147 Moss Way, Glasgow, KY 42141, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Craddock Pest Control</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Glasgow, KY 42141, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 270-678-7615">📞 +1 270-678-7615</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5278751938878776598&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2e8f3347-5683-408a-8501-2d40feb00c61">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2e8f3347-5683-408a-8501-2d40feb00c61">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2e8f3347-5683-408a-8501-2d40feb00c61" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="317 Prospect St, East Hartford, CT 06108, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>A Small Job LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 East Hartford, CT 06108, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 860-983-9580">📞 +1 860-983-9580</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15762205465399018511&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8c80f8b1-5ed8-4a95-8639-4e8dc256b592">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8c80f8b1-5ed8-4a95-8639-4e8dc256b592">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8c80f8b1-5ed8-4a95-8639-4e8dc256b592" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="168 Windham Rd, Pelham, NH 03076, USA"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Extreme Make Over Custom Home Repair Handyman Services</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Pelham, NH 03076, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 603-818-7797">📞 +1 603-818-7797</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5948084772489796661&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a9f91b76-ae0f-4db8-b14c-6f916a725fad">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a9f91b76-ae0f-4db8-b14c-6f916a725fad">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a9f91b76-ae0f-4db8-b14c-6f916a725fad" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="1201 Zeb Helms Rd, Monroe, NC 28112, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Monroe Blinds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Monroe, NC 28112, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 704-283-1351">📞 +1 704-283-1351</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3887213427731510660&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3da72cea-8a4b-4045-a7f2-2bd7bbf9f8cf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3da72cea-8a4b-4045-a7f2-2bd7bbf9f8cf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3da72cea-8a4b-4045-a7f2-2bd7bbf9f8cf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="129 Mile End Rd, Bethnal Green, London E1 4GB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Eva's Blinds, Shutters &amp; Curtains</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bethnal Green, London E1 4GB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3916 5102">📞 +44 20 3916 5102</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=565598750420246545&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="58d617c0-3218-4231-bd99-c4e783c413cf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="58d617c0-3218-4231-bd99-c4e783c413cf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="58d617c0-3218-4231-bd99-c4e783c413cf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="313 Greg St, Reddish, Stockport SK5 7BP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sublime Shutters</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Reddish, Stockport SK5 7BP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 401 4551">📞 +44 161 401 4551</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9971978781371022749&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="978d7827-78ec-4dea-aaed-e3bee948cf3a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="978d7827-78ec-4dea-aaed-e3bee948cf3a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="978d7827-78ec-4dea-aaed-e3bee948cf3a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="Unit 3 Egerton St, Droylsden, Manchester M43 7EL, UK"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>A M Blinds &amp; Shutters</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Droylsden, Manchester M43 7EL, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 370 9627">📞 +44 161 370 9627</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5698786281054399692&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3528b4fa-0f8a-46d9-8268-d10e29e8a661">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3528b4fa-0f8a-46d9-8268-d10e29e8a661">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3528b4fa-0f8a-46d9-8268-d10e29e8a661" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="Unit 2, 64a Roseville Rd, Leeds LS8 5DR, UK"
+        data-score="30"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="41.5 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">30</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>kaur blinds &amp; curtains ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 64a Roseville Rd, Leeds LS8 5DR, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7956 794241">📞 +44 7956 794241</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10776118329189009384&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2faa8903-1c6e-4e23-8883-bc3af10cd8da">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2faa8903-1c6e-4e23-8883-bc3af10cd8da">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2faa8903-1c6e-4e23-8883-bc3af10cd8da" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="37 Dumbarton Rd, Clydebank G81 1UA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Joe Walkers Window Blinds Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 37 Dumbarton Rd, Clydebank G81 1UA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 141 230 4028">📞 +44 141 230 4028</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16643665418407485107&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e9414330-2a26-4153-b268-424214fbe4bc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e9414330-2a26-4153-b268-424214fbe4bc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e9414330-2a26-4153-b268-424214fbe4bc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="65 Young Terrace, Glasgow G21 4LN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Peaky Blinders Glasgow Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 65 Young Terrace, Glasgow G21 4LN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7425 839571">📞 +44 7425 839571</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10271617418817569871&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="00735fbf-b756-43c1-b82e-de1982730916">✓ Approve</button>
+          <button class="btn btn-reject" data-id="00735fbf-b756-43c1-b82e-de1982730916">✕ Reject</button>
+          <button class="btn btn-demo" data-id="00735fbf-b756-43c1-b82e-de1982730916" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="3 Drum Mains Park, Cumbernauld, Glasgow G68 9LD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Shades Shutters &amp; Blinds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Cumbernauld, Glasgow G68 9LD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 333 777 8101">📞 +44 333 777 8101</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4263483068671016358&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ceef45a9-1589-4c6d-8815-50600ea19239">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ceef45a9-1589-4c6d-8815-50600ea19239">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ceef45a9-1589-4c6d-8815-50600ea19239" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="1137 Carpenter St Ste B, Philadelphia, PA 19147, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>D&amp;M Locksmith South Philadelphia</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Philadelphia, PA 19147, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 877-565-5720">📞 +1 877-565-5720</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10560568851141038568&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ca369fd4-da8e-4990-9fff-4464600c9b9a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ca369fd4-da8e-4990-9fff-4464600c9b9a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ca369fd4-da8e-4990-9fff-4464600c9b9a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="330 Ridout St N Unit 102B, London, ON N6A 0A7, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>S.O.S Locksmith</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 London, ON N6A 0A7, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 226-559-9341">📞 +1 226-559-9341</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7527778961994017253&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dc279df9-e0bc-4d6c-b324-215c9c199bcd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dc279df9-e0bc-4d6c-b324-215c9c199bcd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dc279df9-e0bc-4d6c-b324-215c9c199bcd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="7 John Knox St, Clydebank, Glasgow G81 1BQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>KeycraftScotland</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Clydebank, Glasgow G81 1BQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7708 536740">📞 +44 7708 536740</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6512600094554459067&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ff141166-0c99-4878-a4f6-039f1ae54dd9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ff141166-0c99-4878-a4f6-039f1ae54dd9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ff141166-0c99-4878-a4f6-039f1ae54dd9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="14a Whitehaugh Rd, Glasgow G53 7ZN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>All about Glasgow Locksmiths</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 14a Whitehaugh Rd, Glasgow G53 7ZN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7886 356613">📞 +44 7886 356613</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14745868490764486417&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="aedf91a8-dac9-4533-a784-94667c885aad">✓ Approve</button>
+          <button class="btn btn-reject" data-id="aedf91a8-dac9-4533-a784-94667c885aad">✕ Reject</button>
+          <button class="btn btn-demo" data-id="aedf91a8-dac9-4533-a784-94667c885aad" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="Gilmour Ave, Clydebank G81 1QF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Now 24 Hour Locksmiths</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Gilmour Ave, Clydebank G81 1QF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 141 266 0652">📞 +44 141 266 0652</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2233662975791795433&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ee425768-e38f-4213-882f-24cec08a9309">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ee425768-e38f-4213-882f-24cec08a9309">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ee425768-e38f-4213-882f-24cec08a9309" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="3435 W Lake Mead Blvd Suite 100, North Las Vegas, NV 89032, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Dial Carpet Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 North Las Vegas, NV 89032, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 702-497-2567">📞 +1 702-497-2567</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14117050501742900492&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0620cbaf-9e86-48c8-95fe-73ff379a55ea">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0620cbaf-9e86-48c8-95fe-73ff379a55ea">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0620cbaf-9e86-48c8-95fe-73ff379a55ea" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="585 N Polk St, Pineville, NC 28134, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>STAT Floor Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Pineville, NC 28134, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 704-923-1460">📞 +1 704-923-1460</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4304337499205878255&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a6b4dc4b-dd68-496f-9450-2b90328ecf52">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a6b4dc4b-dd68-496f-9450-2b90328ecf52">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a6b4dc4b-dd68-496f-9450-2b90328ecf52" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="244A York Wy, London N7 9AG, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>London Sofa &amp; Carpet Cleaners LTD</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 244A York Wy, London N7 9AG, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7780 850050">📞 +44 7780 850050</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5321942701799856510&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4688fbaf-d6f9-4e09-8090-3cb50b99bd4d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4688fbaf-d6f9-4e09-8090-3cb50b99bd4d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4688fbaf-d6f9-4e09-8090-3cb50b99bd4d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="297 Exeter Rd Unit 15, London, ON N6L 1G3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>London Steam Carpet, Upholstery &amp; Air-Duct Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 London, ON N6L 1G3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 519-668-6575">📞 +1 519-668-6575</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11327143687274590911&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c483f612-7369-4abb-9c60-5fb301f88b96">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c483f612-7369-4abb-9c60-5fb301f88b96">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c483f612-7369-4abb-9c60-5fb301f88b96" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="63a Edbrooke Rd, Maida Hill, London W9 2DE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>London Carpet Cleaning LTD</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Maida Hill, London W9 2DE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3390 2157">📞 +44 20 3390 2157</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16845274312508436500&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="21fc9c18-d75e-43d2-90c4-77433c81e0df">✓ Approve</button>
+          <button class="btn btn-reject" data-id="21fc9c18-d75e-43d2-90c4-77433c81e0df">✕ Reject</button>
+          <button class="btn btn-demo" data-id="21fc9c18-d75e-43d2-90c4-77433c81e0df" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="7B Chippenham Mews, Maida Hill, London W9 2AN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Deep Clean Carpet &amp; Rug Cleaning Services</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Maida Hill, London W9 2AN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 8446 6045">📞 +44 20 8446 6045</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9929929726840711911&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="03edc52c-ceeb-4d14-a9b5-f2c7dfecaa47">✓ Approve</button>
+          <button class="btn btn-reject" data-id="03edc52c-ceeb-4d14-a9b5-f2c7dfecaa47">✕ Reject</button>
+          <button class="btn btn-demo" data-id="03edc52c-ceeb-4d14-a9b5-f2c7dfecaa47" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="96 Scales Rd, London N17 9EZ, UK"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mr Deep Clean Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 96 Scales Rd, London N17 9EZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7957 584213">📞 +44 7957 584213</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8995019525327408400&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="93ae886e-a14b-4030-a4e3-c9304c6ccede">✓ Approve</button>
+          <button class="btn btn-reject" data-id="93ae886e-a14b-4030-a4e3-c9304c6ccede">✕ Reject</button>
+          <button class="btn btn-demo" data-id="93ae886e-a14b-4030-a4e3-c9304c6ccede" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="4720 Avenue Rd, London, ON N6N 1E7, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Super Steam Carpet, Upholstery &amp; Air-Duct Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 London, ON N6N 1E7, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 519-857-9444">📞 +1 519-857-9444</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17937786966366243136&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="aed4a611-5788-4057-971b-02590e931721">✓ Approve</button>
+          <button class="btn btn-reject" data-id="aed4a611-5788-4057-971b-02590e931721">✕ Reject</button>
+          <button class="btn btn-demo" data-id="aed4a611-5788-4057-971b-02590e931721" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 14, Concorde Business Centre, Wireless Rd, Biggin Hill, Westerham TN16 3YN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Carpet Bright UK</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Biggin Hill, Westerham TN16 3YN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3011 5590">📞 +44 20 3011 5590</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14754887856044529104&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dbf97b7b-57e3-4d1a-91cd-0c41fa2d38e1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dbf97b7b-57e3-4d1a-91cd-0c41fa2d38e1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dbf97b7b-57e3-4d1a-91cd-0c41fa2d38e1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="26 Rose Gardens, London W5 4JU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Cleaner Carpets London</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 26 Rose Gardens, London W5 4JU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3772 8698">📞 +44 20 3772 8698</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9879560136056008311&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d66ee081-92e5-4749-9d13-80119942dd11">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d66ee081-92e5-4749-9d13-80119942dd11">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d66ee081-92e5-4749-9d13-80119942dd11" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="304A Ballards Ln, London N12 0EY, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Vip Carpet Cleaning London Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 304A Ballards Ln, London N12 0EY, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 8050 3535">📞 +44 20 8050 3535</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8700943668072710443&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3e1fd082-8459-4a51-8e3d-56c7bf62e9e5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3e1fd082-8459-4a51-8e3d-56c7bf62e9e5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3e1fd082-8459-4a51-8e3d-56c7bf62e9e5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Matrix Business Center, 167 Station Rd, London HA8 7JU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hi Carpet Cleaner Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 167 Station Rd, London HA8 7JU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 8133 0090">📞 +44 20 8133 0090</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12789214725083361495&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="344b9863-6650-4866-8abd-e6888ac7a01c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="344b9863-6650-4866-8abd-e6888ac7a01c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="344b9863-6650-4866-8abd-e6888ac7a01c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hamilton Mews, London W1J 7HB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Best Deep Carpet Cleaning Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hamilton Mews, London W1J 7HB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3489 6141">📞 +44 20 3489 6141</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4396228165267812267&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="70a41627-0533-4fb6-82df-aa8ecb1782dc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="70a41627-0533-4fb6-82df-aa8ecb1782dc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="70a41627-0533-4fb6-82df-aa8ecb1782dc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1595 Dyer Dr #406, London, ON N6G 0T7, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Great North Steam Carpet, Upholstery &amp; Air-Duct Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 London, ON N6G 0T7, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 519-702-2707">📞 +1 519-702-2707</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2782281400216687250&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="eb4def5f-0ad2-48cd-b972-b1af4e20ef97">✓ Approve</button>
+          <button class="btn btn-reject" data-id="eb4def5f-0ad2-48cd-b972-b1af4e20ef97">✕ Reject</button>
+          <button class="btn btn-demo" data-id="eb4def5f-0ad2-48cd-b972-b1af4e20ef97" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="16 Yew Grove, London NW2 3AD, UK"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>ProClean Carpet &amp; Upholstery Deep Clean</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 16 Yew Grove, London NW2 3AD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7985 184747">📞 +44 7985 184747</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10230382556905193278&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b80c05fd-674b-4df9-bddb-8556909ad3e7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b80c05fd-674b-4df9-bddb-8556909ad3e7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b80c05fd-674b-4df9-bddb-8556909ad3e7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="404 Wharncliffe Rd S, London, ON N6J 2M4, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Steamers Cleaning Services Inc.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 London, ON N6J 2M4, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 519-854-0882">📞 +1 519-854-0882</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9996544555993486642&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9d853a6e-838f-4e88-adb7-3aa50bdebae2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9d853a6e-838f-4e88-adb7-3aa50bdebae2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9d853a6e-838f-4e88-adb7-3aa50bdebae2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="30 Prioress Rd, Norwood, London SE27 0NW, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>London Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Norwood, London SE27 0NW, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7428 382574">📞 +44 7428 382574</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11159589404072955185&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c4e89ada-7674-4cae-8c28-ca1cc4478fa9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c4e89ada-7674-4cae-8c28-ca1cc4478fa9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c4e89ada-7674-4cae-8c28-ca1cc4478fa9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="47 Westbourne Terrace, London W2 3UY, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>4 Seasons Carpet Clean</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 47 Westbourne Terrace, London W2 3UY, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3488 1970">📞 +44 20 3488 1970</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5050757772328620291&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4bfc8794-9709-4545-84a2-cff686ed30b3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4bfc8794-9709-4545-84a2-cff686ed30b3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4bfc8794-9709-4545-84a2-cff686ed30b3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Flat 23, Polesworth House, Alfred Rd, London W2 5HB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Rise &amp; Co Carpet and Upholstery Deep Cleaning Dry</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Alfred Rd, London W2 5HB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7521 751115">📞 +44 7521 751115</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1418769581471270635&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a9648f1d-3250-4a4b-9a21-82ae89a3db52">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a9648f1d-3250-4a4b-9a21-82ae89a3db52">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a9648f1d-3250-4a4b-9a21-82ae89a3db52" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="25 Effie Rd, London SW6 1EL, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Number ONE Carpet Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 25 Effie Rd, London SW6 1EL, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3632 3212">📞 +44 20 3632 3212</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4883941273426144437&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="48f58c1a-1032-4931-9c1f-a757b43fc3e2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="48f58c1a-1032-4931-9c1f-a757b43fc3e2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="48f58c1a-1032-4931-9c1f-a757b43fc3e2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="86a Edward Rd, London E17 6LU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Unlimited Carpet Clean</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 86a Edward Rd, London E17 6LU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 8257 8024">📞 +44 20 8257 8024</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15849193074909526473&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="13bd6970-2543-4ad3-a781-fb72c7411d4c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="13bd6970-2543-4ad3-a781-fb72c7411d4c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="13bd6970-2543-4ad3-a781-fb72c7411d4c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="205 Gateshead Rd, Borehamwood, London WD6 5LN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Prolux Cleaning Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Borehamwood, London WD6 5LN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3318 6387">📞 +44 20 3318 6387</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12438390743696528826&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7191d80f-c398-46f9-a7fb-4e8b604bf8d3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7191d80f-c398-46f9-a7fb-4e8b604bf8d3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7191d80f-c398-46f9-a7fb-4e8b604bf8d3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="51 Butterton Dr, Abbey Hey, Manchester M18 8GZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>&quot;Lemon Breeze&quot; Ltd. Carpet &amp; Upholstery cleaning Manchester and surrounding areas</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Abbey Hey, Manchester M18 8GZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7450 524034">📞 +44 7450 524034</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12266537460370414035&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dc05f5c3-4356-4b07-9e73-dc44034b7bd5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dc05f5c3-4356-4b07-9e73-dc44034b7bd5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dc05f5c3-4356-4b07-9e73-dc44034b7bd5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit C, Aldow Enterprise Park, Blackett St, Manchester M12 6AE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Man &amp; Machine | Carpet Cleaning Manchester | Domestic and Commercial</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Blackett St, Manchester M12 6AE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7774 502832">📞 +44 7774 502832</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6708972437944750053&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="17ad47fd-2967-48be-a12f-06b24787788c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="17ad47fd-2967-48be-a12f-06b24787788c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="17ad47fd-2967-48be-a12f-06b24787788c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Deanbank Ave, Burnage, Manchester M19 2EZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Carpet Cleaning In Stockport</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Burnage, Manchester M19 2EZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7554 933028">📞 +44 7554 933028</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8672494149580685842&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="34ff7ede-c07e-44f3-89a5-1bb2b1225756">✓ Approve</button>
+          <button class="btn btn-reject" data-id="34ff7ede-c07e-44f3-89a5-1bb2b1225756">✕ Reject</button>
+          <button class="btn btn-demo" data-id="34ff7ede-c07e-44f3-89a5-1bb2b1225756" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Swan Buildings, First Floor, 20 Swan St, Manchester M4 5JQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Prestige Refresh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 20 Swan St, Manchester M4 5JQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 667 5252">📞 +44 161 667 5252</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3129833396794785547&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6e515055-c9c8-4a4b-9eb0-4cb7bd790639">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6e515055-c9c8-4a4b-9eb0-4cb7bd790639">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6e515055-c9c8-4a4b-9eb0-4cb7bd790639" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="23 Pattishall Cl, Manchester M4 7DU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Cleaners With Pride</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 23 Pattishall Cl, Manchester M4 7DU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7840 017649">📞 +44 7840 017649</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7889639658379112706&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0a8101f8-7c0c-497e-97c5-fed022847dce">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0a8101f8-7c0c-497e-97c5-fed022847dce">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0a8101f8-7c0c-497e-97c5-fed022847dce" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="9 Manton Cl, Salford, Manchester M7 4ZE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Natalia Carpet Sheriff LTD</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Salford, Manchester M7 4ZE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7825 581722">📞 +44 7825 581722</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11117036359869672465&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="096b2268-db11-4604-b85e-40bfd3f905d5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="096b2268-db11-4604-b85e-40bfd3f905d5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="096b2268-db11-4604-b85e-40bfd3f905d5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="100 Tri City Rd #111, Somersworth, NH 03878, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Stanley Steemer</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Somersworth, NH 03878, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 800-783-3637">📞 +1 800-783-3637</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7983980914545337785&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="831c2867-e46e-4194-aa2e-6a8e368f6086">✓ Approve</button>
+          <button class="btn btn-reject" data-id="831c2867-e46e-4194-aa2e-6a8e368f6086">✕ Reject</button>
+          <button class="btn btn-demo" data-id="831c2867-e46e-4194-aa2e-6a8e368f6086" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="92 Brook St, Manchester, NH 03104, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fabricare Carpet And Upholstery Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manchester, NH 03104, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 603-533-1908">📞 +1 603-533-1908</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17071775345157089922&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4274bd71-f867-4448-8793-cf9f6429fd9e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4274bd71-f867-4448-8793-cf9f6429fd9e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4274bd71-f867-4448-8793-cf9f6429fd9e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="60 Park Rd, Stretford, Manchester M32 8DQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Carpet Cleaning Trafford</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Stretford, Manchester M32 8DQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7855 114660">📞 +44 7855 114660</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8364367088630856616&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c8546496-dfad-4f33-9cfa-1063654e89e2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c8546496-dfad-4f33-9cfa-1063654e89e2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c8546496-dfad-4f33-9cfa-1063654e89e2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="70 Williams Cres, Chadderton, Oldham OL9 8BJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Right Choice Carpet cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chadderton, Oldham OL9 8BJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7700 142250">📞 +44 7700 142250</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10511572296570226283&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="114e2f7e-5ff5-4d6a-9b67-1935e2e33bc7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="114e2f7e-5ff5-4d6a-9b67-1935e2e33bc7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="114e2f7e-5ff5-4d6a-9b67-1935e2e33bc7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Sadler St, Middleton, Manchester M24 5TR, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Paul Anderson Carpet and Upholstery Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Middleton, Manchester M24 5TR, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7795 278379">📞 +44 7795 278379</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7353714899398551273&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8284c8ec-9ad6-4f8c-b1d4-e7a86b4f3068">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8284c8ec-9ad6-4f8c-b1d4-e7a86b4f3068">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8284c8ec-9ad6-4f8c-b1d4-e7a86b4f3068" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="45 Gordon Rd, Eccles, Manchester M30 9QB, UK"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Complete Oven and Carpet Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Eccles, Manchester M30 9QB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7715 992178">📞 +44 7715 992178</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9409080880028566294&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="86b91668-9e97-4039-a5d6-c96ace3dc2fd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="86b91668-9e97-4039-a5d6-c96ace3dc2fd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="86b91668-9e97-4039-a5d6-c96ace3dc2fd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="450 Inverness Cors, Birmingham, AL 35242, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>LocalPro Carpet Cleaning of Hoover</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, AL 35242, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-675-2773">📞 +1 205-675-2773</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3058006227300626829&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ae7cadf0-81e6-44a9-88df-8f3bbc816851">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ae7cadf0-81e6-44a9-88df-8f3bbc816851">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ae7cadf0-81e6-44a9-88df-8f3bbc816851" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="40 Gardeners Ct, Hunslet, Leeds LS10 1ED, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Scrub N Brush</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hunslet, Leeds LS10 1ED, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7823 651354">📞 +44 7823 651354</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13453221648428885565&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="246632be-36be-42b5-a20f-08ad37a13c84">✓ Approve</button>
+          <button class="btn btn-reject" data-id="246632be-36be-42b5-a20f-08ad37a13c84">✕ Reject</button>
+          <button class="btn btn-demo" data-id="246632be-36be-42b5-a20f-08ad37a13c84" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="17 Alan Cres, Leeds LS15 0JA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Blue Lion Homecare</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 17 Alan Cres, Leeds LS15 0JA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7840 621736">📞 +44 7840 621736</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9707701544300279209&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4ce8c5af-cdb4-4846-b0e3-0079e7d8cf15">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4ce8c5af-cdb4-4846-b0e3-0079e7d8cf15">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4ce8c5af-cdb4-4846-b0e3-0079e7d8cf15" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2/2, 156 Charles St, Glasgow G21 2QH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fresh Loom Carpet Cleaning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 156 Charles St, Glasgow G21 2QH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7778 879063">📞 +44 7778 879063</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10151283626222731311&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c7703089-447b-4551-9c0f-4c651c9767ec">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c7703089-447b-4551-9c0f-4c651c9767ec">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c7703089-447b-4551-9c0f-4c651c9767ec" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
