@@ -1,0 +1,3081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-08-29</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-08-29</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">71</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="1 Esplanade Terrace, Edinburgh EH15 2ES, UK">1 Esplanade Terrace, Edinburgh EH15 2ES, UK</option><option value="10 Park St, Bristol BS1 5HX, UK">10 Park St, Bristol BS1 5HX, UK</option><option value="100 Darcey Rd, Castle Hill NSW 2154, Australia">100 Darcey Rd, Castle Hill NSW 2154, Australia</option><option value="106B Rundle St, Kent Town SA 5067, Australia">106B Rundle St, Kent Town SA 5067, Australia</option><option value="123 Comiston Rd, Edinburgh EH10 6AQ, UK">123 Comiston Rd, Edinburgh EH10 6AQ, UK</option><option value="127 Ravenswood Ave, Edinburgh EH16 5SG, UK">127 Ravenswood Ave, Edinburgh EH16 5SG, UK</option><option value="14 Chilworth Ave, Enfield SA 5085, Australia">14 Chilworth Ave, Enfield SA 5085, Australia</option><option value="14 Heidenreich Ave, Salisbury Downs SA 5108, Australia">14 Heidenreich Ave, Salisbury Downs SA 5108, Australia</option><option value="15 Calton Rd, Edinburgh EH8 8EQ, UK">15 Calton Rd, Edinburgh EH8 8EQ, UK</option><option value="156 Northfield Farm Ave, Edinburgh EH8 7QZ, UK">156 Northfield Farm Ave, Edinburgh EH8 7QZ, UK</option><option value="17 Evandale St, Floreat WA 6014, Australia">17 Evandale St, Floreat WA 6014, Australia</option><option value="18b Carrington Rd, Randwick NSW 2031, Australia">18b Carrington Rd, Randwick NSW 2031, Australia</option><option value="21 Langford St, Pooraka SA 5095, Australia">21 Langford St, Pooraka SA 5095, Australia</option><option value="212 Forest Rd., Bristol BS16 3QU, UK">212 Forest Rd., Bristol BS16 3QU, UK</option><option value="26 Moorhead Way, Koondoola WA 6064, Australia">26 Moorhead Way, Koondoola WA 6064, Australia</option><option value="280 Richmond Rd, Marleston SA 5033, Australia">280 Richmond Rd, Marleston SA 5033, Australia</option><option value="3 Hill St, Edinburgh EH2 3JP, UK">3 Hill St, Edinburgh EH2 3JP, UK</option><option value="3 Hill St, Edinburgh EH3 2JP, UK">3 Hill St, Edinburgh EH3 2JP, UK</option><option value="3 Keates Rd, Armadale WA 6112, Australia">3 Keates Rd, Armadale WA 6112, Australia</option><option value="30 Canonmills, Edinburgh EH3 5LH, UK">30 Canonmills, Edinburgh EH3 5LH, UK</option><option value="32 Gloucester Rd N, Bristol BS7 0SJ, UK">32 Gloucester Rd N, Bristol BS7 0SJ, UK</option><option value="398 St Kilda Rd, St Kilda VIC 3182, Australia">398 St Kilda Rd, St Kilda VIC 3182, Australia</option><option value="4-10/12 India St, Capalaba QLD 4157, Australia">4-10/12 India St, Capalaba QLD 4157, Australia</option><option value="44-46 Savile St, Sheffield S4 7UD, UK">44-46 Savile St, Sheffield S4 7UD, UK</option><option value="5 Naples St, Fraser Rise VIC 3336, Australia">5 Naples St, Fraser Rise VIC 3336, Australia</option><option value="5 S Charlotte St, Edinburgh EH2 4AN, UK">5 S Charlotte St, Edinburgh EH2 4AN, UK</option><option value="58 Warrender Park Rd, Edinburgh EH9 1EX, UK">58 Warrender Park Rd, Edinburgh EH9 1EX, UK</option><option value="5A/63 Paramount Dr, Wangara WA 6065, Australia">5A/63 Paramount Dr, Wangara WA 6065, Australia</option><option value="6 Florence Ave, Blair Athol SA 5084, Australia">6 Florence Ave, Blair Athol SA 5084, Australia</option><option value="6 Millar Pl, Edinburgh EH10 5HJ, UK">6 Millar Pl, Edinburgh EH10 5HJ, UK</option><option value="6 St Aidan's Rd, Bristol BS5 8RU, UK">6 St Aidan's Rd, Bristol BS5 8RU, UK</option><option value="6/71 Winton Rd, Joondalup WA 6027, Australia">6/71 Winton Rd, Joondalup WA 6027, Australia</option><option value="74 Belmont Rd, Juniper Green EH14 5ED, UK">74 Belmont Rd, Juniper Green EH14 5ED, UK</option><option value="8 Albany St, Edinburgh EH1 3QB, UK">8 Albany St, Edinburgh EH1 3QB, UK</option><option value="8 Kew Terrace, Edinburgh EH12 5JE, UK">8 Kew Terrace, Edinburgh EH12 5JE, UK</option><option value="8 Spey St, Edinburgh EH7 4PY, UK">8 Spey St, Edinburgh EH7 4PY, UK</option><option value="80 Market St, South Melbourne VIC 3205, Australia">80 Market St, South Melbourne VIC 3205, Australia</option><option value="83 Peffer Pl, Edinburgh EH16 4BB, UK">83 Peffer Pl, Edinburgh EH16 4BB, UK</option><option value="Bedminster, Bristol BS3 1JH, UK">Bedminster, Bristol BS3 1JH, UK</option><option value="Bishopston, Bristol BS7 8PD, UK">Bishopston, Bristol BS7 8PD, UK</option><option value="Brislington, Bristol BS4 5AB, UK">Brislington, Bristol BS4 5AB, UK</option><option value="Bristol, CT 06010, USA">Bristol, CT 06010, USA</option><option value="Bristol, IL 60512, USA">Bristol, IL 60512, USA</option><option value="Bristol, RI 02809, USA">Bristol, RI 02809, USA</option><option value="Brunswick Rd, Edinburgh EH7 5NQ, UK">Brunswick Rd, Edinburgh EH7 5NQ, UK</option><option value="Burwood NSW 2134, Burwood NSW 2133, Australia">Burwood NSW 2134, Burwood NSW 2133, Australia</option><option value="Clifton, Bristol BS8 2QN, UK">Clifton, Bristol BS8 2QN, UK</option><option value="Cramond, Edinburgh EH4 6LN, UK">Cramond, Edinburgh EH4 6LN, UK</option><option value="Edinburgh, Docks EH6 7DN, UK">Edinburgh, Docks EH6 7DN, UK</option><option value="Eric Rd, Holland Park West QLD 4121, Australia">Eric Rd, Holland Park West QLD 4121, Australia</option><option value="Hamilton St, Stirling WA 6021, Australia">Hamilton St, Stirling WA 6021, Australia</option><option value="Hammersmith Rd, Bristol BS5 7BD, UK">Hammersmith Rd, Bristol BS5 7BD, UK</option><option value="Kingswood, Bristol BS15 1UB, UK">Kingswood, Bristol BS15 1UB, UK</option><option value="Kingswood, Bristol BS15 9XE, UK">Kingswood, Bristol BS15 9XE, UK</option><option value="Leith, Edinburgh EH6 7HZ, UK">Leith, Edinburgh EH6 7HZ, UK</option><option value="Little Stoke, Bristol BS34 6JT, UK">Little Stoke, Bristol BS34 6JT, UK</option><option value="Novers Hill, Bristol BS3 5QE, UK">Novers Hill, Bristol BS3 5QE, UK</option><option value="Patchway, Bristol BS34 5TS, UK">Patchway, Bristol BS34 5TS, UK</option><option value="Plainville, CT 06062, USA">Plainville, CT 06062, USA</option><option value="Plainville, MA 02762, USA">Plainville, MA 02762, USA</option><option value="Redcliffe, Bristol BS1 6LS, UK">Redcliffe, Bristol BS1 6LS, UK</option><option value="Stockwood, Bristol BS14 8LS, UK">Stockwood, Bristol BS14 8LS, UK</option><option value="U6b/175 James Ruse Dr, Camellia NSW 2142, Australia">U6b/175 James Ruse Dr, Camellia NSW 2142, Australia</option><option value="Unit 311/27 Hill Rd, Wentworth Point NSW 2127, Australia">Unit 311/27 Hill Rd, Wentworth Point NSW 2127, Australia</option><option value="Unit 44/28 Crystal St, Waterloo NSW 2017, Australia">Unit 44/28 Crystal St, Waterloo NSW 2017, Australia</option><option value="Unit 9/1058 Ann St, Fortitude Valley QLD 4006, Australia">Unit 9/1058 Ann St, Fortitude Valley QLD 4006, Australia</option><option value="West Lothian, Edinburgh EH3 9DQ, UK">West Lothian, Edinburgh EH3 9DQ, UK</option><option value="Woodseats, Sheffield S8 0JJ, UK">Woodseats, Sheffield S8 0JJ, UK</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">71</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="3 Keates Rd, Armadale WA 6112, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Creative Driveways and Fencing</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3 Keates Rd, Armadale WA 6112, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 499 190 555">📞 +61 499 190 555</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2715989192349716981&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="818378f4-a230-4c21-ad01-c21acb8eb149">✓ Approve</button>
+          <button class="btn btn-reject" data-id="818378f4-a230-4c21-ad01-c21acb8eb149">✕ Reject</button>
+          <button class="btn btn-demo" data-id="818378f4-a230-4c21-ad01-c21acb8eb149" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="Centaurus Retail Park, Centaurus Rd, Patchway, Bristol BS34 5TS, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tapi Carpets &amp; Floors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Patchway, Bristol BS34 5TS, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 428 6430">📞 +44 117 428 6430</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5341339340971426903&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1427369d-16f8-4986-a147-741240a965de">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1427369d-16f8-4986-a147-741240a965de">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1427369d-16f8-4986-a147-741240a965de" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="127 Ravenswood Ave, Edinburgh EH16 5SG, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Edinburgh Floor Sanders</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 127 Ravenswood Ave, Edinburgh EH16 5SG, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 468 2349">📞 +44 131 468 2349</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14318670248877003772&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bcc95a35-3a7d-445a-98da-80ddf66e120d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bcc95a35-3a7d-445a-98da-80ddf66e120d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bcc95a35-3a7d-445a-98da-80ddf66e120d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="Shop 2, 11-17 Burleigh St, Burwood NSW 2134, Burwood NSW 2133, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Perfect FLooring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Burwood NSW 2134, Burwood NSW 2133, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 468 883 186">📞 +61 468 883 186</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10163485363155177891&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a7c4a641-6926-449f-9302-867aeec395a8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a7c4a641-6926-449f-9302-867aeec395a8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a7c4a641-6926-449f-9302-867aeec395a8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="Homemaker The Valley, South Building, Unit 9/1058 Ann St, Fortitude Valley QLD 4006, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Carpet Call Fortitude Valley</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 9/1058 Ann St, Fortitude Valley QLD 4006, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 7 3895 6511">📞 +61 7 3895 6511</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12752186159442692066&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="153c8c02-f3ab-4533-bd42-059b13f1f0b6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="153c8c02-f3ab-4533-bd42-059b13f1f0b6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="153c8c02-f3ab-4533-bd42-059b13f1f0b6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="6/71 Winton Rd, Joondalup WA 6027, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Exquisite Flooring Perth</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 6/71 Winton Rd, Joondalup WA 6027, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 433 984 144">📞 +61 433 984 144</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12650033634974717011&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3ec399da-2635-4c2e-901f-6b94c2360490">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3ec399da-2635-4c2e-901f-6b94c2360490">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3ec399da-2635-4c2e-901f-6b94c2360490" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="17 Evandale St, Floreat WA 6014, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>O'Brien Flooring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 17 Evandale St, Floreat WA 6014, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 420 235 709">📞 +61 420 235 709</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9929572593338647499&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f3ee8b65-9960-4406-819c-fb66d7730ba9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f3ee8b65-9960-4406-819c-fb66d7730ba9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f3ee8b65-9960-4406-819c-fb66d7730ba9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="106B Rundle St, Kent Town SA 5067, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Natrastep Floors | Hybrid &amp; Laminate Flooring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 106B Rundle St, Kent Town SA 5067, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 499 609 960">📞 +61 499 609 960</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15535217904782394593&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f6958bb3-a621-4397-bdb7-40ba3482d7ee">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f6958bb3-a621-4397-bdb7-40ba3482d7ee">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f6958bb3-a621-4397-bdb7-40ba3482d7ee" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="280 Richmond Rd, Marleston SA 5033, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Floors Plus Carpet Court</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 280 Richmond Rd, Marleston SA 5033, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 8352 6388">📞 +61 8 8352 6388</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3826275964130302843&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e8c43242-8c4a-47f0-89e6-a11ed1026913">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e8c43242-8c4a-47f0-89e6-a11ed1026913">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e8c43242-8c4a-47f0-89e6-a11ed1026913" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="21 Langford St, Pooraka SA 5095, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bargain Carpets Adelaide</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 21 Langford St, Pooraka SA 5095, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 7095 2585">📞 +61 8 7095 2585</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12471666296507731961&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f8fc0a5a-f0e2-4082-b263-f498869ab9e8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f8fc0a5a-f0e2-4082-b263-f498869ab9e8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f8fc0a5a-f0e2-4082-b263-f498869ab9e8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="500 Wood St #103, Bristol, RI 02809, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Guild Tile, LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bristol, RI 02809, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 401-286-0327">📞 +1 401-286-0327</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=692049443970490407&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e2c9be2b-2f82-4b51-9802-c520e0496c84">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e2c9be2b-2f82-4b51-9802-c520e0496c84">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e2c9be2b-2f82-4b51-9802-c520e0496c84" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="64 S Cypress Dr, Bristol, IL 60512, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bristol Tile &amp; Grout Restoration, Inc.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bristol, IL 60512, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 630-882-8055">📞 +1 630-882-8055</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=41640144235337420&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="af09fb5c-34ae-45b2-9f69-498b7b2e9380">✓ Approve</button>
+          <button class="btn btn-reject" data-id="af09fb5c-34ae-45b2-9f69-498b7b2e9380">✕ Reject</button>
+          <button class="btn btn-demo" data-id="af09fb5c-34ae-45b2-9f69-498b7b2e9380" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="Unit 2, Bush Industrial Estate, Hammersmith Rd, Bristol BS5 7BD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bristol Tile Company</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hammersmith Rd, Bristol BS5 7BD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 952 6126">📞 +44 117 952 6126</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13518780260872656607&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a5f185f5-e486-4203-a5d8-08bec25f48a6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a5f185f5-e486-4203-a5d8-08bec25f48a6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a5f185f5-e486-4203-a5d8-08bec25f48a6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="Brunswick Rd, Edinburgh EH7 5NQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MRM Construction Solutions Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Brunswick Rd, Edinburgh EH7 5NQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7388 967451">📞 +44 7388 967451</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13235852525750002680&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e44f5504-1855-4097-a0dd-85c9a5d7dc76">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e44f5504-1855-4097-a0dd-85c9a5d7dc76">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e44f5504-1855-4097-a0dd-85c9a5d7dc76" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="Albert Dock, Leith, Edinburgh, Docks EH6 7DN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bily Renovation Painting and Decorating Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Edinburgh, Docks EH6 7DN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7388 085357">📞 +44 7388 085357</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4362263653312553434&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7b0a9453-60b7-495d-b08e-626b841bd48c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7b0a9453-60b7-495d-b08e-626b841bd48c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7b0a9453-60b7-495d-b08e-626b841bd48c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="100 Darcey Rd, Castle Hill NSW 2154, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MDI Tiling</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 100 Darcey Rd, Castle Hill NSW 2154, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 417 718 357">📞 +61 417 718 357</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12239535785320830317&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c646a8b3-c53d-465d-b721-8be476e60241">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c646a8b3-c53d-465d-b721-8be476e60241">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c646a8b3-c53d-465d-b721-8be476e60241" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="5 Naples St, Fraser Rise VIC 3336, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sunrise Tiling Melbourne</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 5 Naples St, Fraser Rise VIC 3336, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 414 942 464">📞 +61 414 942 464</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13493013948675427966&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1ce2d548-c366-4675-ba7b-fca2a019955c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1ce2d548-c366-4675-ba7b-fca2a019955c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1ce2d548-c366-4675-ba7b-fca2a019955c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="Hamilton St, Stirling WA 6021, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>JB Tiling &amp; Regrouting</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hamilton St, Stirling WA 6021, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 468 813 202">📞 +61 468 813 202</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10740752510252731041&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f24f56bd-9bbd-48fd-bf49-6e3f8c500afd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f24f56bd-9bbd-48fd-bf49-6e3f8c500afd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f24f56bd-9bbd-48fd-bf49-6e3f8c500afd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="26 Moorhead Way, Koondoola WA 6064, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sam's Tiling and Renovation</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 26 Moorhead Way, Koondoola WA 6064, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 402 833 445">📞 +61 402 833 445</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3043427804862023461&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="942a0cb2-019f-4747-bec3-776b2794ae19">✓ Approve</button>
+          <button class="btn btn-reject" data-id="942a0cb2-019f-4747-bec3-776b2794ae19">✕ Reject</button>
+          <button class="btn btn-demo" data-id="942a0cb2-019f-4747-bec3-776b2794ae19" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="14 Heidenreich Ave, Salisbury Downs SA 5108, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Adelaide 1 Tiling</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 14 Heidenreich Ave, Salisbury Downs SA 5108, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 404 552 274">📞 +61 404 552 274</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7591511838089194777&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="de35e667-e94f-4da9-9626-01fdb52bbecd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="de35e667-e94f-4da9-9626-01fdb52bbecd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="de35e667-e94f-4da9-9626-01fdb52bbecd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="6 Florence Ave, Blair Athol SA 5084, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>D&amp;D Tiling and Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 6 Florence Ave, Blair Athol SA 5084, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 402 713 124">📞 +61 402 713 124</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=920295325891045089&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d7ddb349-1e97-4bc5-9e71-2b169b2472b4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d7ddb349-1e97-4bc5-9e71-2b169b2472b4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d7ddb349-1e97-4bc5-9e71-2b169b2472b4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="14 Chilworth Ave, Enfield SA 5085, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>South Star Tiling &amp; Constructions</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 14 Chilworth Ave, Enfield SA 5085, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 469 756 028">📞 +61 469 756 028</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10794375430296470048&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5931f68d-0d2c-4c80-b2e6-4542bffbee0b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5931f68d-0d2c-4c80-b2e6-4542bffbee0b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5931f68d-0d2c-4c80-b2e6-4542bffbee0b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="6 St Aidan's Rd, Bristol BS5 8RU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ambient Bathrooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 6 St Aidan's Rd, Bristol BS5 8RU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 961 9021">📞 +44 117 961 9021</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13696949568787855213&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="feac4e33-d48b-473b-a1a1-755e29884aec">✓ Approve</button>
+          <button class="btn btn-reject" data-id="feac4e33-d48b-473b-a1a1-755e29884aec">✕ Reject</button>
+          <button class="btn btn-demo" data-id="feac4e33-d48b-473b-a1a1-755e29884aec" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="55 Lacey Rd, Stockwood, Bristol BS14 8LS, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>England's Finest Ltd, Kitchens - Bathrooms - Building</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Stockwood, Bristol BS14 8LS, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7812 017255">📞 +44 7812 017255</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15356429025193198162&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cc27e8c6-d0ae-44a9-8691-a4d719e4b3be">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cc27e8c6-d0ae-44a9-8691-a4d719e4b3be">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cc27e8c6-d0ae-44a9-8691-a4d719e4b3be" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="10 Northend Rd, Kingswood, Bristol BS15 1UB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Oakley Bathrooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kingswood, Bristol BS15 1UB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7725 529559">📞 +44 7725 529559</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11578409449076331342&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c8d2643f-a326-4ec8-a24b-89b0a0269724">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c8d2643f-a326-4ec8-a24b-89b0a0269724">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c8d2643f-a326-4ec8-a24b-89b0a0269724" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="49 Josephine Terrace, Bristol, CT 06010, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Myers Home Improvements LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bristol, CT 06010, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 860-329-1341">📞 +1 860-329-1341</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2946903929155353667&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e7c99f93-c03d-4937-b9a1-72b13612e09a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e7c99f93-c03d-4937-b9a1-72b13612e09a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e7c99f93-c03d-4937-b9a1-72b13612e09a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1 Rossall Ave, Little Stoke, Bristol BS34 6JT, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Inspired Bathrooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Little Stoke, Bristol BS34 6JT, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7853 069280">📞 +44 7853 069280</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1459794725615427625&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ca7cbb44-134b-4e15-b659-23b05c877e54">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ca7cbb44-134b-4e15-b659-23b05c877e54">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ca7cbb44-134b-4e15-b659-23b05c877e54" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="288a Gloucester Rd, Bishopston, Bristol BS7 8PD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bristol Refurbishment limited</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bishopston, Bristol BS7 8PD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7597 102090">📞 +44 7597 102090</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5939689381235493925&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2601624f-cdf5-4f82-9aab-c222f84259a6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2601624f-cdf5-4f82-9aab-c222f84259a6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2601624f-cdf5-4f82-9aab-c222f84259a6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="10 Park St, Bristol BS1 5HX, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Assist Plumbing and Bathrooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 10 Park St, Bristol BS1 5HX, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 214 1433">📞 +44 117 214 1433</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8570118835078446469&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="231766f8-650b-4401-84a6-19313aeffe5f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="231766f8-650b-4401-84a6-19313aeffe5f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="231766f8-650b-4401-84a6-19313aeffe5f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="77 Baden Rd, Kingswood, Bristol BS15 9XE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SP Local Plumbing Services (Bristol)</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kingswood, Bristol BS15 9XE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7833 673116">📞 +44 7833 673116</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4356456709007954734&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4c51ea25-6b66-4b2d-beb1-35dfea065fea">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4c51ea25-6b66-4b2d-beb1-35dfea065fea">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4c51ea25-6b66-4b2d-beb1-35dfea065fea" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 17, Barnack Trading Centre, Novers Hill, Bristol BS3 5QE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bristol City Kitchens and Bathrooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Novers Hill, Bristol BS3 5QE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7495 129625">📞 +44 7495 129625</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16818492334817123021&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="aa89dd61-b48b-474a-91fd-f93558a634a7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="aa89dd61-b48b-474a-91fd-f93558a634a7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="aa89dd61-b48b-474a-91fd-f93558a634a7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="212 Forest Rd., Bristol BS16 3QU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bathroom Fitting Bristol</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 212 Forest Rd., Bristol BS16 3QU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 463 0166">📞 +44 117 463 0166</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17540209055732927926&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f8213ead-a871-49c9-897d-599e4f84c229">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f8213ead-a871-49c9-897d-599e4f84c229">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f8213ead-a871-49c9-897d-599e4f84c229" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="67 Constitution St, Bristol, RI 02809, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bristol Home Improvement</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bristol, RI 02809, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7211844081829870445&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5fd0988d-6e37-44d5-9216-84440028ba96">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5fd0988d-6e37-44d5-9216-84440028ba96">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5fd0988d-6e37-44d5-9216-84440028ba96" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="211-213 North St, Bedminster, Bristol BS3 1JH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Angel Interiors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bedminster, Bristol BS3 1JH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 1275 595359">📞 +44 1275 595359</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16251126267854594728&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d830c2fc-f116-492f-b67e-9154c40c8584">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d830c2fc-f116-492f-b67e-9154c40c8584">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d830c2fc-f116-492f-b67e-9154c40c8584" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="88 Whiteladies Rd, Clifton, Bristol BS8 2QN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ripples Bristol</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Clifton, Bristol BS8 2QN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 973 1144">📞 +44 117 973 1144</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5556160241151218934&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f1a92569-140a-45b5-9504-6a3fcdff9faa">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f1a92569-140a-45b5-9504-6a3fcdff9faa">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f1a92569-140a-45b5-9504-6a3fcdff9faa" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="248 Oakland St, Bristol, CT 06010, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Henderson Residential LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bristol, CT 06010, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 860-805-3711">📞 +1 860-805-3711</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13798910298701137152&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="69b0b448-ade3-4b18-9bd1-2f1ee22e02b5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="69b0b448-ade3-4b18-9bd1-2f1ee22e02b5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="69b0b448-ade3-4b18-9bd1-2f1ee22e02b5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="25 Messenger St Ste 5, Plainville, MA 02762, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bristol Remodeling &amp; Construction</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Plainville, MA 02762, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 774-643-0130">📞 +1 774-643-0130</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3494290492123765078&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ca7e8921-e47b-47ef-a780-54d9f66fdc30">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ca7e8921-e47b-47ef-a780-54d9f66fdc30">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ca7e8921-e47b-47ef-a780-54d9f66fdc30" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="65 Farmington Valley Dr, Plainville, CT 06062, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Total Bath Systems</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Plainville, CT 06062, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 860-855-3524">📞 +1 860-855-3524</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5613092560399328099&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="35fb6b86-1dcb-414b-a344-4e05e0ecbbaf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="35fb6b86-1dcb-414b-a344-4e05e0ecbbaf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="35fb6b86-1dcb-414b-a344-4e05e0ecbbaf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="54-56 Redcliff St, Redcliffe, Bristol BS1 6LS, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bathroom Solutions Bristol</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Redcliffe, Bristol BS1 6LS, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 929 9227">📞 +44 117 929 9227</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15504274856962803579&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="eda81dda-beac-4f15-aff5-6c0a83ea1466">✓ Approve</button>
+          <button class="btn btn-reject" data-id="eda81dda-beac-4f15-aff5-6c0a83ea1466">✕ Reject</button>
+          <button class="btn btn-demo" data-id="eda81dda-beac-4f15-aff5-6c0a83ea1466" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="32 Gloucester Rd N, Bristol BS7 0SJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Little Bathroom and Boiler Company</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 32 Gloucester Rd N, Bristol BS7 0SJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 979 2860">📞 +44 117 979 2860</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18423932566184364266&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dd1fd397-0c8c-4eab-83b0-b7582280c492">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dd1fd397-0c8c-4eab-83b0-b7582280c492">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dd1fd397-0c8c-4eab-83b0-b7582280c492" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="52 Bristol Hill, Brislington, Bristol BS4 5AB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>JMI BATHROOMS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Brislington, Bristol BS4 5AB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 972 0171">📞 +44 117 972 0171</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=52302075973646985&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5156b68c-e3bd-4021-bb48-951ea55fe3da">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5156b68c-e3bd-4021-bb48-951ea55fe3da">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5156b68c-e3bd-4021-bb48-951ea55fe3da" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="156 Northfield Farm Ave, Edinburgh EH8 7QZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Edinburgh Bathrooms And Kitchens Company Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 156 Northfield Farm Ave, Edinburgh EH8 7QZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 665 8655">📞 +44 131 665 8655</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7159880680038507379&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ca5d37bf-fb5f-4603-bc7c-069e543755cc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ca5d37bf-fb5f-4603-bc7c-069e543755cc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ca5d37bf-fb5f-4603-bc7c-069e543755cc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="27 Lauriston St, West Lothian, Edinburgh EH3 9DQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Property Improve Ltd- kitchen &amp; bathroom fitting</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 West Lothian, Edinburgh EH3 9DQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 285 0708">📞 +44 131 285 0708</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11615637775405776911&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="25a19ca6-8794-43d2-8c10-2990f3451852">✓ Approve</button>
+          <button class="btn btn-reject" data-id="25a19ca6-8794-43d2-8c10-2990f3451852">✕ Reject</button>
+          <button class="btn btn-demo" data-id="25a19ca6-8794-43d2-8c10-2990f3451852" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="123 Comiston Rd, Edinburgh EH10 6AQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>KSB Bathrooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 123 Comiston Rd, Edinburgh EH10 6AQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 447 7765">📞 +44 131 447 7765</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14418386033097987288&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0a045d3b-1f5e-40ac-9996-d00764b61e19">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0a045d3b-1f5e-40ac-9996-d00764b61e19">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0a045d3b-1f5e-40ac-9996-d00764b61e19" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="3F1, Third Floor, 3 Hill St, Edinburgh EH2 3JP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>FORAZZI BATHROOMS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3 Hill St, Edinburgh EH2 3JP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 141 673 5737">📞 +44 141 673 5737</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8403287718346216877&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f6401257-a8cc-4395-9c5b-15ebae3e6b35">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f6401257-a8cc-4395-9c5b-15ebae3e6b35">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f6401257-a8cc-4395-9c5b-15ebae3e6b35" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="6 Millar Pl, Edinburgh EH10 5HJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Lothian bathrooms ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 6 Millar Pl, Edinburgh EH10 5HJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7859 008755">📞 +44 7859 008755</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13559517396701125394&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="954ac775-2a97-4c9f-88f8-f337d863c244">✓ Approve</button>
+          <button class="btn btn-reject" data-id="954ac775-2a97-4c9f-88f8-f337d863c244">✕ Reject</button>
+          <button class="btn btn-demo" data-id="954ac775-2a97-4c9f-88f8-f337d863c244" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="83 Peffer Pl, Edinburgh EH16 4BB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Newtown Renovations Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 83 Peffer Pl, Edinburgh EH16 4BB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 661 6714">📞 +44 131 661 6714</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9184231842002131791&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e9c14483-4f23-4d8c-989d-8fa4c5ea956c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e9c14483-4f23-4d8c-989d-8fa4c5ea956c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e9c14483-4f23-4d8c-989d-8fa4c5ea956c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="15 Calton Rd, Edinburgh EH8 8EQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bathroom Renovations Edinburgh l Bathroom Installers</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 15 Calton Rd, Edinburgh EH8 8EQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 639 0238">📞 +44 131 639 0238</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5881500181035635722&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="85965611-6bb8-425b-815a-7470c578de3b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="85965611-6bb8-425b-815a-7470c578de3b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="85965611-6bb8-425b-815a-7470c578de3b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="58 Warrender Park Rd, Edinburgh EH9 1EX, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Cedar Developments</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 58 Warrender Park Rd, Edinburgh EH9 1EX, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 202 9132">📞 +44 131 202 9132</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8001348545982387664&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4f32959e-4c92-4e65-8c67-027992135745">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4f32959e-4c92-4e65-8c67-027992135745">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4f32959e-4c92-4e65-8c67-027992135745" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="74 Belmont Rd, Juniper Green EH14 5ED, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Edinburgh Property Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 74 Belmont Rd, Juniper Green EH14 5ED, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7812 040799">📞 +44 7812 040799</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4447051515566870310&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c9c28a1d-8c9b-485c-b37b-174a368ef53a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c9c28a1d-8c9b-485c-b37b-174a368ef53a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c9c28a1d-8c9b-485c-b37b-174a368ef53a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="13 Essex Brae, Cramond, Edinburgh EH4 6LN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Cramond Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Cramond, Edinburgh EH4 6LN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 659 9193">📞 +44 131 659 9193</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14599297620313824829&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f0a4e31b-9a24-46b9-b629-2a5113f556ca">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f0a4e31b-9a24-46b9-b629-2a5113f556ca">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f0a4e31b-9a24-46b9-b629-2a5113f556ca" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Third Floor, 3 Hill St, Edinburgh EH3 2JP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Jacobsen Bathrooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3 Hill St, Edinburgh EH3 2JP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 381 5088">📞 +44 131 381 5088</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3747289339258959001&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6cf315fb-f609-42cc-9a3d-c2a226657660">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6cf315fb-f609-42cc-9a3d-c2a226657660">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6cf315fb-f609-42cc-9a3d-c2a226657660" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1 Esplanade Terrace, Edinburgh EH15 2ES, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>GSA Bathrooms LTD</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1 Esplanade Terrace, Edinburgh EH15 2ES, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7507 516392">📞 +44 7507 516392</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2242712842461464956&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="47904c95-259b-4994-a3d3-35a98a2ce4d4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="47904c95-259b-4994-a3d3-35a98a2ce4d4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="47904c95-259b-4994-a3d3-35a98a2ce4d4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5 S Charlotte St, Edinburgh EH2 4AN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Merit Property Solutions</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 5 S Charlotte St, Edinburgh EH2 4AN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8115897068247630634&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5e2d17c9-f964-4c32-a441-dfcd799e38f4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5e2d17c9-f964-4c32-a441-dfcd799e38f4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5e2d17c9-f964-4c32-a441-dfcd799e38f4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="8 Kew Terrace, Edinburgh EH12 5JE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Bathroom Company</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 8 Kew Terrace, Edinburgh EH12 5JE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 337 3355">📞 +44 131 337 3355</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1749849724471776180&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="46ab876d-3fad-4efe-a929-e22a261cfdc0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="46ab876d-3fad-4efe-a929-e22a261cfdc0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="46ab876d-3fad-4efe-a929-e22a261cfdc0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="28 Salamander St, Leith, Edinburgh EH6 7HZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Aspire Trade Services Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Leith, Edinburgh EH6 7HZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 555 2416">📞 +44 131 555 2416</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13385046738944925065&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="deb25689-327f-493c-a439-c5abef9f05a4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="deb25689-327f-493c-a439-c5abef9f05a4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="deb25689-327f-493c-a439-c5abef9f05a4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5 S Charlotte St, Edinburgh EH2 4AN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Professional Group Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 5 S Charlotte St, Edinburgh EH2 4AN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7842 162673">📞 +44 7842 162673</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7316148272956039875&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1407da27-d8d3-4fe7-8276-301b87d87154">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1407da27-d8d3-4fe7-8276-301b87d87154">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1407da27-d8d3-4fe7-8276-301b87d87154" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Units 7, 8 Spey St, Edinburgh EH7 4PY, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>All About Baths</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 8 Spey St, Edinburgh EH7 4PY, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 555 4316">📞 +44 131 555 4316</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8720501530086095253&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d66f96e6-0973-4b84-8c97-8426ee32289d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d66f96e6-0973-4b84-8c97-8426ee32289d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d66f96e6-0973-4b84-8c97-8426ee32289d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="8 Albany St, Edinburgh EH1 3QB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tip Top Renovator Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 8 Albany St, Edinburgh EH1 3QB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7858 183526">📞 +44 7858 183526</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15849136386995169938&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ebf2883c-9c45-48bb-a153-aaf8272503ac">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ebf2883c-9c45-48bb-a153-aaf8272503ac">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ebf2883c-9c45-48bb-a153-aaf8272503ac" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="30 Canonmills, Edinburgh EH3 5LH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Napier Bathrooms &amp; Interiors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 30 Canonmills, Edinburgh EH3 5LH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 556 6166">📞 +44 131 556 6166</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8128536289692332159&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="219c19e5-33bc-4ee6-a074-dc62589563a4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="219c19e5-33bc-4ee6-a074-dc62589563a4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="219c19e5-33bc-4ee6-a074-dc62589563a4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Home Design HQ Showroom, 44-46 Savile St, Sheffield S4 7UD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>33 Designs Limited</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 44-46 Savile St, Sheffield S4 7UD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7375 693018">📞 +44 7375 693018</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4471014939734400780&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d26f444a-53ff-4b9e-829a-19d51b57c2f2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d26f444a-53ff-4b9e-829a-19d51b57c2f2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d26f444a-53ff-4b9e-829a-19d51b57c2f2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="125 Fraser Rd, Woodseats, Sheffield S8 0JJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Chris Shephard The Plumber</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Woodseats, Sheffield S8 0JJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7908 898827">📞 +44 7908 898827</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9184171581693344753&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="821a9658-f18d-4b35-ab5d-6ddc81b7b43b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="821a9658-f18d-4b35-ab5d-6ddc81b7b43b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="821a9658-f18d-4b35-ab5d-6ddc81b7b43b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="U6b/175 James Ruse Dr, Camellia NSW 2142, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Prestige Bathroom Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 U6b/175 James Ruse Dr, Camellia NSW 2142, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 402 121 111">📞 +61 402 121 111</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2496880108635274158&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d4bec973-d090-47a4-b152-00bc6e62b728">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d4bec973-d090-47a4-b152-00bc6e62b728">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d4bec973-d090-47a4-b152-00bc6e62b728" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 44/28 Crystal St, Waterloo NSW 2017, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Aussie Bathroom Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 44/28 Crystal St, Waterloo NSW 2017, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 414 802 755">📞 +61 414 802 755</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7782621452727496437&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9c4cb3e8-fbf6-4ae3-a87f-1060db401dbd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9c4cb3e8-fbf6-4ae3-a87f-1060db401dbd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9c4cb3e8-fbf6-4ae3-a87f-1060db401dbd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="18b Carrington Rd, Randwick NSW 2031, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>BEAU RENO</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 18b Carrington Rd, Randwick NSW 2031, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 2 9398 7226">📞 +61 2 9398 7226</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7403465935163914581&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7d8ade97-00c6-47fe-a1a2-09c5b1c9779d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7d8ade97-00c6-47fe-a1a2-09c5b1c9779d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7d8ade97-00c6-47fe-a1a2-09c5b1c9779d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 311/27 Hill Rd, Wentworth Point NSW 2127, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Jaym Bathroom Renovation Shower Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 311/27 Hill Rd, Wentworth Point NSW 2127, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 433 117 165">📞 +61 433 117 165</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2707324852395611148&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fa17387c-c15f-4ce0-8c21-29f56e40588a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fa17387c-c15f-4ce0-8c21-29f56e40588a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fa17387c-c15f-4ce0-8c21-29f56e40588a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="398 St Kilda Rd, St Kilda VIC 3182, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Parine Home Renovations Melbourne</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 398 St Kilda Rd, St Kilda VIC 3182, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 404 167 312">📞 +61 404 167 312</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18188508917499241849&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1a0c60b4-06db-430b-a2b7-a082244cdb6a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1a0c60b4-06db-430b-a2b7-a082244cdb6a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1a0c60b4-06db-430b-a2b7-a082244cdb6a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="80 Market St, South Melbourne VIC 3205, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Rebuiltt</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 80 Market St, South Melbourne VIC 3205, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 431 097 885">📞 +61 431 097 885</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15689377530744700012&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bb39ba7a-d179-49e8-82c6-5bc9b0a99c46">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bb39ba7a-d179-49e8-82c6-5bc9b0a99c46">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bb39ba7a-d179-49e8-82c6-5bc9b0a99c46" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="4-10/12 India St, Capalaba QLD 4157, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Gold Star Bathrooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 4-10/12 India St, Capalaba QLD 4157, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 1300 141 525">📞 +61 1300 141 525</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8372026072721494123&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="132d4ced-b251-43b3-9a13-e965ee37b978">✓ Approve</button>
+          <button class="btn btn-reject" data-id="132d4ced-b251-43b3-9a13-e965ee37b978">✕ Reject</button>
+          <button class="btn btn-demo" data-id="132d4ced-b251-43b3-9a13-e965ee37b978" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Eric Rd, Holland Park West QLD 4121, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>CK Plumbing &amp; Bathroom Renovations Brisbane</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Eric Rd, Holland Park West QLD 4121, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 432 420 145">📞 +61 432 420 145</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11957298124782740998&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7dc6fcb7-9572-43eb-baab-100d8cef4391">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7dc6fcb7-9572-43eb-baab-100d8cef4391">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7dc6fcb7-9572-43eb-baab-100d8cef4391" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5A/63 Paramount Dr, Wangara WA 6065, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Gia’s Bathroom &amp; Kitchen Renovations Perth</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 5A/63 Paramount Dr, Wangara WA 6065, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 6187 5150">📞 +61 8 6187 5150</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5316358602581046593&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0f5c3c2c-0b37-4b2a-963c-96205e30e5cb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0f5c3c2c-0b37-4b2a-963c-96205e30e5cb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0f5c3c2c-0b37-4b2a-963c-96205e30e5cb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
