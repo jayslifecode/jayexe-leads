@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-08-30</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-08-30</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">44</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="122 Victoria Rd, Drummoyne NSW 2047, Australia">122 Victoria Rd, Drummoyne NSW 2047, Australia</option><option value="129 Marchmont Rd, Edinburgh EH9 1HA, UK">129 Marchmont Rd, Edinburgh EH9 1HA, UK</option><option value="13 Comely Bank Row, Edinburgh EH4 1EA, UK">13 Comely Bank Row, Edinburgh EH4 1EA, UK</option><option value="14 King's Haugh, Edinburgh EH16 5UY, UK">14 King's Haugh, Edinburgh EH16 5UY, UK</option><option value="17 Church Hill Pl, Edinburgh EH10 4BE, UK">17 Church Hill Pl, Edinburgh EH10 4BE, UK</option><option value="2 Anderson Pl, Edinburgh EH6 5NP, UK">2 Anderson Pl, Edinburgh EH6 5NP, UK</option><option value="28 Cliff St, Glenelg East SA 5045, Australia">28 Cliff St, Glenelg East SA 5045, Australia</option><option value="3 Church Hill Pl, Edinburgh EH10 4BE, UK">3 Church Hill Pl, Edinburgh EH10 4BE, UK</option><option value="3/4 Bridge Rd, Hornsby NSW 2077, Australia">3/4 Bridge Rd, Hornsby NSW 2077, Australia</option><option value="31 Castle St, Edinburgh EH2 3DN, UK">31 Castle St, Edinburgh EH2 3DN, UK</option><option value="5 Graham St, Edinburgh EH6 5QN, UK">5 Graham St, Edinburgh EH6 5QN, UK</option><option value="51-57 Dalry Rd, Edinburgh EH11 2BX, UK">51-57 Dalry Rd, Edinburgh EH11 2BX, UK</option><option value="55 Salvado Rd, Subiaco WA 6008, Australia">55 Salvado Rd, Subiaco WA 6008, Australia</option><option value="6/135 Hector St W, Osborne Park WA 6017, Australia">6/135 Hector St W, Osborne Park WA 6017, Australia</option><option value="74/16 Victoria Ave, Castle Hill NSW 2154, Australia">74/16 Victoria Ave, Castle Hill NSW 2154, Australia</option><option value="835 Ecclesall Rd, Sheffield S11 8TH, UK">835 Ecclesall Rd, Sheffield S11 8TH, UK</option><option value="855 High St, Armadale VIC 3143, Australia">855 High St, Armadale VIC 3143, Australia</option><option value="Attercliffe, Sheffield S9 3RQ, UK">Attercliffe, Sheffield S9 3RQ, UK</option><option value="Attercliffe, Sheffield S9 3WZ, UK">Attercliffe, Sheffield S9 3WZ, UK</option><option value="Concord, ON L4K 2M7, Canada">Concord, ON L4K 2M7, Canada</option><option value="Crystal Peaks, Sheffield S20 7PJ, UK">Crystal Peaks, Sheffield S20 7PJ, UK</option><option value="Dryden Rd, Loanhead EH20 9LZ, UK">Dryden Rd, Loanhead EH20 9LZ, UK</option><option value="Etobicoke, ON M8Z 2Z2, Canada">Etobicoke, ON M8Z 2Z2, Canada</option><option value="Greenhill, Sheffield S8 7BP, UK">Greenhill, Sheffield S8 7BP, UK</option><option value="Grenoside, Sheffield S35 8ND, UK">Grenoside, Sheffield S35 8ND, UK</option><option value="Heeley, Sheffield S2 4HS, UK">Heeley, Sheffield S2 4HS, UK</option><option value="Heeley, Sheffield S2 4HT, UK">Heeley, Sheffield S2 4HT, UK</option><option value="Hillsborough, Sheffield S6 1PD, UK">Hillsborough, Sheffield S6 1PD, UK</option><option value="Intake, Sheffield S12 2AZ, UK">Intake, Sheffield S12 2AZ, UK</option><option value="Leith, Edinburgh EH6 4ER, UK">Leith, Edinburgh EH6 4ER, UK</option><option value="Meersbrook, Sheffield S8 9FT, UK">Meersbrook, Sheffield S8 9FT, UK</option><option value="Neepsend, Sheffield S3 8AU, UK">Neepsend, Sheffield S3 8AU, UK</option><option value="Newmarket, ON L3X 2P2, Canada">Newmarket, ON L3X 2P2, Canada</option><option value="North York, ON M2N 7E9, Canada">North York, ON M2N 7E9, Canada</option><option value="Sharrow, Sheffield S11 8XB, UK">Sharrow, Sheffield S11 8XB, UK</option><option value="Sighthill, Edinburgh EH11 4DT, UK">Sighthill, Edinburgh EH11 4DT, UK</option><option value="Toronto, ON M4P 1E4, Canada">Toronto, ON M4P 1E4, Canada</option><option value="Toronto, ON M6G 2W9, Canada">Toronto, ON M6G 2W9, Canada</option><option value="Vaughan, ON L4K 2Z7, Canada">Vaughan, ON L4K 2Z7, Canada</option><option value="West Lothian, Edinburgh EH3 9DQ, UK">West Lothian, Edinburgh EH3 9DQ, UK</option><option value="Woodseats, Sheffield S8 8QG, UK">Woodseats, Sheffield S8 8QG, UK</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">44</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="41 Chauncey Ave, Etobicoke, ON M8Z 2Z2, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Art Metal Workshop - Railings, Gates, Fences</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Etobicoke, ON M8Z 2Z2, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-848-4588">📞 +1 416-848-4588</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16778866612954994533&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="451235df-ea93-4b3e-96f2-13e8dffac98e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="451235df-ea93-4b3e-96f2-13e8dffac98e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="451235df-ea93-4b3e-96f2-13e8dffac98e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="74/16 Victoria Ave, Castle Hill NSW 2154, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hills Flooring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 74/16 Victoria Ave, Castle Hill NSW 2154, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 2 8677 8847">📞 +61 2 8677 8847</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16625476278990244095&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7543b13a-b1c3-4763-b405-ed145120ff56">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7543b13a-b1c3-4763-b405-ed145120ff56">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7543b13a-b1c3-4763-b405-ed145120ff56" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="8001 Jane St #3, Concord, ON L4K 2M7, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Home Design Flooring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Concord, ON L4K 2M7, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 905-532-9992">📞 +1 905-532-9992</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12435078163682494876&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f376072f-a0b8-4f3d-9060-5587e488a188">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f376072f-a0b8-4f3d-9060-5587e488a188">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f376072f-a0b8-4f3d-9060-5587e488a188" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="550 Menczel Crescent, Newmarket, ON L3X 2P2, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Professional Tile Installation, Tile Reno Expert</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Newmarket, ON L3X 2P2, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-354-7482">📞 +1 647-354-7482</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17007423387824965888&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a9ddf2ef-6d64-450f-bc24-80a6dad5c9ff">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a9ddf2ef-6d64-450f-bc24-80a6dad5c9ff">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a9ddf2ef-6d64-450f-bc24-80a6dad5c9ff" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="2300 Yonge St, Toronto, ON M4P 1E4, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Elevate Home Renovation Toronto | Kitchen Basement Bathroom Renovation</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M4P 1E4, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-492-4115">📞 +1 647-492-4115</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8765547602383221227&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="94fd14da-7ce2-49dc-9f7e-d4fbe60811c8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="94fd14da-7ce2-49dc-9f7e-d4fbe60811c8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="94fd14da-7ce2-49dc-9f7e-d4fbe60811c8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="5000 Yonge St Unit# 1901-A, North York, ON M2N 7E9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Easy Renovation | Condo, Kitchen &amp; Bathroom Renovation</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 North York, ON M2N 7E9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-660-9543">📞 +1 647-660-9543</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7345564243904811057&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5de6e5d5-6461-49de-b836-29b5b6fac2fe">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5de6e5d5-6461-49de-b836-29b5b6fac2fe">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5de6e5d5-6461-49de-b836-29b5b6fac2fe" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="823 Manning Ave Unit 2, Toronto, ON M6G 2W9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kristal Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6G 2W9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 437-849-7576">📞 +1 437-849-7576</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11655671401214568658&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="011e0605-19d6-460d-bfe0-1afc2fac2acf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="011e0605-19d6-460d-bfe0-1afc2fac2acf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="011e0605-19d6-460d-bfe0-1afc2fac2acf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="13 Comely Bank Row, Edinburgh EH4 1EA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Stockbridge Kitchens and Carpentry Co</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 13 Comely Bank Row, Edinburgh EH4 1EA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7308 292292">📞 +44 7308 292292</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=671787032024265247&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f1617fc0-aa21-4ae2-ab8b-af95c977aaea">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f1617fc0-aa21-4ae2-ab8b-af95c977aaea">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f1617fc0-aa21-4ae2-ab8b-af95c977aaea" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="Unit 45, Imex Business Centre, Dryden Rd, Loanhead EH20 9LZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Pentland Kitchen Company | Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dryden Rd, Loanhead EH20 9LZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 440 0403">📞 +44 131 440 0403</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16588560343206717704&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d501bda2-5c6f-4588-bfb1-f3623c605f4d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d501bda2-5c6f-4588-bfb1-f3623c605f4d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d501bda2-5c6f-4588-bfb1-f3623c605f4d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="Unit 3, Block 3, Peffermill Industrial Estate, 14 King's Haugh, Edinburgh EH16 5UY, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>J&amp;D Kitchen Makeovers</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 14 King's Haugh, Edinburgh EH16 5UY, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 203 3803">📞 +44 131 203 3803</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14589752837597985506&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="94faccc9-169e-49fc-8162-ce57b2880c18">✓ Approve</button>
+          <button class="btn btn-reject" data-id="94faccc9-169e-49fc-8162-ce57b2880c18">✕ Reject</button>
+          <button class="btn btn-demo" data-id="94faccc9-169e-49fc-8162-ce57b2880c18" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="2 Anderson Pl, Edinburgh EH6 5NP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>David John &amp; Son Kitchens Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 2 Anderson Pl, Edinburgh EH6 5NP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7725 477446">📞 +44 7725 477446</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14134221581594305602&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c0c145da-840d-4af1-9483-14e849115038">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c0c145da-840d-4af1-9483-14e849115038">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c0c145da-840d-4af1-9483-14e849115038" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="51-57 Dalry Rd, Edinburgh EH11 2BX, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kitchens Defined by Colin Wong</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 51-57 Dalry Rd, Edinburgh EH11 2BX, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 337 2579">📞 +44 131 337 2579</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14932544931756512708&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a8b02587-142f-4521-b2dc-6320a1cdeb2e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a8b02587-142f-4521-b2dc-6320a1cdeb2e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a8b02587-142f-4521-b2dc-6320a1cdeb2e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="31 Castle St, Edinburgh EH2 3DN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Harvey Jones Kitchens Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 31 Castle St, Edinburgh EH2 3DN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 225 2950">📞 +44 131 225 2950</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17420514285072756913&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="576abd45-2782-4d15-a8fa-4e8e28997d11">✓ Approve</button>
+          <button class="btn btn-reject" data-id="576abd45-2782-4d15-a8fa-4e8e28997d11">✕ Reject</button>
+          <button class="btn btn-demo" data-id="576abd45-2782-4d15-a8fa-4e8e28997d11" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="27 Lauriston St, West Lothian, Edinburgh EH3 9DQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MJ Joinery (Scot) Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 West Lothian, Edinburgh EH3 9DQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7770 755894">📞 +44 7770 755894</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17143096503315465453&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="820d4999-4ea0-42d7-931b-40f5df53401f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="820d4999-4ea0-42d7-931b-40f5df53401f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="820d4999-4ea0-42d7-931b-40f5df53401f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="3 Church Hill Pl, Edinburgh EH10 4BE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Countryside Kitchens &amp; Interiors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3 Church Hill Pl, Edinburgh EH10 4BE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 447 9353">📞 +44 131 447 9353</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10316166781584430085&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a94a9a96-7425-4f29-9938-ce88bab9c1b7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a94a9a96-7425-4f29-9938-ce88bab9c1b7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a94a9a96-7425-4f29-9938-ce88bab9c1b7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="129 Marchmont Rd, Edinburgh EH9 1HA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Kitchen Depot, Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 129 Marchmont Rd, Edinburgh EH9 1HA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 385 1010">📞 +44 131 385 1010</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=239043198759583947&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="76d8e66f-821f-4bb2-80d5-688ae37688cb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="76d8e66f-821f-4bb2-80d5-688ae37688cb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="76d8e66f-821f-4bb2-80d5-688ae37688cb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="17 Church Hill Pl, Edinburgh EH10 4BE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kutchenhaus Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 17 Church Hill Pl, Edinburgh EH10 4BE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 563 3172">📞 +44 131 563 3172</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5289263954857485762&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1849600b-d162-4f43-8648-7ff0c549c258">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1849600b-d162-4f43-8648-7ff0c549c258">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1849600b-d162-4f43-8648-7ff0c549c258" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="8 Bankhead Crossway N, Sighthill, Edinburgh EH11 4DT, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ashley Ann Kitchens | Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sighthill, Edinburgh EH11 4DT, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 661 1630">📞 +44 131 661 1630</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3024741132634930709&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cbf61084-729c-40eb-a0f2-85949a7ad1d2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cbf61084-729c-40eb-a0f2-85949a7ad1d2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cbf61084-729c-40eb-a0f2-85949a7ad1d2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="5 Graham St, Edinburgh EH6 5QN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>City Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 5 Graham St, Edinburgh EH6 5QN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 278 3394">📞 +44 131 278 3394</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7197748581077833056&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9966179a-e5d4-4374-8b76-4c1d1a84c316">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9966179a-e5d4-4374-8b76-4c1d1a84c316">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9966179a-e5d4-4374-8b76-4c1d1a84c316" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="6 N Leith Sands, Leith, Edinburgh EH6 4ER, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kitchens By Nick McNally</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Leith, Edinburgh EH6 4ER, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 297 3917">📞 +44 131 297 3917</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4081877127214563567&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e157b4ff-9a93-4e50-b594-c503fecd7822">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e157b4ff-9a93-4e50-b594-c503fecd7822">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e157b4ff-9a93-4e50-b594-c503fecd7822" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Millennium House, 30 Junction Rd, Sharrow, Sheffield S11 8XB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Designer Kitchen Direct</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sharrow, Sheffield S11 8XB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 349 1454">📞 +44 114 349 1454</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4412594325786377551&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f3d4ccae-427d-4503-af66-2c6965bd30d9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f3d4ccae-427d-4503-af66-2c6965bd30d9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f3d4ccae-427d-4503-af66-2c6965bd30d9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="42 Bingham Rd, Woodseats, Sheffield S8 8QG, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>TrueFit Kitchen Fitters Sheffield</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Woodseats, Sheffield S8 8QG, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 463 0225">📞 +44 114 463 0225</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16479821830759987803&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="11823256-f420-4321-99bb-8100acad140c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="11823256-f420-4321-99bb-8100acad140c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="11823256-f420-4321-99bb-8100acad140c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="835 Ecclesall Rd, Sheffield S11 8TH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kitchen Craft Design Sheffield</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 835 Ecclesall Rd, Sheffield S11 8TH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 266 3663">📞 +44 114 266 3663</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3580003734022694194&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="50f6c223-80d3-4fcf-8fb9-04953b9d25b3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="50f6c223-80d3-4fcf-8fb9-04953b9d25b3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="50f6c223-80d3-4fcf-8fb9-04953b9d25b3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="738 Attercliffe Rd, Attercliffe, Sheffield S9 3RQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Xclusive Kitchens - Media walls and Electric Fire</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Attercliffe, Sheffield S9 3RQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 327 3535">📞 +44 114 327 3535</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4284421527073719922&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b2b0816a-9e1e-4aa7-967c-3797462e28e2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b2b0816a-9e1e-4aa7-967c-3797462e28e2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b2b0816a-9e1e-4aa7-967c-3797462e28e2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="86 Blacksmith Ln, Grenoside, Sheffield S35 8ND, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kitchen Experts Sheffield</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Grenoside, Sheffield S35 8ND, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14508906354578564249&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="62ab4d35-ab67-4650-aa27-b5950113361e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="62ab4d35-ab67-4650-aa27-b5950113361e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="62ab4d35-ab67-4650-aa27-b5950113361e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 2a, Hillsborough Trade Point, Rawson Spring Rd, Hillsborough, Sheffield S6 1PD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sheffield Kitchen Outlet</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hillsborough, Sheffield S6 1PD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 233 8975">📞 +44 114 233 8975</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14401990749284670727&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0adda096-6ff9-45cd-8004-9a9d63bda4d4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0adda096-6ff9-45cd-8004-9a9d63bda4d4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0adda096-6ff9-45cd-8004-9a9d63bda4d4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="621-627 London Rd, Heeley, Sheffield S2 4HT, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Kitchen Gallery Sheffield</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Heeley, Sheffield S2 4HT, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 258 3899">📞 +44 114 258 3899</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11857782774322616036&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="86a313cf-8f2d-49c6-9193-cc3d9c9343e5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="86a313cf-8f2d-49c6-9193-cc3d9c9343e5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="86a313cf-8f2d-49c6-9193-cc3d9c9343e5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="17, Kingfisher Works, Neepsend Ln, Neepsend, Sheffield S3 8AU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sheffield Kitchen Supplies</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Neepsend, Sheffield S3 8AU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 273 7524">📞 +44 114 273 7524</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7987238624117861064&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="51f84768-3a4a-4542-a751-61a691fbdf12">✓ Approve</button>
+          <button class="btn btn-reject" data-id="51f84768-3a4a-4542-a751-61a691fbdf12">✕ Reject</button>
+          <button class="btn btn-demo" data-id="51f84768-3a4a-4542-a751-61a691fbdf12" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit A4 Stevenson Way, Attercliffe, Sheffield S9 3WZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sheffield Solid Surfaces</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Attercliffe, Sheffield S9 3WZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 243 6568">📞 +44 114 243 6568</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14140554978726753419&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0abddcd9-776d-412d-8ee7-829dbb9538f3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0abddcd9-776d-412d-8ee7-829dbb9538f3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0abddcd9-776d-412d-8ee7-829dbb9538f3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Gordon Works, 49 Valley Rd, Meersbrook, Sheffield S8 9FT, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>CDS Kitchens</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Meersbrook, Sheffield S8 9FT, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7872 641422">📞 +44 7872 641422</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8871194785722521086&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a0a7402e-58db-42c8-abc0-01f3eb5c3036">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a0a7402e-58db-42c8-abc0-01f3eb5c3036">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a0a7402e-58db-42c8-abc0-01f3eb5c3036" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="577-609 London Rd, Heeley, Sheffield S2 4HS, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Square German Kitchens at Ponsford</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Heeley, Sheffield S2 4HS, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 251 4561">📞 +44 114 251 4561</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=22569639338804795&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c342c065-fed9-4bf0-b9f2-0cb66fdec511">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c342c065-fed9-4bf0-b9f2-0cb66fdec511">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c342c065-fed9-4bf0-b9f2-0cb66fdec511" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2 Woodhouse Rd, Intake, Sheffield S12 2AZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Corner Kitchens Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Intake, Sheffield S12 2AZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 253 1777">📞 +44 114 253 1777</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2195555295613668894&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fc125d40-6b76-405e-b1c2-9a5351b2c704">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fc125d40-6b76-405e-b1c2-9a5351b2c704">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fc125d40-6b76-405e-b1c2-9a5351b2c704" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit H3, Crystal Peaks, Sheffield S20 7PJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>German Häcker Kitchens by Kitchen Craft Design Sheffield</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Crystal Peaks, Sheffield S20 7PJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 268 0147">📞 +44 114 268 0147</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5101626362245402418&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="709a6288-4e35-44a7-851d-e5567b74da55">✓ Approve</button>
+          <button class="btn btn-reject" data-id="709a6288-4e35-44a7-851d-e5567b74da55">✕ Reject</button>
+          <button class="btn btn-demo" data-id="709a6288-4e35-44a7-851d-e5567b74da55" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="208 Bocking Ln, Greenhill, Sheffield S8 7BP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>German Kitchen Outlet Sheffield</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Greenhill, Sheffield S8 7BP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 308 0390">📞 +44 114 308 0390</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3309840576161448700&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a9226485-b9e7-45ca-9f28-71325727b1fd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a9226485-b9e7-45ca-9f28-71325727b1fd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a9226485-b9e7-45ca-9f28-71325727b1fd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="3/4 Bridge Rd, Hornsby NSW 2077, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sydney Styles Bathrooms and Kitchens - Hornsby</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3/4 Bridge Rd, Hornsby NSW 2077, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 2 8411 2958">📞 +61 2 8411 2958</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5510741751223901378&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dfd597e2-f23c-4c62-9441-0ea3fd689d71">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dfd597e2-f23c-4c62-9441-0ea3fd689d71">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dfd597e2-f23c-4c62-9441-0ea3fd689d71" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="122 Victoria Rd, Drummoyne NSW 2047, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Eurolife Kitchens</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 122 Victoria Rd, Drummoyne NSW 2047, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 2 9719 8977">📞 +61 2 9719 8977</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15747752899594287686&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8ca1d42c-6145-4fce-a307-3353a673683d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8ca1d42c-6145-4fce-a307-3353a673683d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8ca1d42c-6145-4fce-a307-3353a673683d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="855 High St, Armadale VIC 3143, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>GIA Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 855 High St, Armadale VIC 3143, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 1300 442 736">📞 +61 1300 442 736</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5655340690061838857&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c0fc54fc-477c-428a-a7d4-bf87aed93e84">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c0fc54fc-477c-428a-a7d4-bf87aed93e84">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c0fc54fc-477c-428a-a7d4-bf87aed93e84" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="6/135 Hector St W, Osborne Park WA 6017, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>WA Kitchens</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 6/135 Hector St W, Osborne Park WA 6017, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 423 970 213">📞 +61 423 970 213</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16305586774805958068&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="aa377b2a-4534-432a-b1ea-fd86b137ab3b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="aa377b2a-4534-432a-b1ea-fd86b137ab3b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="aa377b2a-4534-432a-b1ea-fd86b137ab3b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Homebase, 55 Salvado Rd, Subiaco WA 6008, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Renovate Kitchen &amp; Interiors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 55 Salvado Rd, Subiaco WA 6008, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 9386 0033">📞 +61 8 9386 0033</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2735287203186537265&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a24aeec5-0998-452f-9afd-a9ecf66a9184">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a24aeec5-0998-452f-9afd-a9ecf66a9184">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a24aeec5-0998-452f-9afd-a9ecf66a9184" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="28 Cliff St, Glenelg East SA 5045, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>BATHROOMS &amp; KITCHENS SA</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 28 Cliff St, Glenelg East SA 5045, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 414 644 773">📞 +61 414 644 773</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6718897365259717611&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="15c81e14-55df-4c36-9db3-64aac0bf05ef">✓ Approve</button>
+          <button class="btn btn-reject" data-id="15c81e14-55df-4c36-9db3-64aac0bf05ef">✕ Reject</button>
+          <button class="btn btn-demo" data-id="15c81e14-55df-4c36-9db3-64aac0bf05ef" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5000 Yonge St Unit# 1901-A, North York, ON M2N 7E9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Easy Renovation | Condo, Kitchen &amp; Bathroom Renovation</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 North York, ON M2N 7E9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-660-9543">📞 +1 647-660-9543</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7345564243904811057&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="362a5520-f70b-4171-a925-fa31d43a039a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="362a5520-f70b-4171-a925-fa31d43a039a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="362a5520-f70b-4171-a925-fa31d43a039a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2300 Yonge St, Toronto, ON M4P 1E4, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Elevate Home Renovation Toronto | Kitchen Basement Bathroom Renovation</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M4P 1E4, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-492-4115">📞 +1 647-492-4115</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8765547602383221227&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="16030c4b-cfb0-45c0-8c5a-88b16b13b97a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="16030c4b-cfb0-45c0-8c5a-88b16b13b97a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="16030c4b-cfb0-45c0-8c5a-88b16b13b97a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="823 Manning Ave Unit 2, Toronto, ON M6G 2W9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kristal Renovations</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6G 2W9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 437-849-7576">📞 +1 437-849-7576</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11655671401214568658&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="971a8616-bb99-41f7-8d7e-98e055ebd8ea">✓ Approve</button>
+          <button class="btn btn-reject" data-id="971a8616-bb99-41f7-8d7e-98e055ebd8ea">✕ Reject</button>
+          <button class="btn btn-demo" data-id="971a8616-bb99-41f7-8d7e-98e055ebd8ea" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="20 Staffern Dr #4, Vaughan, ON L4K 2Z7, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Neo Kitchen</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vaughan, ON L4K 2Z7, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 905-660-7788">📞 +1 905-660-7788</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6484898109285106535&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d190bfd4-ef15-465b-8dde-913321e1e82f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d190bfd4-ef15-465b-8dde-913321e1e82f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d190bfd4-ef15-465b-8dde-913321e1e82f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
