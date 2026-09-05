@@ -1,0 +1,3189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-09-05</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-09-05</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">74</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="1 Pearson St, Parafield Gardens SA 5107, Australia">1 Pearson St, Parafield Gardens SA 5107, Australia</option><option value="105 Sir Donald Bradman Dr, Hilton SA 5033, Australia">105 Sir Donald Bradman Dr, Hilton SA 5033, Australia</option><option value="11 Kings Ct, Adelaide SA 5000, Australia">11 Kings Ct, Adelaide SA 5000, Australia</option><option value="155 Payneham Rd, St Peters SA 5069, Australia">155 Payneham Rd, St Peters SA 5069, Australia</option><option value="203 Richmond Rd, Richmond SA 5033, Australia">203 Richmond Rd, Richmond SA 5033, Australia</option><option value="21 Croydon Rd, Keswick SA 5035, Australia">21 Croydon Rd, Keswick SA 5035, Australia</option><option value="226 Hampstead Rd, Clearview SA 5085, Australia">226 Hampstead Rd, Clearview SA 5085, Australia</option><option value="236 Glen Osmond Rd, Fullarton SA 5063, Australia">236 Glen Osmond Rd, Fullarton SA 5063, Australia</option><option value="25 Magill Rd, Stepney SA 5069, Australia">25 Magill Rd, Stepney SA 5069, Australia</option><option value="253 Diagonal Rd, Warradale SA 5046, Australia">253 Diagonal Rd, Warradale SA 5046, Australia</option><option value="47/49 Elizabeth St, Norwood SA 5067, Australia">47/49 Elizabeth St, Norwood SA 5067, Australia</option><option value="617 Goodwood Rd, Panorama SA 5041, Australia">617 Goodwood Rd, Panorama SA 5041, Australia</option><option value="Birman Cres, Flagstaff Hill SA 5159, Australia">Birman Cres, Flagstaff Hill SA 5159, Australia</option><option value="Bonner Str. 50, 53173 Bonn, Germany">Bonner Str. 50, 53173 Bonn, Germany</option><option value="Burnaby, BC V5A 2G9, Canada">Burnaby, BC V5A 2G9, Canada</option><option value="Calgary, AB T3B 0M8, Canada">Calgary, AB T3B 0M8, Canada</option><option value="Calgary, AB T3B 6J1, Canada">Calgary, AB T3B 6J1, Canada</option><option value="Calgary, AB T3E 6L1, Canada">Calgary, AB T3E 6L1, Canada</option><option value="Calgary, AB T3G 4P8, Canada">Calgary, AB T3G 4P8, Canada</option><option value="Dernburgstraße 23B, 14057 Berlin, Germany">Dernburgstraße 23B, 14057 Berlin, Germany</option><option value="Drygalski-Allee 33c, 81477 München, Germany">Drygalski-Allee 33c, 81477 München, Germany</option><option value="Durham, NC 27713, USA">Durham, NC 27713, USA</option><option value="Etobicoke, ON M8V 0A3, Canada">Etobicoke, ON M8V 0A3, Canada</option><option value="Etobicoke, ON M8V 0J1, Canada">Etobicoke, ON M8V 0J1, Canada</option><option value="Etobicoke, ON M8Z 0G3, Canada">Etobicoke, ON M8Z 0G3, Canada</option><option value="Eversbuschstraße 29, 80999 München, Germany">Eversbuschstraße 29, 80999 München, Germany</option><option value="Ganghoferstraße 19a, 82216 Maisach, Germany">Ganghoferstraße 19a, 82216 Maisach, Germany</option><option value="Hanover, PA 17331, USA">Hanover, PA 17331, USA</option><option value="Isabellastraße 28, 80796 München, Germany">Isabellastraße 28, 80796 München, Germany</option><option value="Karlsburger Str. 63, 81829 München, Germany">Karlsburger Str. 63, 81829 München, Germany</option><option value="Landsberger Str. 155, 80687 München, Germany">Landsberger Str. 155, 80687 München, Germany</option><option value="Lochhamer Str. 78, 81477 München-Thalkirchen-Obersendling-Forstenried-Fürstenried-Solln, Germany">Lochhamer Str. 78, 81477 München-Thalkirchen-Obersendling-Forstenried-Fürstenried-Solln, Germany</option><option value="Milford, CT 06460, USA">Milford, CT 06460, USA</option><option value="Mississauga, ON L4W 5K3, Canada">Mississauga, ON L4W 5K3, Canada</option><option value="Montréal, QC H2N 2C9, Canada">Montréal, QC H2N 2C9, Canada</option><option value="Montréal, QC H4E 1A5, Canada">Montréal, QC H4E 1A5, Canada</option><option value="Montréal-Nord, QC H1H 2C5, Canada">Montréal-Nord, QC H1H 2C5, Canada</option><option value="Moosacher Str. 82a, 80809 München, Germany">Moosacher Str. 82a, 80809 München, Germany</option><option value="Newtown, CT 06470, USA">Newtown, CT 06470, USA</option><option value="North York, ON M2H 2X1, Canada">North York, ON M2H 2X1, Canada</option><option value="North York, ON M2N 1L8, Canada">North York, ON M2N 1L8, Canada</option><option value="Ottawa, ON K2J 3T4, Canada">Ottawa, ON K2J 3T4, Canada</option><option value="Ottawa, ON K2P 2C8, Canada">Ottawa, ON K2P 2C8, Canada</option><option value="Ottawa, ON K2S 2W5, Canada">Ottawa, ON K2S 2W5, Canada</option><option value="Richmond, ON K0A 2Z0, Canada">Richmond, ON K0A 2Z0, Canada</option><option value="Ridgefield, WA 98642, USA">Ridgefield, WA 98642, USA</option><option value="Saint-Bruno-de-Montarville, QC J3V 5S1, Canada">Saint-Bruno-de-Montarville, QC J3V 5S1, Canada</option><option value="Saint-Léonard, QC H1P 3E6, Canada">Saint-Léonard, QC H1P 3E6, Canada</option><option value="Scarborough, ON M1C 1M3, Canada">Scarborough, ON M1C 1M3, Canada</option><option value="Scarborough, ON M1W 2H1, Canada">Scarborough, ON M1W 2H1, Canada</option><option value="Toronto, ON M5A 1T1, Canada">Toronto, ON M5A 1T1, Canada</option><option value="Toronto, ON M5H 2V6, Canada">Toronto, ON M5H 2V6, Canada</option><option value="Toronto, ON M5J 2H7, Canada">Toronto, ON M5J 2H7, Canada</option><option value="Toronto, ON M5T 1A5, Canada">Toronto, ON M5T 1A5, Canada</option><option value="Toronto, ON M5T 1X5, Canada">Toronto, ON M5T 1X5, Canada</option><option value="Toronto, ON M5V 2G5, Canada">Toronto, ON M5V 2G5, Canada</option><option value="Toronto, ON M6G 1A1, Canada">Toronto, ON M6G 1A1, Canada</option><option value="Toronto, ON M6G 1M5, Canada">Toronto, ON M6G 1M5, Canada</option><option value="Toronto, ON M6K 0B3, Canada">Toronto, ON M6K 0B3, Canada</option><option value="Toronto, ON M6K 1X9, Canada">Toronto, ON M6K 1X9, Canada</option><option value="Toronto, ON M6R 2M3, Canada">Toronto, ON M6R 2M3, Canada</option><option value="Unit 4/65 Stephens Ave, Torrensville SA 5031, Australia">Unit 4/65 Stephens Ave, Torrensville SA 5031, Australia</option><option value="Vancouver, WA 98660, USA">Vancouver, WA 98660, USA</option><option value="Vancouver, WA 98661, USA">Vancouver, WA 98661, USA</option><option value="Vancouver, WA 98682, USA">Vancouver, WA 98682, USA</option><option value="Vancouver, WA 98683, USA">Vancouver, WA 98683, USA</option><option value="Vancouver, WA 98685, USA">Vancouver, WA 98685, USA</option><option value="Vaughan, ON L4J 0G7, Canada">Vaughan, ON L4J 0G7, Canada</option><option value="West Haven, CT 06516, USA">West Haven, CT 06516, USA</option><option value="West Vancouver, BC V7T 1A2, Canada">West Vancouver, BC V7T 1A2, Canada</option><option value="Woodbridge, ON L4L 5Y8, Canada">Woodbridge, ON L4L 5Y8, Canada</option><option value="Zielstattstraße 37, 81379 München, Germany">Zielstattstraße 37, 81379 München, Germany</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">74</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="360 Bay St. Unit 600, Toronto, ON M5H 2V6, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>1Click Energy Solutions (formerly 1Click Heating and Cooling)</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M5H 2V6, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 800-458-1289">📞 +1 800-458-1289</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11008423087685840632&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c43e443d-4149-4f00-9894-64c1f619696c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c43e443d-4149-4f00-9894-64c1f619696c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c43e443d-4149-4f00-9894-64c1f619696c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="4060 Rue Monselet, Montréal-Nord, QC H1H 2C5, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Beaudar Électrique</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Montréal-Nord, QC H1H 2C5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 514-825-9063">📞 +1 514-825-9063</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=268575869593985819&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="33c3893f-10ce-49dd-81c1-0feea1416fa3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="33c3893f-10ce-49dd-81c1-0feea1416fa3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="33c3893f-10ce-49dd-81c1-0feea1416fa3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="4200 Rue Saint-Patrick, Montréal, QC H4E 1A5, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>VanLife Campers - Montréal</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Montréal, QC H4E 1A5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 514-903-1995">📞 +1 514-903-1995</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7971837275162878335&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0b455a45-8c75-472f-92fa-532bb5b2b12c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0b455a45-8c75-472f-92fa-532bb5b2b12c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0b455a45-8c75-472f-92fa-532bb5b2b12c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="3785 McBean St, Richmond, ON K0A 2Z0, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SunShine Solar Power Inc.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Richmond, ON K0A 2Z0, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 343-548-2182">📞 +1 343-548-2182</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13909482040895290905&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="eaf4e1d2-d451-4ace-8a6b-45bc4d5e36e0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="eaf4e1d2-d451-4ace-8a6b-45bc4d5e36e0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="eaf4e1d2-d451-4ace-8a6b-45bc4d5e36e0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="Landsberger Str. 155, 80687 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Alteon GmbH</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Landsberger Str. 155, 80687 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 54558277">📞 +49 89 54558277</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7568658310223144986&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="01e9d248-13cb-47a7-8c1b-2ae5d1958dac">✓ Approve</button>
+          <button class="btn btn-reject" data-id="01e9d248-13cb-47a7-8c1b-2ae5d1958dac">✕ Reject</button>
+          <button class="btn btn-demo" data-id="01e9d248-13cb-47a7-8c1b-2ae5d1958dac" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="Ganghoferstraße 19a, 82216 Maisach, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sonnenvermittler24</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ganghoferstraße 19a, 82216 Maisach, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 176 62248896">📞 +49 176 62248896</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7486753481642938916&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bf2e550b-d9cd-4f9d-8ea6-b6447f4a1618">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bf2e550b-d9cd-4f9d-8ea6-b6447f4a1618">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bf2e550b-d9cd-4f9d-8ea6-b6447f4a1618" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="Isabellastraße 28, 80796 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Solardet GmbH</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Isabellastraße 28, 80796 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 1517 0085695">📞 +49 1517 0085695</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8728041652627729179&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="40849c82-2317-4653-be6f-ea28b3221462">✓ Approve</button>
+          <button class="btn btn-reject" data-id="40849c82-2317-4653-be6f-ea28b3221462">✕ Reject</button>
+          <button class="btn btn-demo" data-id="40849c82-2317-4653-be6f-ea28b3221462" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="Karlsburger Str. 63, 81829 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Deine Solarwelt GmbH</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Karlsburger Str. 63, 81829 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 248813740">📞 +49 89 248813740</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12463212512891862506&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="100a5a4f-9d68-4202-8d30-5ecc3717c6da">✓ Approve</button>
+          <button class="btn btn-reject" data-id="100a5a4f-9d68-4202-8d30-5ecc3717c6da">✕ Reject</button>
+          <button class="btn btn-demo" data-id="100a5a4f-9d68-4202-8d30-5ecc3717c6da" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="1550 S Gateway Rd #307, Mississauga, ON L4W 5K3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>QuickJunkPro</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Mississauga, ON L4W 5K3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-760-0066">📞 +1 647-760-0066</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5672232513585985969&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="836f82d1-7d8f-4363-aec2-e8237f5a4cd8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="836f82d1-7d8f-4363-aec2-e8237f5a4cd8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="836f82d1-7d8f-4363-aec2-e8237f5a4cd8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="1220 Main St Suite 427, Vancouver, WA 98660, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Clean Slate Hauling And Junk Removal Vancouver</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vancouver, WA 98660, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 360-469-5802">📞 +1 360-469-5802</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12872162952740149720&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b66d031a-e8f0-4c7f-be73-53af3ad3c32a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b66d031a-e8f0-4c7f-be73-53af3ad3c32a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b66d031a-e8f0-4c7f-be73-53af3ad3c32a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="14000 SE Cascade Park Dr, Vancouver, WA 98683, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Haul Away Junk Removal LLC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vancouver, WA 98683, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 360-644-2692">📞 +1 360-644-2692</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15066645560609563911&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="32bb6142-22ef-47c8-b1bc-9e348dcc0195">✓ Approve</button>
+          <button class="btn btn-reject" data-id="32bb6142-22ef-47c8-b1bc-9e348dcc0195">✕ Reject</button>
+          <button class="btn btn-demo" data-id="32bb6142-22ef-47c8-b1bc-9e348dcc0195" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="248 Rue Kéroack, Saint-Bruno-de-Montarville, QC J3V 5S1, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ramasse Vite Rive-Sud | Service de débarras &amp; Junk Removal</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Saint-Bruno-de-Montarville, QC J3V 5S1, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 438-527-1701">📞 +1 438-527-1701</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18099176752485247947&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1e621b81-18df-49f6-9939-683f4d4f2131">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1e621b81-18df-49f6-9939-683f4d4f2131">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1e621b81-18df-49f6-9939-683f4d4f2131" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="Zielstattstraße 37, 81379 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>AstraCaB | Lastentaxi &amp; Transport München</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Zielstattstraße 37, 81379 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 1590 8311777">📞 +49 1590 8311777</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11441411268615781646&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="06f322fc-a795-4c75-b0fd-ab1a1a8185ed">✓ Approve</button>
+          <button class="btn btn-reject" data-id="06f322fc-a795-4c75-b0fd-ab1a1a8185ed">✕ Reject</button>
+          <button class="btn btn-demo" data-id="06f322fc-a795-4c75-b0fd-ab1a1a8185ed" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="3 Simm Ln Ste 1 c, Newtown, CT 06470, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>CT Mold Pros</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Newtown, CT 06470, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 203-920-0265">📞 +1 203-920-0265</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13599969108202141264&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6b40827a-2f44-4625-8c62-a6dedf29b0de">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6b40827a-2f44-4625-8c62-a6dedf29b0de">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6b40827a-2f44-4625-8c62-a6dedf29b0de" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="88 Farwell St, West Haven, CT 06516, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>BioClean</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 West Haven, CT 06516, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 203-283-3912">📞 +1 203-283-3912</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5624836257535264563&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6f289386-dba8-4cdd-81c9-34b272b1ba6f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6f289386-dba8-4cdd-81c9-34b272b1ba6f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6f289386-dba8-4cdd-81c9-34b272b1ba6f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="97 Buckingham Ave, Milford, CT 06460, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>911 Restoration of Connecticut</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Milford, CT 06460, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 203-208-7101">📞 +1 203-208-7101</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1070928965687214908&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="30872acc-1276-43f2-b010-8198a1007c65">✓ Approve</button>
+          <button class="btn btn-reject" data-id="30872acc-1276-43f2-b010-8198a1007c65">✕ Reject</button>
+          <button class="btn btn-demo" data-id="30872acc-1276-43f2-b010-8198a1007c65" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="Dernburgstraße 23B, 14057 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>KOCA Bau Berlin | Sanierung Berlin | Trockenbau Berlin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dernburgstraße 23B, 14057 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 1573 5155066">📞 +49 1573 5155066</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8463285745825598834&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7fc0a672-1b13-4852-828d-3ad0e0ae1969">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7fc0a672-1b13-4852-828d-3ad0e0ae1969">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7fc0a672-1b13-4852-828d-3ad0e0ae1969" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="Eversbuschstraße 29, 80999 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SchimmelExperte24</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Eversbuschstraße 29, 80999 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 172 3695715">📞 +49 172 3695715</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3757118248015492669&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cdbbd19b-8edc-4d4d-8911-35b549c018c1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cdbbd19b-8edc-4d4d-8911-35b549c018c1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cdbbd19b-8edc-4d4d-8911-35b549c018c1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="Moosacher Str. 82a, 80809 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Blue Detect München</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Moosacher Str. 82a, 80809 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 2060936003">📞 +49 89 2060936003</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15976269794245186509&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5b3616fd-f3e9-4bb0-a49e-8fae767a3a7e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5b3616fd-f3e9-4bb0-a49e-8fae767a3a7e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5b3616fd-f3e9-4bb0-a49e-8fae767a3a7e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="1 Center Square #5, Hanover, PA 17331, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mason-Dixon Restoration</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hanover, PA 17331, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 443-218-3295">📞 +1 443-218-3295</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15326371087428121001&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a4b7b779-0038-48f9-b25e-e0e06ca1d232">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a4b7b779-0038-48f9-b25e-e0e06ca1d232">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a4b7b779-0038-48f9-b25e-e0e06ca1d232" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="106 Capitola Dr, Durham, NC 27713, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>RestorePro Reconstruction</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Durham, NC 27713, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 919-804-8827">📞 +1 919-804-8827</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7857151811978741662&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a2299f6e-f5b8-4788-bfae-cfa6c1ebbb46">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a2299f6e-f5b8-4788-bfae-cfa6c1ebbb46">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a2299f6e-f5b8-4788-bfae-cfa6c1ebbb46" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Lochhamer Str. 78, 81477 München-Thalkirchen-Obersendling-Forstenried-Fürstenried-Solln, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Xero Bayern Stiftung</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Lochhamer Str. 78, 81477 München-Thalkirchen-Obersendling-Forstenried-Fürstenried-Solln, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 176 14936440">📞 +49 176 14936440</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15892309559079315237&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c46773e6-fe95-44a6-b91c-b208d3b844cc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c46773e6-fe95-44a6-b91c-b208d3b844cc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c46773e6-fe95-44a6-b91c-b208d3b844cc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="48 Scarboro Ave, Scarborough, ON M1C 1M3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Water Damage Scarborough</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Scarborough, ON M1C 1M3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-560-5316">📞 +1 647-560-5316</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1480798529062059912&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="10856341-6145-4790-ad59-a038370bb2b9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="10856341-6145-4790-ad59-a038370bb2b9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="10856341-6145-4790-ad59-a038370bb2b9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1108 NE 146th St Ste, G, Vancouver, WA 98685, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>USA Restoration - Water Damage Restoration</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vancouver, WA 98685, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 360-800-5322">📞 +1 360-800-5322</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1757549790072364323&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="89c66127-843a-4c93-9017-85e78ecae169">✓ Approve</button>
+          <button class="btn btn-reject" data-id="89c66127-843a-4c93-9017-85e78ecae169">✕ Reject</button>
+          <button class="btn btn-demo" data-id="89c66127-843a-4c93-9017-85e78ecae169" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="6101 NE 127th Ave #300, Vancouver, WA 98682, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Rainbow Restoration of North Vancouver</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vancouver, WA 98682, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 360-883-4463">📞 +1 360-883-4463</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14546750605438985400&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="791012b6-ffc2-4567-8ec1-42348a36e2c7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="791012b6-ffc2-4567-8ec1-42348a36e2c7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="791012b6-ffc2-4567-8ec1-42348a36e2c7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 4/65 Stephens Ave, Torrensville SA 5031, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Prestige Appliance Repair Centre</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 4/65 Stephens Ave, Torrensville SA 5031, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 8352 2022">📞 +61 8 8352 2022</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4495459853476671192&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="64b1a1d3-8048-4501-9e03-106e2330bbb4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="64b1a1d3-8048-4501-9e03-106e2330bbb4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="64b1a1d3-8048-4501-9e03-106e2330bbb4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="617 Goodwood Rd, Panorama SA 5041, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Adelaide Oven Repairs®</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 617 Goodwood Rd, Panorama SA 5041, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 411 377 955">📞 +61 411 377 955</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9498218736860197395&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7299fe2b-b114-4e61-a711-ea3c83e806ee">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7299fe2b-b114-4e61-a711-ea3c83e806ee">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7299fe2b-b114-4e61-a711-ea3c83e806ee" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="11 Kings Ct, Adelaide SA 5000, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Wise Appliance Service</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 11 Kings Ct, Adelaide SA 5000, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 7099 2271">📞 +61 8 7099 2271</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1838260676839480832&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2f631a97-1bad-43f7-a3c9-152be25bc0d3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2f631a97-1bad-43f7-a3c9-152be25bc0d3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2f631a97-1bad-43f7-a3c9-152be25bc0d3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="617 Goodwood Rd, Panorama SA 5041, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Adelaide Appliance Repairs®</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 617 Goodwood Rd, Panorama SA 5041, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 411 377 955">📞 +61 411 377 955</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10696965948197980962&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e9b7ee8a-ecd0-4c3c-95f8-267618ed6a2c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e9b7ee8a-ecd0-4c3c-95f8-267618ed6a2c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e9b7ee8a-ecd0-4c3c-95f8-267618ed6a2c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="226 Hampstead Rd, Clearview SA 5085, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>First Choice Washing Machine Repairs</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 226 Hampstead Rd, Clearview SA 5085, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 466 399 015">📞 +61 466 399 015</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10459025634667478223&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bebdca6c-d878-40b3-973e-ead51829b29e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bebdca6c-d878-40b3-973e-ead51829b29e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bebdca6c-d878-40b3-973e-ead51829b29e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="236 Glen Osmond Rd, Fullarton SA 5063, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Adelaide Appliance Gallery</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 236 Glen Osmond Rd, Fullarton SA 5063, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 8223 1146">📞 +61 8 8223 1146</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14970376406451974224&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4009eed1-abcb-452b-831d-bd6d71b6da97">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4009eed1-abcb-452b-831d-bd6d71b6da97">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4009eed1-abcb-452b-831d-bd6d71b6da97" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="203 Richmond Rd, Richmond SA 5033, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>AARI Refrigerator Repairs Adelaide &amp; Appliances</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 203 Richmond Rd, Richmond SA 5033, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 5122 5995">📞 +61 8 5122 5995</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4002379304092643245&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9238b25e-215a-4610-b4c4-70703bd40d69">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9238b25e-215a-4610-b4c4-70703bd40d69">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9238b25e-215a-4610-b4c4-70703bd40d69" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Birman Cres, Flagstaff Hill SA 5159, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Slades Appliance Service</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birman Cres, Flagstaff Hill SA 5159, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 418 803 114">📞 +61 418 803 114</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1133558496927077902&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="32b9a720-2745-4574-8820-c433968673f4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="32b9a720-2745-4574-8820-c433968673f4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="32b9a720-2745-4574-8820-c433968673f4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1 Pearson St, Parafield Gardens SA 5107, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>AK HOME APPLIANCE REPAIR PTY LTD</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1 Pearson St, Parafield Gardens SA 5107, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 478 954 466">📞 +61 478 954 466</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13735951076313593023&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e48fd0f1-02b8-4eb7-87fb-9fff8680002d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e48fd0f1-02b8-4eb7-87fb-9fff8680002d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e48fd0f1-02b8-4eb7-87fb-9fff8680002d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="25 Magill Rd, Stepney SA 5069, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Stepney Appliances</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 25 Magill Rd, Stepney SA 5069, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 8362 4160">📞 +61 8 8362 4160</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17070892659360349894&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bef6b798-70bf-4156-89fd-5085fe4f691d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bef6b798-70bf-4156-89fd-5085fe4f691d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bef6b798-70bf-4156-89fd-5085fe4f691d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="253 Diagonal Rd, Warradale SA 5046, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Warradale Appliance Service</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 253 Diagonal Rd, Warradale SA 5046, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 8296 3136">📞 +61 8 8296 3136</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15987729432537315277&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="52a9d256-9d61-46c8-944f-c26076378dcd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="52a9d256-9d61-46c8-944f-c26076378dcd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="52a9d256-9d61-46c8-944f-c26076378dcd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="21 Croydon Rd, Keswick SA 5035, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Samsung Priority Appliance Repairs Adelaide (NOT MOBILE PHONES)</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 21 Croydon Rd, Keswick SA 5035, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 7099 0122">📞 +61 8 7099 0122</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14882035485730307409&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="75acc81a-b924-47b5-9c53-fe1838fb7360">✓ Approve</button>
+          <button class="btn btn-reject" data-id="75acc81a-b924-47b5-9c53-fe1838fb7360">✕ Reject</button>
+          <button class="btn btn-demo" data-id="75acc81a-b924-47b5-9c53-fe1838fb7360" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="155 Payneham Rd, St Peters SA 5069, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mr Dishwasher</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 155 Payneham Rd, St Peters SA 5069, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 8 8223 1146">📞 +61 8 8223 1146</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10816618104339122582&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="498001c6-6066-426c-bd33-889d3a3e4b3a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="498001c6-6066-426c-bd33-889d3a3e4b3a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="498001c6-6066-426c-bd33-889d3a3e4b3a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="105 Sir Donald Bradman Dr, Hilton SA 5033, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Statewide Appliance Spares</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 105 Sir Donald Bradman Dr, Hilton SA 5033, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 1800 005 220">📞 +61 1800 005 220</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14141241515046023185&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="56cc867d-c7d2-49ba-9537-1f810df10695">✓ Approve</button>
+          <button class="btn btn-reject" data-id="56cc867d-c7d2-49ba-9537-1f810df10695">✕ Reject</button>
+          <button class="btn btn-demo" data-id="56cc867d-c7d2-49ba-9537-1f810df10695" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 5, 47/49 Elizabeth St, Norwood SA 5067, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>AA King Refrigeration</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 47/49 Elizabeth St, Norwood SA 5067, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 415 701 691">📞 +61 415 701 691</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8290681294038592341&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bdfa32f5-4f9b-4d8d-b6fd-66aa54f6eac6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bdfa32f5-4f9b-4d8d-b6fd-66aa54f6eac6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bdfa32f5-4f9b-4d8d-b6fd-66aa54f6eac6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="55 University Ave Unit 628, Toronto, ON M5J 2H7, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Appliance Repair Toronto</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M5J 2H7, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-642-1414">📞 +1 647-642-1414</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3626610283922128894&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="10fdd738-0d24-409e-8d6d-7fdfe0b2dc8d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="10fdd738-0d24-409e-8d6d-7fdfe0b2dc8d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="10fdd738-0d24-409e-8d6d-7fdfe0b2dc8d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="51 Wolseley St #311, Toronto, ON M5T 1A5, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Appliance Service Toronto</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M5T 1A5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-696-1777">📞 +1 647-696-1777</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7237760842861274929&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d8378b89-b8ba-4404-b188-d4f93128185c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d8378b89-b8ba-4404-b188-d4f93128185c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d8378b89-b8ba-4404-b188-d4f93128185c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="20 N Park Rd #215, Vaughan, ON L4J 0G7, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Repair in Toronto</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vaughan, ON L4J 0G7, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-922-8244">📞 +1 647-922-8244</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10683121250037850968&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ac60db5d-5c3f-4f9b-8b2c-77f87f585367">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ac60db5d-5c3f-4f9b-8b2c-77f87f585367">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ac60db5d-5c3f-4f9b-8b2c-77f87f585367" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="325 Bogert Ave Unit L2, North York, ON M2N 1L8, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Canada Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 North York, ON M2N 1L8, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-887-5839">📞 +1 416-887-5839</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15131959242119308829&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3aa55f18-258e-4f03-9235-713784b3fa7d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3aa55f18-258e-4f03-9235-713784b3fa7d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3aa55f18-258e-4f03-9235-713784b3fa7d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="30 Shore Breeze Dr Unit 6208, Etobicoke, ON M8V 0J1, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Promaster Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Etobicoke, ON M8V 0J1, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-575-6835">📞 +1 647-575-6835</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11175004078253323268&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="03e1f28e-10a0-4e0a-bc2b-2076ab1cc3c0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="03e1f28e-10a0-4e0a-bc2b-2076ab1cc3c0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="03e1f28e-10a0-4e0a-bc2b-2076ab1cc3c0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="460 College St Ste 431, Toronto, ON M6G 1A1, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Toronto Appliance Fixer</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6G 1A1, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-697-4437">📞 +1 647-697-4437</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9990926467265987861&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9cc36718-c939-4430-9d04-50205a160000">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9cc36718-c939-4430-9d04-50205a160000">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9cc36718-c939-4430-9d04-50205a160000" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="876 Bloor St W Back unit, Toronto, ON M6G 1M5, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Appliance Repairman</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6G 1M5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-692-3957">📞 +1 647-692-3957</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12832296691684587491&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a1a3c76b-b4dc-4923-be36-65ebb0957669">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a1a3c76b-b4dc-4923-be36-65ebb0957669">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a1a3c76b-b4dc-4923-be36-65ebb0957669" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="180 John St Office 418, Toronto, ON M5T 1X5, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>TrueFix Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M5T 1X5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-874-2990">📞 +1 647-874-2990</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8608701492389551000&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="046a8876-3988-4fbe-be73-7a8a050a7a9b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="046a8876-3988-4fbe-be73-7a8a050a7a9b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="046a8876-3988-4fbe-be73-7a8a050a7a9b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="384 Queen St E Unit 3, Toronto, ON M5A 1T1, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>EAS Repair &amp; Installation - Toronto</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M5A 1T1, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-956-6902">📞 +1 647-956-6902</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2416565157403878388&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e0dec9b2-8e00-4077-88d7-0c0d5ca9048a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e0dec9b2-8e00-4077-88d7-0c0d5ca9048a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e0dec9b2-8e00-4077-88d7-0c0d5ca9048a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="60 Atlantic Ave Ste 238, Toronto, ON M6K 1X9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Total Care Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6K 1X9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-308-8103">📞 +1 647-308-8103</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15014369158454487970&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="30657175-7dee-4627-b943-b2cf5ad8f569">✓ Approve</button>
+          <button class="btn btn-reject" data-id="30657175-7dee-4627-b943-b2cf5ad8f569">✕ Reject</button>
+          <button class="btn btn-demo" data-id="30657175-7dee-4627-b943-b2cf5ad8f569" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="80 Marine Parade Dr #2407, Etobicoke, ON M8V 0A3, Canada"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Onbudget Appliances Repairs</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Etobicoke, ON M8V 0A3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-865-5157">📞 +1 647-865-5157</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2972115543787838459&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="43db7030-54f9-4a38-b53a-288b6b967d79">✓ Approve</button>
+          <button class="btn btn-reject" data-id="43db7030-54f9-4a38-b53a-288b6b967d79">✕ Reject</button>
+          <button class="btn btn-demo" data-id="43db7030-54f9-4a38-b53a-288b6b967d79" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="7 Smith Crescent #216, Etobicoke, ON M8Z 0G3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Appliance Repair Shymon</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Etobicoke, ON M8Z 0G3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-822-4404">📞 +1 416-822-4404</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3746862301235505529&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9320eb88-df1c-45f6-99dd-a111a6ffa694">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9320eb88-df1c-45f6-99dd-a111a6ffa694">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9320eb88-df1c-45f6-99dd-a111a6ffa694" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="83 Peter St Unit 318, Toronto, ON M5V 2G5, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Appliance Fix Toronto</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M5V 2G5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-952-6464">📞 +1 647-952-6464</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12432527004577882545&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1787f665-2a12-4ba9-bab6-4de21c46a1a4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1787f665-2a12-4ba9-bab6-4de21c46a1a4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1787f665-2a12-4ba9-bab6-4de21c46a1a4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="60 Atlantic Ave Unit 201, Toronto, ON M6K 1X9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>East Liberty Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6K 1X9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-997-0494">📞 +1 416-997-0494</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15608175986393928108&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1cf6406f-143a-4a57-8ea1-a9c812a0e162">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1cf6406f-143a-4a57-8ea1-a9c812a0e162">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1cf6406f-143a-4a57-8ea1-a9c812a0e162" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="10 Calamint Ln. #52, Scarborough, ON M1W 2H1, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sam Appliance Repairs</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Scarborough, ON M1W 2H1, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 437-999-7571">📞 +1 437-999-7571</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1791328022808039812&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fcb3fa05-132f-4abc-af93-e89539feeee1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fcb3fa05-132f-4abc-af93-e89539feeee1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fcb3fa05-132f-4abc-af93-e89539feeee1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="141 Caster Ave, Woodbridge, ON L4L 5Y8, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kampen Appliance Service</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Woodbridge, ON L4L 5Y8, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 905-738-1687">📞 +1 905-738-1687</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12774911498247670369&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="01122732-d75e-4631-a07b-95ff6948a6e0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="01122732-d75e-4631-a07b-95ff6948a6e0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="01122732-d75e-4631-a07b-95ff6948a6e0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="395 Cherokee Blvd, North York, ON M2H 2X1, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Modern Appliance</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 North York, ON M2H 2X1, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-457-2152">📞 +1 416-457-2152</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=662759647627701259&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="819d93e1-69f3-447b-bf8f-64dfcba6a38e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="819d93e1-69f3-447b-bf8f-64dfcba6a38e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="819d93e1-69f3-447b-bf8f-64dfcba6a38e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="279A Roncesvalles Ave, Toronto, ON M6R 2M3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Certified Appliance Technician</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6R 2M3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-691-4006">📞 +1 647-691-4006</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10551172020111103389&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f2125442-0c5d-4d0a-ad55-3a2e2283b8df">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f2125442-0c5d-4d0a-ad55-3a2e2283b8df">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f2125442-0c5d-4d0a-ad55-3a2e2283b8df" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5 Hanna Ave Unit 311, Toronto, ON M6K 0B3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Liberty Appliances</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6K 0B3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-495-7171">📞 +1 647-495-7171</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16562782938632615469&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3dcaee87-880b-4701-a99e-b9dc82da321d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3dcaee87-880b-4701-a99e-b9dc82da321d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3dcaee87-880b-4701-a99e-b9dc82da321d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5500 NE Fourth Plain Blvd #43, Vancouver, WA 98661, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>USFix Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vancouver, WA 98661, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 360-836-0409">📞 +1 360-836-0409</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5219815333422701973&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1ad34ead-5e9c-4afc-88ac-c21f04d5f466">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1ad34ead-5e9c-4afc-88ac-c21f04d5f466">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1ad34ead-5e9c-4afc-88ac-c21f04d5f466" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="100 Park Royal S Unit 200, West Vancouver, BC V7T 1A2, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>High End Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 West Vancouver, BC V7T 1A2, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 778-654-7379">📞 +1 778-654-7379</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9371037924161275656&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="82b23191-3eea-494c-9edb-e38ff829d42c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="82b23191-3eea-494c-9edb-e38ff829d42c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="82b23191-3eea-494c-9edb-e38ff829d42c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="18 S Gee Creek Loop, Ridgefield, WA 98642, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>EasyFix - Appliance Repair Service</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ridgefield, WA 98642, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 360-800-6621">📞 +1 360-800-6621</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12653982434454477741&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8850ffea-8b0d-4405-9377-13b4923bb749">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8850ffea-8b0d-4405-9377-13b4923bb749">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8850ffea-8b0d-4405-9377-13b4923bb749" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="7228 Winston St #14, Burnaby, BC V5A 2G9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>TechVill Appliance Repair Vancouver</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Burnaby, BC V5A 2G9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 778-652-3614">📞 +1 778-652-3614</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10382198581838003264&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3c45f7f1-1976-42c3-b95f-b13900143539">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3c45f7f1-1976-42c3-b95f-b13900143539">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3c45f7f1-1976-42c3-b95f-b13900143539" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="4624 16 Ave NW Unit #C, Calgary, AB T3B 0M8, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Rocky View Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Calgary, AB T3B 0M8, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 587-848-3562">📞 +1 587-848-3562</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1416148220586661842&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2ba5843d-9ceb-45e3-881a-45ea98cf9f2c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2ba5843d-9ceb-45e3-881a-45ea98cf9f2c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2ba5843d-9ceb-45e3-881a-45ea98cf9f2c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="81 Greenbriar PI NW, Calgary, AB T3B 6J1, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>VM-Smart Solutions Inc</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Calgary, AB T3B 6J1, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 825-365-9698">📞 +1 825-365-9698</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6733021402766994794&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="36ed8195-34c0-4861-bf67-31e324358b4f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="36ed8195-34c0-4861-bf67-31e324358b4f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="36ed8195-34c0-4861-bf67-31e324358b4f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="4838 Richard Rd SW ste 300 office 8, Calgary, AB T3E 6L1, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>TechVill Appliance Repair Southwest</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Calgary, AB T3E 6L1, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 587-317-4327">📞 +1 587-317-4327</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14633693271680745113&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="57ef4fe1-7eba-4aea-a379-2a1277854eaa">✓ Approve</button>
+          <button class="btn btn-reject" data-id="57ef4fe1-7eba-4aea-a379-2a1277854eaa">✕ Reject</button>
+          <button class="btn btn-demo" data-id="57ef4fe1-7eba-4aea-a379-2a1277854eaa" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="14 Citadel Ridge Green NW, Calgary, AB T3G 4P8, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Able Appliance</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Calgary, AB T3G 4P8, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 587-840-7766">📞 +1 587-840-7766</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7833055017080071041&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d7ab0a1f-c910-40e6-95ed-e1b7ecf0c34f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d7ab0a1f-c910-40e6-95ed-e1b7ecf0c34f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d7ab0a1f-c910-40e6-95ed-e1b7ecf0c34f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="225 Rue Chabanel O #901, Montréal, QC H2N 2C9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Vite Fix Appliance</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Montréal, QC H2N 2C9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 514-613-5506">📞 +1 514-613-5506</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15564179786811892356&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bf6580ce-7cce-4565-b0b2-4c9e86bc342b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bf6580ce-7cce-4565-b0b2-4c9e86bc342b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bf6580ce-7cce-4565-b0b2-4c9e86bc342b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="9080 Boul Langelier, Saint-Léonard, QC H1P 3E6, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Montréal-electromenagers</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Saint-Léonard, QC H1P 3E6, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 438-391-8388">📞 +1 438-391-8388</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11039897860510166911&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="60c9b49a-cc31-491f-93b9-31df10af7f30">✓ Approve</button>
+          <button class="btn btn-reject" data-id="60c9b49a-cc31-491f-93b9-31df10af7f30">✕ Reject</button>
+          <button class="btn btn-demo" data-id="60c9b49a-cc31-491f-93b9-31df10af7f30" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="617 Taliesin Cres, Ottawa, ON K2S 2W5, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>NorthFix Appliance Repair</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ottawa, ON K2S 2W5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-625-4346">📞 +1 647-625-4346</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17186807000362440866&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="22ff866f-16dc-465d-9b94-fc917dfe3859">✓ Approve</button>
+          <button class="btn btn-reject" data-id="22ff866f-16dc-465d-9b94-fc917dfe3859">✕ Reject</button>
+          <button class="btn btn-demo" data-id="22ff866f-16dc-465d-9b94-fc917dfe3859" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="120 Garrity Crescent, Ottawa, ON K2J 3T4, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>DXB APPLIANCE REPAIR INC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ottawa, ON K2J 3T4, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 613-981-4994">📞 +1 613-981-4994</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5333011877349789179&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="74ceebcd-7478-47fc-a9a7-85d37c04641f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="74ceebcd-7478-47fc-a9a7-85d37c04641f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="74ceebcd-7478-47fc-a9a7-85d37c04641f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="415 MacLaren St unit 228, Ottawa, ON K2P 2C8, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ottawa Appliance Service</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ottawa, ON K2P 2C8, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 613-722-3550">📞 +1 613-722-3550</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8168629194434683787&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cf1500da-5842-4bfa-8edb-4d05202d86b0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cf1500da-5842-4bfa-8edb-4d05202d86b0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cf1500da-5842-4bfa-8edb-4d05202d86b0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Drygalski-Allee 33c, 81477 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SAB Hausgeräte</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Drygalski-Allee 33c, 81477 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 176 22083815">📞 +49 176 22083815</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2041728831752486872&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="28fcf09e-4877-4e42-a829-e8e25bd916d3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="28fcf09e-4877-4e42-a829-e8e25bd916d3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="28fcf09e-4877-4e42-a829-e8e25bd916d3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bonner Str. 50, 53173 Bonn, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hausgeräte Kundendienst Miesen</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bonner Str. 50, 53173 Bonn, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 228 346077">📞 +49 228 346077</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6631611863268268048&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dc446ca1-2a90-4fa0-8448-8a7e3a503caf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dc446ca1-2a90-4fa0-8448-8a7e3a503caf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dc446ca1-2a90-4fa0-8448-8a7e3a503caf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
