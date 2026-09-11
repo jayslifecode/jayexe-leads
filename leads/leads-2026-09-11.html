@@ -1,0 +1,3333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-09-11</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-09-11</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">78</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="2 Rue de Parme, 75009 Paris, France">2 Rue de Parme, 75009 Paris, France</option><option value="20, 00185 Roma RM, Italy">20, 00185 Roma RM, Italy</option><option value="28 Rue Monsieur le Prince, 75006 Paris, France">28 Rue Monsieur le Prince, 75006 Paris, France</option><option value="46 Av. George V, 75008 Paris, France">46 Av. George V, 75008 Paris, France</option><option value="49, 00193 Roma RM, Italy">49, 00193 Roma RM, Italy</option><option value="5 Sq. Auguste Renoir, 75014 Paris, France">5 Sq. Auguste Renoir, 75014 Paris, France</option><option value="87, 00186 Roma RM, Italy">87, 00186 Roma RM, Italy</option><option value="Admiralengracht 223, 1056 DX Amsterdam, Netherlands">Admiralengracht 223, 1056 DX Amsterdam, Netherlands</option><option value="Alboinstraße 18, 12103 Berlin-Bezirk Tempelhof-Schöneberg, Germany">Alboinstraße 18, 12103 Berlin-Bezirk Tempelhof-Schöneberg, Germany</option><option value="Alte Allee 13, 81245 München, Germany">Alte Allee 13, 81245 München, Germany</option><option value="Alte Schönhauser Str. 32B, 10119 Berlin, Germany">Alte Schönhauser Str. 32B, 10119 Berlin, Germany</option><option value="An d. Seepromenade 21, 16816 Neuruppin, Germany">An d. Seepromenade 21, 16816 Neuruppin, Germany</option><option value="Arabellastraße 6, 81925 München-Bogenhausen, Germany">Arabellastraße 6, 81925 München-Bogenhausen, Germany</option><option value="Bahrenfelder Str. 146, 22765 Hamburg, Germany">Bahrenfelder Str. 146, 22765 Hamburg, Germany</option><option value="Bartholomäusstraße 95, 22083 Hamburg-Nord, Germany">Bartholomäusstraße 95, 22083 Hamburg-Nord, Germany</option><option value="Bayerstraße 12, 80335 München, Germany">Bayerstraße 12, 80335 München, Germany</option><option value="Budapester Str. 45, 10787 Berlin, Germany">Budapester Str. 45, 10787 Berlin, Germany</option><option value="Bugenhagenstraße 8, 20095 Hamburg, Germany">Bugenhagenstraße 8, 20095 Hamburg, Germany</option><option value="Bülowstraße 56-57, 10783 Berlin-Bezirk Tempelhof-Schöneberg, Germany">Bülowstraße 56-57, 10783 Berlin-Bezirk Tempelhof-Schöneberg, Germany</option><option value="Centro, 28013 Madrid, Spain">Centro, 28013 Madrid, Spain</option><option value="Ella-Trebe-Straße 5, 10557 Berlin, Germany">Ella-Trebe-Straße 5, 10557 Berlin, Germany</option><option value="Feilitzschstraße 26, 80802 München-Schwabing-Freimann, Germany">Feilitzschstraße 26, 80802 München-Schwabing-Freimann, Germany</option><option value="Gabriele-Tergit-Promenade 17 a-d, 10963 Berlin, Germany">Gabriele-Tergit-Promenade 17 a-d, 10963 Berlin, Germany</option><option value="Gartenstraße 4, 10115 Berlin, Germany">Gartenstraße 4, 10115 Berlin, Germany</option><option value="Gràcia, 08012 Barcelona, Spain">Gràcia, 08012 Barcelona, Spain</option><option value="Hamburg, NY 14075, USA">Hamburg, NY 14075, USA</option><option value="Hardenbergstraße 28, 10623 Berlin-Bezirk Charlottenburg-Wilmersdorf, Germany">Hardenbergstraße 28, 10623 Berlin-Bezirk Charlottenburg-Wilmersdorf, Germany</option><option value="Hardenbergstraße 28/Floor 5, 10623 Berlin, Germany">Hardenbergstraße 28/Floor 5, 10623 Berlin, Germany</option><option value="Hausvogteipl. 11, 10117 Berlin, Germany">Hausvogteipl. 11, 10117 Berlin, Germany</option><option value="Josephspl. 4, 80798 München-Maxvorstadt, Germany">Josephspl. 4, 80798 München-Maxvorstadt, Germany</option><option value="Kanalstraße 9, 80538 München, Germany">Kanalstraße 9, 80538 München, Germany</option><option value="Kardinal-Faulhaber-Straße 1, 80333 München, Germany">Kardinal-Faulhaber-Straße 1, 80333 München, Germany</option><option value="Karlsruher Str. 20, 10711 Berlin-Bezirk Charlottenburg-Wilmersdorf, Germany">Karlsruher Str. 20, 10711 Berlin-Bezirk Charlottenburg-Wilmersdorf, Germany</option><option value="Konrad-Wolf-Straße 76, 13055 Berlin, Germany">Konrad-Wolf-Straße 76, 13055 Berlin, Germany</option><option value="Kurfürstendamm 146, 10709 Berlin, Germany">Kurfürstendamm 146, 10709 Berlin, Germany</option><option value="Landsberger Allee 106, 10369 Berlin, Germany">Landsberger Allee 106, 10369 Berlin, Germany</option><option value="Landsberger Str. 406, 81241 München, Germany">Landsberger Str. 406, 81241 München, Germany</option><option value="Langenfelder Damm 52, 22525 Hamburg-Eimsbüttel, Germany">Langenfelder Damm 52, 22525 Hamburg-Eimsbüttel, Germany</option><option value="Leopoldstraße 170, 80804 München-Schwabing-Freimann, Germany">Leopoldstraße 170, 80804 München-Schwabing-Freimann, Germany</option><option value="Lindenstraße 32, 83043 Bad Aibling, Germany">Lindenstraße 32, 83043 Bad Aibling, Germany</option><option value="Maria-Probst-Straße 22, 80939 München-Schwabing-Freimann, Germany">Maria-Probst-Straße 22, 80939 München-Schwabing-Freimann, Germany</option><option value="Marietta, GA 30067, USA">Marietta, GA 30067, USA</option><option value="Marlene-Dietrich-Platz 2, 10785 Berlin, Germany">Marlene-Dietrich-Platz 2, 10785 Berlin, Germany</option><option value="Mathildenstraße 5, 80336 München-Ludwigsvorstadt-Isarvorstadt, Germany">Mathildenstraße 5, 80336 München-Ludwigsvorstadt-Isarvorstadt, Germany</option><option value="Maximilianstraße 17, 80539 München, Germany">Maximilianstraße 17, 80539 München, Germany</option><option value="Maximilianstraße 17, 80539 München-Altstadt-Lehel, Germany">Maximilianstraße 17, 80539 München-Altstadt-Lehel, Germany</option><option value="Möckernstraße 10, 10963 Berlin-Bezirk Friedrichshain-Kreuzberg, Germany">Möckernstraße 10, 10963 Berlin-Bezirk Friedrichshain-Kreuzberg, Germany</option><option value="Neuer Jungfernstieg 9 14, 20354 Hamburg, Germany">Neuer Jungfernstieg 9 14, 20354 Hamburg, Germany</option><option value="Neuturmstraße 1, 80331 München, Germany">Neuturmstraße 1, 80331 München, Germany</option><option value="Orleansstraße 45, 81667 München-Au-Haidhausen, Germany">Orleansstraße 45, 81667 München-Au-Haidhausen, Germany</option><option value="Perusastraße 5, 80333 München-Altstadt-Lehel, Germany">Perusastraße 5, 80333 München-Altstadt-Lehel, Germany</option><option value="Potsdamer Str. 3, 10785 Berlin, Germany">Potsdamer Str. 3, 10785 Berlin, Germany</option><option value="Promenadepl. 2-6, 80333 München, Germany">Promenadepl. 2-6, 80333 München, Germany</option><option value="Rome, GA 30161, USA">Rome, GA 30161, USA</option><option value="Rome, GA 30165, USA">Rome, GA 30165, USA</option><option value="Rome, NY 13440, USA">Rome, NY 13440, USA</option><option value="Salamanca, 28001 Madrid, Spain">Salamanca, 28001 Madrid, Spain</option><option value="Sarrià-Sant Gervasi, 08006 Barcelona, Spain">Sarrià-Sant Gervasi, 08006 Barcelona, Spain</option><option value="Sarrià-Sant Gervasi, 08021 Barcelona, Spain">Sarrià-Sant Gervasi, 08021 Barcelona, Spain</option><option value="Siegesstraße 11, 80802 München, Germany">Siegesstraße 11, 80802 München, Germany</option><option value="Thermenallee 1-5, 85435 Erding, Germany">Thermenallee 1-5, 85435 Erding, Germany</option><option value="Tropical-Islands-Allee 1, 15910 Krausnick-Groß Wasserburg, Germany">Tropical-Islands-Allee 1, 15910 Krausnick-Groß Wasserburg, Germany</option><option value="Wirtstraße 1B, 81539 München-Untergiesing-Harlaching, Germany">Wirtstraße 1B, 81539 München-Untergiesing-Harlaching, Germany</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">78</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="6100 South Park Ave, Hamburg, NY 14075, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hamburg Twp Building Inspection</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hamburg, NY 14075, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 716-649-6111">📞 +1 716-649-6111</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7772094278752464522&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="43ac68bc-685f-411b-9f07-4d4b35b1db1b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="43ac68bc-685f-411b-9f07-4d4b35b1db1b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="43ac68bc-685f-411b-9f07-4d4b35b1db1b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="5 Sq. Auguste Renoir, 75014 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Homediag - diagnostic immobilier Paris</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 5 Sq. Auguste Renoir, 75014 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 6 29 54 64 46">📞 +33 6 29 54 64 46</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11471328242569374274&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b42abeaa-cd46-4a1c-834e-2b185f12edcb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b42abeaa-cd46-4a1c-834e-2b185f12edcb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b42abeaa-cd46-4a1c-834e-2b185f12edcb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="Gartenstraße 4, 10115 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>click &amp; surr</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Gartenstraße 4, 10115 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 51657165">📞 +49 30 51657165</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14306307137558865018&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a6d6bc41-627a-4730-971e-6f38080f9e7d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a6d6bc41-627a-4730-971e-6f38080f9e7d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a6d6bc41-627a-4730-971e-6f38080f9e7d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="Alte Schönhauser Str. 32B, 10119 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>FOTOIMPEX GmbH</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Alte Schönhauser Str. 32B, 10119 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 33631 64590">📞 +49 33631 64590</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5226384386241535678&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0abed69a-fa40-437e-9215-1a36668d795f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0abed69a-fa40-437e-9215-1a36668d795f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0abed69a-fa40-437e-9215-1a36668d795f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="367 Dodd Blvd SE, Rome, GA 30161, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Alarms plus</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30161, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-506-0050">📞 +1 706-506-0050</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17487562339429364514&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="57c2a9fc-cb0a-4e1c-82b4-1e6d35b07573">✓ Approve</button>
+          <button class="btn btn-reject" data-id="57c2a9fc-cb0a-4e1c-82b4-1e6d35b07573">✕ Reject</button>
+          <button class="btn btn-demo" data-id="57c2a9fc-cb0a-4e1c-82b4-1e6d35b07573" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="2470 Windy Hill Rd SE Suite 300, Marietta, GA 30067, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Edge CCTV Business Security Cameras</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Marietta, GA 30067, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 678-883-0999">📞 +1 678-883-0999</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11294947603754537080&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="972250f7-cc0b-43f3-a953-b8307dab7ac2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="972250f7-cc0b-43f3-a953-b8307dab7ac2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="972250f7-cc0b-43f3-a953-b8307dab7ac2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="Kanalstraße 9, 80538 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>ChrisGeo Friseure</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kanalstraße 9, 80538 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 80001707">📞 +49 89 80001707</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3623188011638928972&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cc1ac018-2430-4cfc-b518-386467a5a3f9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cc1ac018-2430-4cfc-b518-386467a5a3f9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cc1ac018-2430-4cfc-b518-386467a5a3f9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="Langenfelder Damm 52, 22525 Hamburg-Eimsbüttel, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Prime Cut &amp; Beauty</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Langenfelder Damm 52, 22525 Hamburg-Eimsbüttel, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 40 22605933">📞 +49 40 22605933</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17462339297565575361&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6dd2586b-79ce-4806-8c09-919a621ac24d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6dd2586b-79ce-4806-8c09-919a621ac24d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6dd2586b-79ce-4806-8c09-919a621ac24d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="Carrer de Balmes, 255, Sarrià-Sant Gervasi, 08006 Barcelona, Spain"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>ALMA Hair Spa Saló - Perruqueria</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sarrià-Sant Gervasi, 08006 Barcelona, Spain</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+34 657 71 62 22">📞 +34 657 71 62 22</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1224965181871614186&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f5b6f3db-9367-4da6-a2d9-452f1023b807">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f5b6f3db-9367-4da6-a2d9-452f1023b807">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f5b6f3db-9367-4da6-a2d9-452f1023b807" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="Via dei Cappellari, 87, 00186 Roma RM, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Salone87</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 87, 00186 Roma RM, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 06 3937 7053">📞 +39 06 3937 7053</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17084673115834915781&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="26a1e0bd-48df-4ac0-9e70-17f4253caa2d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="26a1e0bd-48df-4ac0-9e70-17f4253caa2d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="26a1e0bd-48df-4ac0-9e70-17f4253caa2d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="Via Giovanni Pierluigi da Palestrina, 49, 00193 Roma RM, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Andrea Borrelli Saloon, Hairstylist &amp; Beauty Roma Prati - Extension</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 49, 00193 Roma RM, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 375 793 8011">📞 +39 375 793 8011</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18332553782046729239&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7db5da20-25c8-4008-9f0e-0916a730a11b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7db5da20-25c8-4008-9f0e-0916a730a11b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7db5da20-25c8-4008-9f0e-0916a730a11b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="Siegesstraße 11, 80802 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Di One Nails&amp;Beauty Room</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Siegesstraße 11, 80802 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 160 4250694">📞 +49 160 4250694</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13118568167802770752&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0a6f6575-5d92-46a1-9f0e-9c1b6ca80534">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0a6f6575-5d92-46a1-9f0e-9c1b6ca80534">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0a6f6575-5d92-46a1-9f0e-9c1b6ca80534" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="Bahrenfelder Str. 146, 22765 Hamburg, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Glam Nails Altona</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bahrenfelder Str. 146, 22765 Hamburg, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 40 28802737">📞 +49 40 28802737</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11032835287020954806&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cde8ce5c-678a-44f6-be19-f6a0823fe62b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cde8ce5c-678a-44f6-be19-f6a0823fe62b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cde8ce5c-678a-44f6-be19-f6a0823fe62b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="Carrer de Ferran Agulló, 6, Sarrià-Sant Gervasi, 08021 Barcelona, Spain"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MVK BARCELONA</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sarrià-Sant Gervasi, 08021 Barcelona, Spain</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+34 936 94 06 90">📞 +34 936 94 06 90</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2106632216077540856&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fa4f8d6a-fd98-46b9-ab3f-ee9462dada72">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fa4f8d6a-fd98-46b9-ab3f-ee9462dada72">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fa4f8d6a-fd98-46b9-ab3f-ee9462dada72" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="Cost.ª de los Ángeles, 11, Centro, Centro, 28013 Madrid, Spain"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>LMB Nail TECH&amp;MUA| Manicura rusa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Centro, 28013 Madrid, Spain</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+34 642 79 11 91">📞 +34 642 79 11 91</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13126839204798163843&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c60324d8-7826-4f08-bdf9-1c9fdd0d3ffd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c60324d8-7826-4f08-bdf9-1c9fdd0d3ffd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c60324d8-7826-4f08-bdf9-1c9fdd0d3ffd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="Village Shopping Center, 834 Turner McCall Blvd, Rome, GA 30161, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>A &amp; T Nails</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30161, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-204-7067">📞 +1 706-204-7067</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17787954759360485337&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="33940007-5d48-4bee-ad1e-1e33fc70344a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="33940007-5d48-4bee-ad1e-1e33fc70344a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="33940007-5d48-4bee-ad1e-1e33fc70344a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="164 Shorter Ave NW, Rome, GA 30165, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>California Nails</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-234-3338">📞 +1 706-234-3338</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2043914262311758007&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d7dbdedb-bc82-4b3d-91a1-d84a55c2e1a4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d7dbdedb-bc82-4b3d-91a1-d84a55c2e1a4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d7dbdedb-bc82-4b3d-91a1-d84a55c2e1a4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="2501 Callier Springs Rd SE, Rome, GA 30161, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Oh So Gorgeous Beauty</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30161, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-506-9240">📞 +1 706-506-9240</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14262406793906201413&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="45c76fdc-e9ff-48e8-9db2-1c553d4404d6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="45c76fdc-e9ff-48e8-9db2-1c553d4404d6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="45c76fdc-e9ff-48e8-9db2-1c553d4404d6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="2448 Shorter Ave NW #2, Rome, GA 30165, USA"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sunny Nail</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-234-5766">📞 +1 706-234-5766</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1636432274485796491&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ce8de70d-3098-4fc5-8e7b-d446402be78d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ce8de70d-3098-4fc5-8e7b-d446402be78d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ce8de70d-3098-4fc5-8e7b-d446402be78d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="2 Sheridan Dr NW, Rome, GA 30165, USA"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Natural Nails</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-295-5559">📞 +1 706-295-5559</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11462775239994539232&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1c95cdd5-ca30-48d0-8229-5a34ddbf4e9c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1c95cdd5-ca30-48d0-8229-5a34ddbf4e9c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1c95cdd5-ca30-48d0-8229-5a34ddbf4e9c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="128 Broad St, Rome, GA 30161, USA"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ivy Nails</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30161, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-378-2229">📞 +1 706-378-2229</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10789705150934012672&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4213f668-52ae-415b-a36b-eb6c33c76ace">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4213f668-52ae-415b-a36b-eb6c33c76ace">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4213f668-52ae-415b-a36b-eb6c33c76ace" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1724 Black River Blvd N, Rome, NY 13440, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Rome Nail And Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, NY 13440, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 315-533-5279">📞 +1 315-533-5279</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17778074810996306791&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9bf6e398-d0e4-4599-9e8c-ca39049e3bb2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9bf6e398-d0e4-4599-9e8c-ca39049e3bb2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9bf6e398-d0e4-4599-9e8c-ca39049e3bb2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1917 Black River Blvd N, Rome, NY 13440, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fashion Nail &amp; Pedicure Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, NY 13440, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 315-336-3706">📞 +1 315-336-3706</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16295073917952617644&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2655c692-860c-4dff-b25d-63c5817fb3fb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2655c692-860c-4dff-b25d-63c5817fb3fb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2655c692-860c-4dff-b25d-63c5817fb3fb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1721 Black River Blvd, Rome, NY 13440, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Jenny K Nails</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, NY 13440, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 315-533-6547">📞 +1 315-533-6547</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11786072124005067490&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="49622c1c-5c3c-4e8b-8bf6-ebdf18b5fd19">✓ Approve</button>
+          <button class="btn btn-reject" data-id="49622c1c-5c3c-4e8b-8bf6-ebdf18b5fd19">✕ Reject</button>
+          <button class="btn btn-demo" data-id="49622c1c-5c3c-4e8b-8bf6-ebdf18b5fd19" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1850 Redmond Cir, Rome, GA 30165, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Perfect Nails</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 762-327-6830">📞 +1 762-327-6830</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17724851563459693326&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ba899852-0894-472a-bb05-1ad88f1b6536">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ba899852-0894-472a-bb05-1ad88f1b6536">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ba899852-0894-472a-bb05-1ad88f1b6536" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2204 Shorter Ave NW, Rome, GA 30165, USA"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Best Nails Salon</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-235-5696">📞 +1 706-235-5696</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10490187068984947953&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2f731e35-3aa2-4392-ab9b-edab0b0857a6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2f731e35-3aa2-4392-ab9b-edab0b0857a6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2f731e35-3aa2-4392-ab9b-edab0b0857a6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Next to Food Lion, 3363 Martha Berry Hwy, Rome, GA 30165, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Galaxy Nails / Eyesbylinda</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-378-0996">📞 +1 706-378-0996</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17960239967967669297&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ba981cd7-a0a9-4f72-ab5a-f8e782b514c8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ba981cd7-a0a9-4f72-ab5a-f8e782b514c8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ba981cd7-a0a9-4f72-ab5a-f8e782b514c8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1443 Turner McCall Blvd, Rome, GA 30161, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>USA Nail Bar</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30161, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-234-2126">📞 +1 706-234-2126</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4275465472580354031&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a4346c18-17b8-48ef-a4b7-abf2ed701e06">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a4346c18-17b8-48ef-a4b7-abf2ed701e06">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a4346c18-17b8-48ef-a4b7-abf2ed701e06" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2807 Martha Berry Hwy, Rome, GA 30165, USA"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>LC Nails</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-234-7300">📞 +1 706-234-7300</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2799912004883260193&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5bd35395-79fe-4bd1-ab30-bec3076f5efa">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5bd35395-79fe-4bd1-ab30-bec3076f5efa">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5bd35395-79fe-4bd1-ab30-bec3076f5efa" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="435 Turner McCall Blvd NE, Rome, GA 30165, USA"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Luxury Nail Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-204-8625">📞 +1 706-204-8625</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2079583484296381119&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="122b1e6e-13a7-4083-9590-2517dab0f832">✓ Approve</button>
+          <button class="btn btn-reject" data-id="122b1e6e-13a7-4083-9590-2517dab0f832">✕ Reject</button>
+          <button class="btn btn-demo" data-id="122b1e6e-13a7-4083-9590-2517dab0f832" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="859 Cartersville Hwy SE, Rome, GA 30161, USA"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>US Nails Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30161, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 762-235-4533">📞 +1 762-235-4533</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11165856954146926193&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f1acc277-cef1-4663-96ac-0ee84576ca49">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f1acc277-cef1-4663-96ac-0ee84576ca49">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f1acc277-cef1-4663-96ac-0ee84576ca49" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Möckernstraße 10, 10963 Berlin-Bezirk Friedrichshain-Kreuzberg, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Liquidrom</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Möckernstraße 10, 10963 Berlin-Bezirk Friedrichshain-Kreuzberg, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10591614365506981835&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cb0b17b9-4ecf-456b-9a76-bad06a3ec1fe">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cb0b17b9-4ecf-456b-9a76-bad06a3ec1fe">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cb0b17b9-4ecf-456b-9a76-bad06a3ec1fe" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Kurfürstendamm 146, 10709 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MyWellness Berlin Wilmersdorf</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kurfürstendamm 146, 10709 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5561668074671407383&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f0e06b91-e820-4fad-8197-4738ffa0f9d8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f0e06b91-e820-4fad-8197-4738ffa0f9d8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f0e06b91-e820-4fad-8197-4738ffa0f9d8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="ONO Spa im THE MANDALA HOTEL, Potsdamer Str. 3, 10785 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>ONO Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Potsdamer Str. 3, 10785 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 590051100">📞 +49 30 590051100</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3689178310434673482&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d6304bf4-2a3e-4f66-92b9-4758799118b7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d6304bf4-2a3e-4f66-92b9-4758799118b7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d6304bf4-2a3e-4f66-92b9-4758799118b7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Alboinstraße 18, 12103 Berlin-Bezirk Tempelhof-Schöneberg, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>wellnest Berlin - euer privates Spa in Schöneberg</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Alboinstraße 18, 12103 Berlin-Bezirk Tempelhof-Schöneberg, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 201 45844600">📞 +49 201 45844600</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17996640194348247065&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d27b81fc-da49-489b-9db6-2327bf933d5c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d27b81fc-da49-489b-9db6-2327bf933d5c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d27b81fc-da49-489b-9db6-2327bf933d5c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Tropical-Islands-Allee 1, 15910 Krausnick-Groß Wasserburg, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tropical Islands</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Tropical-Islands-Allee 1, 15910 Krausnick-Groß Wasserburg, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 35477 605050">📞 +49 35477 605050</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2311620472337317265&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d4ec4a6f-e073-4fae-b7d9-7d626a286b77">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d4ec4a6f-e073-4fae-b7d9-7d626a286b77">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d4ec4a6f-e073-4fae-b7d9-7d626a286b77" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hardenbergstraße 28/Floor 5, 10623 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Waldorf Astoria Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hardenbergstraße 28/Floor 5, 10623 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 8140002950">📞 +49 30 8140002950</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=68306573005289489&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="00f48b05-62a5-4ae4-ad8b-b23bccfb081e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="00f48b05-62a5-4ae4-ad8b-b23bccfb081e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="00f48b05-62a5-4ae4-ad8b-b23bccfb081e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bülowstraße 56-57, 10783 Berlin-Bezirk Tempelhof-Schöneberg, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sultan Hamam Berlin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bülowstraße 56-57, 10783 Berlin-Bezirk Tempelhof-Schöneberg, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 21753375">📞 +49 30 21753375</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6054383700434301399&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c37844eb-b482-4697-8fe7-55dd39fd0e12">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c37844eb-b482-4697-8fe7-55dd39fd0e12">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c37844eb-b482-4697-8fe7-55dd39fd0e12" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Karlsruher Str. 20, 10711 Berlin-Bezirk Charlottenburg-Wilmersdorf, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Aspria Berlin Ku’damm</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Karlsruher Str. 20, 10711 Berlin-Bezirk Charlottenburg-Wilmersdorf, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 8906888918">📞 +49 30 8906888918</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3435981545910666830&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f993b7da-b5fc-4073-9fb7-50d0639c2b51">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f993b7da-b5fc-4073-9fb7-50d0639c2b51">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f993b7da-b5fc-4073-9fb7-50d0639c2b51" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Ella-Trebe-Straße 5, 10557 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sky Spa &amp; Fitnesslounge</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ella-Trebe-Straße 5, 10557 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 740743888">📞 +49 30 740743888</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17493841092669765703&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="99dcd6e5-205b-47bd-9a12-65eecd0c1562">✓ Approve</button>
+          <button class="btn btn-reject" data-id="99dcd6e5-205b-47bd-9a12-65eecd0c1562">✕ Reject</button>
+          <button class="btn btn-demo" data-id="99dcd6e5-205b-47bd-9a12-65eecd0c1562" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="An d. Seepromenade 21, 16816 Neuruppin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fontane Therme</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 An d. Seepromenade 21, 16816 Neuruppin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 3391 40350">📞 +49 3391 40350</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5418878904954964272&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5d234e2b-6a19-44d7-a110-d42352d00d4a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5d234e2b-6a19-44d7-a110-d42352d00d4a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5d234e2b-6a19-44d7-a110-d42352d00d4a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Budapester Str. 45, 10787 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Palace Spa Berlin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Budapester Str. 45, 10787 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 25021070">📞 +49 30 25021070</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1827683581860987095&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6b0cd07a-cdb6-49eb-b384-344f2016996d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6b0cd07a-cdb6-49eb-b384-344f2016996d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6b0cd07a-cdb6-49eb-b384-344f2016996d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hardenbergstraße 28, 10623 Berlin-Bezirk Charlottenburg-Wilmersdorf, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Waldorf Astoria Berlin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hardenbergstraße 28, 10623 Berlin-Bezirk Charlottenburg-Wilmersdorf, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 8140000">📞 +49 30 8140000</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7812331662888918677&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="420f9533-8248-4731-bbf5-36022c0aaeb9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="420f9533-8248-4731-bbf5-36022c0aaeb9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="420f9533-8248-4731-bbf5-36022c0aaeb9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Marlene-Dietrich-Platz 2, 10785 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Club Olympus Spa &amp; Fitness</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Marlene-Dietrich-Platz 2, 10785 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 25531890">📞 +49 30 25531890</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11651227581422976491&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a48f8a6d-c3ef-4d9f-9599-108d58bb23d4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a48f8a6d-c3ef-4d9f-9599-108d58bb23d4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a48f8a6d-c3ef-4d9f-9599-108d58bb23d4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Konrad-Wolf-Straße 76, 13055 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sen Spa Massage Berlin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Konrad-Wolf-Straße 76, 13055 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 162 1866699">📞 +49 162 1866699</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11746835177541575545&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1ebd2fa1-cb59-4ee1-89d4-a5bcb2d22de5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1ebd2fa1-cb59-4ee1-89d4-a5bcb2d22de5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1ebd2fa1-cb59-4ee1-89d4-a5bcb2d22de5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Landsberger Allee 106, 10369 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>THE Spa Vienna House by Wyndham Andel's Berlin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Landsberger Allee 106, 10369 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 31199616">📞 +49 30 31199616</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5743611844513248226&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fc4e8f34-3dd8-4716-911d-00954f5d9c1d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fc4e8f34-3dd8-4716-911d-00954f5d9c1d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fc4e8f34-3dd8-4716-911d-00954f5d9c1d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hausvogteipl. 11, 10117 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>float Berlin Mitte Wellness</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hausvogteipl. 11, 10117 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 20143797">📞 +49 30 20143797</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13655563652206530777&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b682a22c-3c59-44e8-8585-ecf28c581bc8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b682a22c-3c59-44e8-8585-ecf28c581bc8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b682a22c-3c59-44e8-8585-ecf28c581bc8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Gabriele-Tergit-Promenade 17 a-d, 10963 Berlin, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Holmes Place Fitness - Potsdamer Platz</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Gabriele-Tergit-Promenade 17 a-d, 10963 Berlin, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 30 8140030">📞 +49 30 8140030</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6515378306565295132&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3d71e30a-7563-485d-92fb-84d50309288b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3d71e30a-7563-485d-92fb-84d50309288b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3d71e30a-7563-485d-92fb-84d50309288b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Maria-Probst-Straße 22, 80939 München-Schwabing-Freimann, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MySpa - Your personal Wellzone | Wellness &amp; Spa in München</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Maria-Probst-Straße 22, 80939 München-Schwabing-Freimann, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 711 38980930">📞 +49 711 38980930</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16902558676445598307&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cff9e614-a5ea-490b-a3e5-9031572a99f4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cff9e614-a5ea-490b-a3e5-9031572a99f4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cff9e614-a5ea-490b-a3e5-9031572a99f4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Lindenstraße 32, 83043 Bad Aibling, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Therme Bad Aibling</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Lindenstraße 32, 83043 Bad Aibling, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 8061 9066200">📞 +49 8061 9066200</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10528409980624252717&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="57243dd8-ddae-4499-af4b-8c8792fa4d97">✓ Approve</button>
+          <button class="btn btn-reject" data-id="57243dd8-ddae-4499-af4b-8c8792fa4d97">✕ Reject</button>
+          <button class="btn btn-demo" data-id="57243dd8-ddae-4499-af4b-8c8792fa4d97" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Feilitzschstraße 26, 80802 München-Schwabing-Freimann, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Premium float Schwabing, Munich</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Feilitzschstraße 26, 80802 München-Schwabing-Freimann, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 33039731">📞 +49 89 33039731</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1942598470419528877&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3af20bef-da15-4d33-b6ee-e8b9fb555a04">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3af20bef-da15-4d33-b6ee-e8b9fb555a04">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3af20bef-da15-4d33-b6ee-e8b9fb555a04" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Thermenallee 1-5, 85435 Erding, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Therme Erding</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Thermenallee 1-5, 85435 Erding, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 8122 5500">📞 +49 8122 5500</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7625440585365863800&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ff1a817b-5a8a-4086-9b4c-6b74b750665f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ff1a817b-5a8a-4086-9b4c-6b74b750665f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ff1a817b-5a8a-4086-9b4c-6b74b750665f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Mathildenstraße 5, 80336 München-Ludwigsvorstadt-Isarvorstadt, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MATHILDEN HAMAM Premium Spa und Massage</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Mathildenstraße 5, 80336 München-Ludwigsvorstadt-Isarvorstadt, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 554573">📞 +49 89 554573</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13851521087025474170&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="76ebddcd-f22f-452a-9dd3-f41aefec38a7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="76ebddcd-f22f-452a-9dd3-f41aefec38a7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="76ebddcd-f22f-452a-9dd3-f41aefec38a7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Kardinal-Faulhaber-Straße 1, 80333 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Asaya Spa Rosewood Munich</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kardinal-Faulhaber-Straße 1, 80333 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 8000198600">📞 +49 89 8000198600</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18196780178710107758&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ce04a417-d22c-451a-8547-0bc9cb9c18f0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ce04a417-d22c-451a-8547-0bc9cb9c18f0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ce04a417-d22c-451a-8547-0bc9cb9c18f0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Maximilianstraße 17, 80539 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kempinski The Spa - Munich</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Maximilianstraße 17, 80539 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 21252155">📞 +49 89 21252155</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7333915677055159204&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ca852e94-2098-4853-a5a2-40376742a919">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ca852e94-2098-4853-a5a2-40376742a919">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ca852e94-2098-4853-a5a2-40376742a919" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Alte Allee 13, 81245 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Auszeit - Wellness mit Ambiente - Day Spa, Massage, Kosmetik</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Alte Allee 13, 81245 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 162 9229797">📞 +49 162 9229797</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13074033997361389845&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="08a39de0-e30a-4612-9c99-a413f435d02c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="08a39de0-e30a-4612-9c99-a413f435d02c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="08a39de0-e30a-4612-9c99-a413f435d02c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Wirtstraße 1B, 81539 München-Untergiesing-Harlaching, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hamam Anatolia</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Wirtstraße 1B, 81539 München-Untergiesing-Harlaching, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 38905858">📞 +49 89 38905858</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10459489467831678043&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7a3d33bf-2dc9-473e-9c34-80db24a244d3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7a3d33bf-2dc9-473e-9c34-80db24a244d3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7a3d33bf-2dc9-473e-9c34-80db24a244d3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Leopoldstraße 170, 80804 München-Schwabing-Freimann, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Spa at the Andaz</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Leopoldstraße 170, 80804 München-Schwabing-Freimann, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 9042194240">📞 +49 89 9042194240</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16748435256158951520&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a42cb3aa-965e-44af-aac5-3bebbb41aa16">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a42cb3aa-965e-44af-aac5-3bebbb41aa16">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a42cb3aa-965e-44af-aac5-3bebbb41aa16" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Josephspl. 4, 80798 München-Maxvorstadt, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>White Bamboo Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Josephspl. 4, 80798 München-Maxvorstadt, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 12737806">📞 +49 89 12737806</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5589271136405763387&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9d6f1d95-06cb-44a8-8eee-a1c66cec55e0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9d6f1d95-06cb-44a8-8eee-a1c66cec55e0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9d6f1d95-06cb-44a8-8eee-a1c66cec55e0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bayerstraße 12, 80335 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sofitel SPA</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bayerstraße 12, 80335 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 599482981">📞 +49 89 599482981</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4951578584442832492&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="87eb176d-5fe7-42fc-80ff-ebc099a97a69">✓ Approve</button>
+          <button class="btn btn-reject" data-id="87eb176d-5fe7-42fc-80ff-ebc099a97a69">✕ Reject</button>
+          <button class="btn btn-demo" data-id="87eb176d-5fe7-42fc-80ff-ebc099a97a69" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bayerstraße 12, 80335 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sofitel Munich Bayerpost</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bayerstraße 12, 80335 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 599480">📞 +49 89 599480</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10413011290822937377&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="84e640e2-86c8-4e53-9e78-01c96c41b163">✓ Approve</button>
+          <button class="btn btn-reject" data-id="84e640e2-86c8-4e53-9e78-01c96c41b163">✕ Reject</button>
+          <button class="btn btn-demo" data-id="84e640e2-86c8-4e53-9e78-01c96c41b163" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Promenadepl. 2-6, 80333 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hotel Bayerischer Hof</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Promenadepl. 2-6, 80333 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 21200">📞 +49 89 21200</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10215954582009988772&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="26e2b9a1-284b-4ed8-896c-a53e93b184df">✓ Approve</button>
+          <button class="btn btn-reject" data-id="26e2b9a1-284b-4ed8-896c-a53e93b184df">✕ Reject</button>
+          <button class="btn btn-demo" data-id="26e2b9a1-284b-4ed8-896c-a53e93b184df" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Perusastraße 5, 80333 München-Altstadt-Lehel, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Aiyasha Medical Spa KG</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Perusastraße 5, 80333 München-Altstadt-Lehel, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 21024550">📞 +49 89 21024550</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4291459400749341073&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dc1706b8-1a1d-411d-b5c5-55598a81e2a2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dc1706b8-1a1d-411d-b5c5-55598a81e2a2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dc1706b8-1a1d-411d-b5c5-55598a81e2a2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Neuturmstraße 1, 80331 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mandarin Oriental, Munich</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Neuturmstraße 1, 80331 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 290980">📞 +49 89 290980</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8066770820842612099&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c1ff76d1-2a67-439e-807b-52bcde68cf9d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c1ff76d1-2a67-439e-807b-52bcde68cf9d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c1ff76d1-2a67-439e-807b-52bcde68cf9d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Maximilianstraße 17, 80539 München-Altstadt-Lehel, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hotel Vier Jahreszeiten Kempinski München</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Maximilianstraße 17, 80539 München-Altstadt-Lehel, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 21250">📞 +49 89 21250</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15344493330088836213&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3825d63a-cc2e-4ff1-af0b-cf4bdefd7740">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3825d63a-cc2e-4ff1-af0b-cf4bdefd7740">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3825d63a-cc2e-4ff1-af0b-cf4bdefd7740" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="The Westin Grand Munich, Arabellastraße 6, 81925 München-Bogenhausen, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>ISARspa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Arabellastraße 6, 81925 München-Bogenhausen, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 92648800">📞 +49 89 92648800</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17382645632455861023&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="14cb336d-82b6-433f-b7b3-d19772dd1d9f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="14cb336d-82b6-433f-b7b3-d19772dd1d9f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="14cb336d-82b6-433f-b7b3-d19772dd1d9f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Landsberger Str. 406, 81241 München, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>FACE &amp; BODY</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Landsberger Str. 406, 81241 München, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 171802">📞 +49 89 171802</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=563358108766513502&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="00fd5004-4b74-4ca5-bbbb-e574f3b733f6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="00fd5004-4b74-4ca5-bbbb-e574f3b733f6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="00fd5004-4b74-4ca5-bbbb-e574f3b733f6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Orleansstraße 45, 81667 München-Au-Haidhausen, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sai Spa München</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Orleansstraße 45, 81667 München-Au-Haidhausen, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 89 44429166">📞 +49 89 44429166</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7860519703677171234&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="61cad269-039e-4c8f-8c67-b6c893cffd30">✓ Approve</button>
+          <button class="btn btn-reject" data-id="61cad269-039e-4c8f-8c67-b6c893cffd30">✕ Reject</button>
+          <button class="btn btn-demo" data-id="61cad269-039e-4c8f-8c67-b6c893cffd30" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bartholomäusstraße 95, 22083 Hamburg-Nord, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bäderland Bartholomäustherme</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bartholomäusstraße 95, 22083 Hamburg-Nord, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 40 188890">📞 +49 40 188890</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=624142666000842648&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="befa0f72-f3c7-437f-851a-e01b6baca830">✓ Approve</button>
+          <button class="btn btn-reject" data-id="befa0f72-f3c7-437f-851a-e01b6baca830">✕ Reject</button>
+          <button class="btn btn-demo" data-id="befa0f72-f3c7-437f-851a-e01b6baca830" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bugenhagenstraße 8, 20095 Hamburg, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Levante Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bugenhagenstraße 8, 20095 Hamburg, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 40 987634905">📞 +49 40 987634905</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17563927676648147695&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="75e030f4-4db9-4f1d-a4a2-13129e2bbe65">✓ Approve</button>
+          <button class="btn btn-reject" data-id="75e030f4-4db9-4f1d-a4a2-13129e2bbe65">✕ Reject</button>
+          <button class="btn btn-demo" data-id="75e030f4-4db9-4f1d-a4a2-13129e2bbe65" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Neuer Jungfernstieg 9 14, 20354 Hamburg, Germany"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Vier Jahreszeiten Spa &amp; Fitness</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Neuer Jungfernstieg 9 14, 20354 Hamburg, Germany</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+49 40 34943151">📞 +49 40 34943151</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3876852313015832424&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4cfc3dd5-cd3a-474b-afd2-a0783e64e700">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4cfc3dd5-cd3a-474b-afd2-a0783e64e700">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4cfc3dd5-cd3a-474b-afd2-a0783e64e700" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Admiralengracht 223, 1056 DX Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Rein wellness spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Admiralengracht 223, 1056 DX Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 247 0019">📞 +31 20 247 0019</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11769072329410253729&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="52eceb96-e738-4a8d-8ae0-dc49fe1d183a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="52eceb96-e738-4a8d-8ae0-dc49fe1d183a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="52eceb96-e738-4a8d-8ae0-dc49fe1d183a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="28 Rue Monsieur le Prince, 75006 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Spa 28 - Le Prince Regent</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 28 Rue Monsieur le Prince, 75006 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 56 24 12 77">📞 +33 1 56 24 12 77</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3389406864935094308&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1cd041f0-b09b-4d71-b491-112f4d8fa908">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1cd041f0-b09b-4d71-b491-112f4d8fa908">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1cd041f0-b09b-4d71-b491-112f4d8fa908" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="46 Av. George V, 75008 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Spa du Fouquet's Paris</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 46 Av. George V, 75008 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 40 69 60 70">📞 +33 1 40 69 60 70</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1529808651523328968&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="36f78c16-284f-4148-8e61-67dbbf441800">✓ Approve</button>
+          <button class="btn btn-reject" data-id="36f78c16-284f-4148-8e61-67dbbf441800">✕ Reject</button>
+          <button class="btn btn-demo" data-id="36f78c16-284f-4148-8e61-67dbbf441800" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2 Rue de Parme, 75009 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Secret de Paris - Hotel &amp; Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 2 Rue de Parme, 75009 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 53 16 33 33">📞 +33 1 53 16 33 33</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14105358441426133805&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ae659b8e-5cf6-436b-8752-79f2389d3737">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ae659b8e-5cf6-436b-8752-79f2389d3737">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ae659b8e-5cf6-436b-8752-79f2389d3737" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Travessera de Gràcia, 141, Gràcia, 08012 Barcelona, Spain"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Moon Relax Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Gràcia, 08012 Barcelona, Spain</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+34 911 67 95 66">📞 +34 911 67 95 66</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8846325920910140812&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="aa6ecee3-a0f1-423d-9130-6f8d40045c91">✓ Approve</button>
+          <button class="btn btn-reject" data-id="aa6ecee3-a0f1-423d-9130-6f8d40045c91">✕ Reject</button>
+          <button class="btn btn-demo" data-id="aa6ecee3-a0f1-423d-9130-6f8d40045c91" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Calle de Lagasca, 80, Bajo C, Salamanca, 28001 Madrid, Spain"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fariolen - Oriental Massage</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Salamanca, 28001 Madrid, Spain</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+34 915 76 16 92">📞 +34 915 76 16 92</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18062335126823513737&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4445894c-1934-4e57-8a39-93c7ca28bef5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4445894c-1934-4e57-8a39-93c7ca28bef5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4445894c-1934-4e57-8a39-93c7ca28bef5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Largo Giovanni Montemartini, 20, 00185 Roma RM, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Thalea SPA Palazzo Montemartini</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 20, 00185 Roma RM, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 06 4566 1880">📞 +39 06 4566 1880</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16913590920742163378&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="681247ac-116f-40ab-b53d-aa3c39bcac04">✓ Approve</button>
+          <button class="btn btn-reject" data-id="681247ac-116f-40ab-b53d-aa3c39bcac04">✕ Reject</button>
+          <button class="btn btn-demo" data-id="681247ac-116f-40ab-b53d-aa3c39bcac04" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
