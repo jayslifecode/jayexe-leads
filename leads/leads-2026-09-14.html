@@ -1,0 +1,3225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-09-14</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-09-14</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">75</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="1 Sq. la Fontaine, 75016 Paris, France">1 Sq. la Fontaine, 75016 Paris, France</option><option value="10 Bd Saint-Germain, 75005 Paris, France">10 Bd Saint-Germain, 75005 Paris, France</option><option value="10 Pass. du Grand Cerf, 75002 Paris, France">10 Pass. du Grand Cerf, 75002 Paris, France</option><option value="101 Porte Berger Niveau -3, 75001 Paris, France">101 Porte Berger Niveau -3, 75001 Paris, France</option><option value="109 Rue Saint-Lazare, 75009 Paris, France">109 Rue Saint-Lazare, 75009 Paris, France</option><option value="12 Rue Fagon, 75013 Paris, France">12 Rue Fagon, 75013 Paris, France</option><option value="12 Rue Jean-Jacques Rousseau, 75001 Paris, France">12 Rue Jean-Jacques Rousseau, 75001 Paris, France</option><option value="13 Rue Réaumur, 75003 Paris, France">13 Rue Réaumur, 75003 Paris, France</option><option value="2 Rue Juliette Lamber, 75017 Paris, France">2 Rue Juliette Lamber, 75017 Paris, France</option><option value="24, 00184 Roma RM, Italy">24, 00184 Roma RM, Italy</option><option value="265 Rue du Faubourg Saint-Martin, 75010 Paris, France">265 Rue du Faubourg Saint-Martin, 75010 Paris, France</option><option value="28 Rue de Saint-Pétersbourg, 75008 Paris, France">28 Rue de Saint-Pétersbourg, 75008 Paris, France</option><option value="30, 20131 Milano MI, Italy">30, 20131 Milano MI, Italy</option><option value="31 Rue Galande, 75005 Paris, France">31 Rue Galande, 75005 Paris, France</option><option value="35, 00176 Roma RM, Italy">35, 00176 Roma RM, Italy</option><option value="38 Bis Rue Traversière, 75012 Paris, France">38 Bis Rue Traversière, 75012 Paris, France</option><option value="4 Pass. de la Canopée, 75001 Paris, France">4 Pass. de la Canopée, 75001 Paris, France</option><option value="40, 20133 Milano MI, Italy">40, 20133 Milano MI, Italy</option><option value="48, 00153 Roma RM, Italy">48, 00153 Roma RM, Italy</option><option value="5, 20123 Milano MI, Italy">5, 20123 Milano MI, Italy</option><option value="60, 00187 Roma RM, Italy">60, 00187 Roma RM, Italy</option><option value="70-72 Av. des Champs-Élysées, 75008 Paris, France">70-72 Av. des Champs-Élysées, 75008 Paris, France</option><option value="73 Rue Fondary, 75015 Paris, France">73 Rue Fondary, 75015 Paris, France</option><option value="74 Rue de Lourmel, 75015 Paris, France">74 Rue de Lourmel, 75015 Paris, France</option><option value="78 Rue Marguerite de Rochechouart, 75009 Paris, France">78 Rue Marguerite de Rochechouart, 75009 Paris, France</option><option value="8 Rue Bachaumont, 75002 Paris, France">8 Rue Bachaumont, 75002 Paris, France</option><option value="9, 00186 Roma RM, Italy">9, 00186 Roma RM, Italy</option><option value="99 Av. Simon Bolivar, 75019 Paris, France">99 Av. Simon Bolivar, 75019 Paris, France</option><option value="Admiraal de Ruijterweg 402H, 1055 ND Amsterdam, Netherlands">Admiraal de Ruijterweg 402H, 1055 ND Amsterdam, Netherlands</option><option value="Austin, TX 78702, USA">Austin, TX 78702, USA</option><option value="BLEKK STUDIO, 0181 Oslo, Norway">BLEKK STUDIO, 0181 Oslo, Norway</option><option value="Bargersville, IN 46106, USA">Bargersville, IN 46106, USA</option><option value="Biskop Gunnerus' gate 3, 0155 Oslo, Norway">Biskop Gunnerus' gate 3, 0155 Oslo, Norway</option><option value="Buikslotermeerplein 170, 1025 EZ Amsterdam, Netherlands">Buikslotermeerplein 170, 1025 EZ Amsterdam, Netherlands</option><option value="Ceintuurbaan 398, 1073 EN Amsterdam, Netherlands">Ceintuurbaan 398, 1073 EN Amsterdam, Netherlands</option><option value="Centro, 28013 Madrid, Spain">Centro, 28013 Madrid, Spain</option><option value="Claude Debussylaan 271, 1082 MC Amsterdam, Netherlands">Claude Debussylaan 271, 1082 MC Amsterdam, Netherlands</option><option value="Comeniusstraat 805, 1065 CH Amsterdam, Netherlands">Comeniusstraat 805, 1065 CH Amsterdam, Netherlands</option><option value="Commelinstraat 49 sous, 1093 TK Amsterdam, Netherlands">Commelinstraat 49 sous, 1093 TK Amsterdam, Netherlands</option><option value="Dallas, TX 75224, USA">Dallas, TX 75224, USA</option><option value="De Clercqstraat 101h, 1053 AH Amsterdam, Netherlands">De Clercqstraat 101h, 1053 AH Amsterdam, Netherlands</option><option value="Eerste Constantijn Huygensstraat 43, 1054 BR Amsterdam, Netherlands">Eerste Constantijn Huygensstraat 43, 1054 BR Amsterdam, Netherlands</option><option value="Eixample, 08015 Barcelona, Spain">Eixample, 08015 Barcelona, Spain</option><option value="Fort Wayne, IN 46825, USA">Fort Wayne, IN 46825, USA</option><option value="Frederik Stangs gate 41, 0264 Oslo, Norway">Frederik Stangs gate 41, 0264 Oslo, Norway</option><option value="Houston, TX 77024, USA">Houston, TX 77024, USA</option><option value="Houston, TX 77056, USA">Houston, TX 77056, USA</option><option value="Humble, TX 77346, USA">Humble, TX 77346, USA</option><option value="Hygiëastraat 8, 1073 RM Amsterdam, Netherlands">Hygiëastraat 8, 1073 RM Amsterdam, Netherlands</option><option value="IJdoornlaan 1701, 1034 BM Amsterdam, Netherlands">IJdoornlaan 1701, 1034 BM Amsterdam, Netherlands</option><option value="Katarina Bangata 70, 116 42 Stockholm, Sweden">Katarina Bangata 70, 116 42 Stockholm, Sweden</option><option value="Kinkerstraat 62 a, 1053 DZ Amsterdam, Netherlands">Kinkerstraat 62 a, 1053 DZ Amsterdam, Netherlands</option><option value="Kinkerstraat 62A, 1053 DZ Amsterdam, Netherlands">Kinkerstraat 62A, 1053 DZ Amsterdam, Netherlands</option><option value="Klaprozenweg 36c2, 1032 KL Amsterdam, Netherlands">Klaprozenweg 36c2, 1032 KL Amsterdam, Netherlands</option><option value="Maasstraat 56, 1078 HL Amsterdam, Netherlands">Maasstraat 56, 1078 HL Amsterdam, Netherlands</option><option value="Manvel, TX 77578, USA">Manvel, TX 77578, USA</option><option value="Markveien 1B, 0554 Oslo, Norway">Markveien 1B, 0554 Oslo, Norway</option><option value="Mäster Samuelsgatan 71, 111 21 Stockholm, Sweden">Mäster Samuelsgatan 71, 111 21 Stockholm, Sweden</option><option value="Overtoom 492, 1054 JZ Amsterdam, Netherlands">Overtoom 492, 1054 JZ Amsterdam, Netherlands</option><option value="Populierenweg 83A, 1092 EV Amsterdam, Netherlands">Populierenweg 83A, 1092 EV Amsterdam, Netherlands</option><option value="Raadhuisstraat 41, 1016 DD Amsterdam, Netherlands">Raadhuisstraat 41, 1016 DD Amsterdam, Netherlands</option><option value="Ringvägen 139, 116 61 Stockholm, Sweden">Ringvägen 139, 116 61 Stockholm, Sweden</option><option value="Roetersstraat 41, 1018 WB Amsterdam, Netherlands">Roetersstraat 41, 1018 WB Amsterdam, Netherlands</option><option value="Rome, GA 30165, USA">Rome, GA 30165, USA</option><option value="Salamanca, 28009 Madrid, Spain">Salamanca, 28009 Madrid, Spain</option><option value="Stenersgata 1, 0050 Oslo, Norway">Stenersgata 1, 0050 Oslo, Norway</option><option value="Stensberggata 12, 0170 Oslo, Norway">Stensberggata 12, 0170 Oslo, Norway</option><option value="Sugar Land, TX 77479, USA">Sugar Land, TX 77479, USA</option><option value="Tvetenveien 152, 0671 Oslo, Norway">Tvetenveien 152, 0671 Oslo, Norway</option><option value="Tweede Jacob van Campenstraat 105, 1073 XP Amsterdam, Netherlands">Tweede Jacob van Campenstraat 105, 1073 XP Amsterdam, Netherlands</option><option value="Tøyengata 2, 0190 Oslo, Norway">Tøyengata 2, 0190 Oslo, Norway</option><option value="Valkyriegata 3, 0366 Oslo, Norway">Valkyriegata 3, 0366 Oslo, Norway</option><option value="Van Baerlestraat 55, 1071 AR Amsterdam, Netherlands">Van Baerlestraat 55, 1071 AR Amsterdam, Netherlands</option><option value="Vogts gate 37, 0474 Oslo, Norway">Vogts gate 37, 0474 Oslo, Norway</option><option value="Zeedijk 58-A, 1012 BA Amsterdam, Netherlands">Zeedijk 58-A, 1012 BA Amsterdam, Netherlands</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">75</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="2541 Redmond Cir, Rome, GA 30165, USA"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ruby Nails</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rome, GA 30165, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 706-291-2905">📞 +1 706-291-2905</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10553809891523199253&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="20dbb433-bd8f-402b-b11b-7a0dd904d7a9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="20dbb433-bd8f-402b-b11b-7a0dd904d7a9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="20dbb433-bd8f-402b-b11b-7a0dd904d7a9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="9355 Katy Fwy, Houston, TX 77024, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Milano Nail Spa Memorial</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Houston, TX 77024, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 346-560-0776">📞 +1 346-560-0776</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2456120014503163762&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2e7b248a-11ce-4069-9530-a21dc97aaf43">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2e7b248a-11ce-4069-9530-a21dc97aaf43">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2e7b248a-11ce-4069-9530-a21dc97aaf43" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="655 W Illinois Ave Ste 916, Dallas, TX 75224, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Milano Nail Spa Wynnewood Village</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dallas, TX 75224, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 469-399-1837">📞 +1 469-399-1837</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12783310546020924726&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e1470107-1737-4989-b43d-15a4ffc5c57f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e1470107-1737-4989-b43d-15a4ffc5c57f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e1470107-1737-4989-b43d-15a4ffc5c57f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="17221 Hwy 6 Suite 103, Manvel, TX 77578, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Milano Nail Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manvel, TX 77578, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 832-637-7055">📞 +1 832-637-7055</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11329957372975787728&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3836872b-53f5-4ee7-8f49-6a05990b225c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3836872b-53f5-4ee7-8f49-6a05990b225c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3836872b-53f5-4ee7-8f49-6a05990b225c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="2755 E 7th St, Austin, TX 78702, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MILANO NAIL SPA AUSTIN | Best Nail Salon in Austin Texas</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Austin, TX 78702, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 512-900-0206">📞 +1 512-900-0206</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1841272287614970213&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ffa19e56-0aa5-4c42-9c77-001602ad3d97">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ffa19e56-0aa5-4c42-9c77-001602ad3d97">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ffa19e56-0aa5-4c42-9c77-001602ad3d97" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="18851 University Blvd #200, Sugar Land, TX 77479, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MILANO NAIL SPA</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sugar Land, TX 77479, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 281-778-0192">📞 +1 281-778-0192</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10521302366775860529&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6a1b624e-fa8c-4788-a62c-eb28e8fee086">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6a1b624e-fa8c-4788-a62c-eb28e8fee086">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6a1b624e-fa8c-4788-a62c-eb28e8fee086" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="2994 Fulmer Dr Unit a, Bargersville, IN 46106, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Milano Nail Lounge</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bargersville, IN 46106, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 317-530-5182">📞 +1 317-530-5182</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14953493695485242280&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="21525a21-9553-4d6e-9606-a90f7ca54a63">✓ Approve</button>
+          <button class="btn btn-reject" data-id="21525a21-9553-4d6e-9606-a90f7ca54a63">✕ Reject</button>
+          <button class="btn btn-demo" data-id="21525a21-9553-4d6e-9606-a90f7ca54a63" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="5000 Westheimer Rd Ste 610, Houston, TX 77056, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Milano Nail Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Houston, TX 77056, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 832-934-8790">📞 +1 832-934-8790</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16604888045301428985&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d05421ae-6ab8-48f6-a74f-34cdc6a99eb4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d05421ae-6ab8-48f6-a74f-34cdc6a99eb4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d05421ae-6ab8-48f6-a74f-34cdc6a99eb4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="6947 Farm to Market 1960 Rd E, Humble, TX 77346, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Milano Nail Spa HUMBLE</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Humble, TX 77346, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 346-688-6686">📞 +1 346-688-6686</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18039239277936649837&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="408d33a8-ee2d-4e0d-b4b9-5c651fd6aa2a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="408d33a8-ee2d-4e0d-b4b9-5c651fd6aa2a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="408d33a8-ee2d-4e0d-b4b9-5c651fd6aa2a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="821 W Washington Center Rd, Fort Wayne, IN 46825, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>VERA NAILS ( OPEN SUNDAY )</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Fort Wayne, IN 46825, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 260-489-7195">📞 +1 260-489-7195</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2929850355336659529&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9e562e82-4dfc-4bad-8fa3-6e7ce912a2b0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9e562e82-4dfc-4bad-8fa3-6e7ce912a2b0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9e562e82-4dfc-4bad-8fa3-6e7ce912a2b0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="Katarina Bangata 70, 116 42 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Lin Nail &amp; Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Katarina Bangata 70, 116 42 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 79 342 23 60">📞 +46 79 342 23 60</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12716920336103321649&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e1bc1fe3-cc3c-4e22-8bea-1329615c87bd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e1bc1fe3-cc3c-4e22-8bea-1329615c87bd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e1bc1fe3-cc3c-4e22-8bea-1329615c87bd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="Mäster Samuelsgatan 71, 111 21 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Jasmin Nails Spa &amp; Beauty - Stockholm City</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Mäster Samuelsgatan 71, 111 21 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 72 881 82 04">📞 +46 72 881 82 04</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3390177462419401416&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8643041f-09d1-4a11-a9a2-db53e7379a2c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8643041f-09d1-4a11-a9a2-db53e7379a2c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8643041f-09d1-4a11-a9a2-db53e7379a2c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="Markveien 1B, 0554 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>CIAO Studio</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Markveien 1B, 0554 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 41 29 96 01">📞 +47 41 29 96 01</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13726990272216197354&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f727d0df-b2ce-4e72-b31e-a02f92509e6e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f727d0df-b2ce-4e72-b31e-a02f92509e6e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f727d0df-b2ce-4e72-b31e-a02f92509e6e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="Frederik Stangs gate 41, 0264 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kolors Nail Studio</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Frederik Stangs gate 41, 0264 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 48 40 15 66">📞 +47 48 40 15 66</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2894499620074079345&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c769f733-d5bf-4566-80ac-a9107cd2a1e7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c769f733-d5bf-4566-80ac-a9107cd2a1e7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c769f733-d5bf-4566-80ac-a9107cd2a1e7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="0474, Vogts gate 37, 0474 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hos Eivy</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vogts gate 37, 0474 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 95 43 80 70">📞 +47 95 43 80 70</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17279215340868579730&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="80b43e48-bb9f-42be-9e6d-f06ae324de46">✓ Approve</button>
+          <button class="btn btn-reject" data-id="80b43e48-bb9f-42be-9e6d-f06ae324de46">✕ Reject</button>
+          <button class="btn btn-demo" data-id="80b43e48-bb9f-42be-9e6d-f06ae324de46" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="Via della Frezza, 9, 00186 Roma RM, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Bvlgari Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 9, 00186 Roma RM, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 06 3608 0415">📞 +39 06 3608 0415</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8474459134443449956&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d9fbe74f-c15f-459c-affd-7aa3789f649f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d9fbe74f-c15f-459c-affd-7aa3789f649f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d9fbe74f-c15f-459c-affd-7aa3789f649f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="Biskop Gunnerus' gate 3, 0155 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Clarion Hotel The Hub</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Biskop Gunnerus' gate 3, 0155 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 23 10 80 00">📞 +47 23 10 80 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5119810349067443765&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7268b231-deef-41b0-ab8b-4c3bd54bea6b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7268b231-deef-41b0-ab8b-4c3bd54bea6b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7268b231-deef-41b0-ab8b-4c3bd54bea6b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="12 Rue Jean-Jacques Rousseau, 75001 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Barbier Saint Louis</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 12 Rue Jean-Jacques Rousseau, 75001 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 6 75 69 61 03">📞 +33 6 75 69 61 03</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14832185657627265288&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d971c9d9-8c10-4445-8e0f-ef8389dc9854">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d971c9d9-8c10-4445-8e0f-ef8389dc9854">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d971c9d9-8c10-4445-8e0f-ef8389dc9854" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="Via Santa Marta, 5, 20123 Milano MI, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>John Barber Milano | Cordusio</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 5, 20123 Milano MI, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 331 249 4802">📞 +39 331 249 4802</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6172951269214537912&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d86227b1-3f05-4b93-abb2-929634a6ffac">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d86227b1-3f05-4b93-abb2-929634a6ffac">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d86227b1-3f05-4b93-abb2-929634a6ffac" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="Via Giovanni Ricordi, 30, 20131 Milano MI, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SELL Barbers</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 30, 20131 Milano MI, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 351 980 6985">📞 +39 351 980 6985</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8756892463403171332&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b0ea0b37-4a9c-455e-ad94-e161ca9ae628">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b0ea0b37-4a9c-455e-ad94-e161ca9ae628">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b0ea0b37-4a9c-455e-ad94-e161ca9ae628" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Tvetenveien 152, 0671 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>DoniBlends Barber Oslo</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Tvetenveien 152, 0671 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 98 36 15 62">📞 +47 98 36 15 62</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6962007382763849784&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7f22a173-04d7-44d7-9f2e-3cf8fe01e12b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7f22a173-04d7-44d7-9f2e-3cf8fe01e12b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7f22a173-04d7-44d7-9f2e-3cf8fe01e12b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Tøyengata 2, 0190 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Oslo Barbershop</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Tøyengata 2, 0190 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 96 98 98 12">📞 +47 96 98 98 12</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8793892166915772845&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0b2b330d-c6b4-4876-88cf-a855a961a1d2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0b2b330d-c6b4-4876-88cf-a855a961a1d2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0b2b330d-c6b4-4876-88cf-a855a961a1d2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Zeedijk 58-A, 1012 BA Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sakura Tattoo</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Zeedijk 58-A, 1012 BA Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 6 33705806">📞 +31 6 33705806</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11704117457101884534&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d87ec627-16f8-4a17-aa6d-bcc9674b6654">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d87ec627-16f8-4a17-aa6d-bcc9674b6654">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d87ec627-16f8-4a17-aa6d-bcc9674b6654" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Vicolo del Cinque, 48, 00153 Roma RM, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Swan Song Tattoo - Studio di Tatuaggi a Trastevere</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 48, 00153 Roma RM, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 06 8981 3095">📞 +39 06 8981 3095</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5392083257468626364&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d93ceb32-425a-4275-848b-2f41a4c1c31e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d93ceb32-425a-4275-848b-2f41a4c1c31e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d93ceb32-425a-4275-848b-2f41a4c1c31e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Torggata 11 2nd floor, BLEKK STUDIO, 0181 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mor Eliezri tattoo</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 BLEKK STUDIO, 0181 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9103903163003651176&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0b5b94b7-5c93-43fe-a78c-e66c6a84c243">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0b5b94b7-5c93-43fe-a78c-e66c6a84c243">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0b5b94b7-5c93-43fe-a78c-e66c6a84c243" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Kinkerstraat 62A, 1053 DZ Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Wax Care Amsterdam</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kinkerstraat 62A, 1053 DZ Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 210 1202">📞 +31 20 210 1202</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18307231291190511589&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="02dfd54e-b1fe-49e7-8c3d-debc12e7dcd4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="02dfd54e-b1fe-49e7-8c3d-debc12e7dcd4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="02dfd54e-b1fe-49e7-8c3d-debc12e7dcd4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hygiëastraat 8, 1073 RM Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Super Waxing</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hygiëastraat 8, 1073 RM Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 6 13944530">📞 +31 6 13944530</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14781809083289060528&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6422e425-8ddb-456e-bb6e-b70af1be953f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6422e425-8ddb-456e-bb6e-b70af1be953f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6422e425-8ddb-456e-bb6e-b70af1be953f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Van Baerlestraat 55, 1071 AR Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Wax Bar</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Van Baerlestraat 55, 1071 AR Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 85 040 3607">📞 +31 85 040 3607</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2258175402678485166&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="344533ac-7313-4e82-b91d-eaa00feded1f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="344533ac-7313-4e82-b91d-eaa00feded1f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="344533ac-7313-4e82-b91d-eaa00feded1f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Tweede Jacob van Campenstraat 105, 1073 XP Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Waxing the City</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Tweede Jacob van Campenstraat 105, 1073 XP Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 633 1525">📞 +31 20 633 1525</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16489296326688017170&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5cb4e692-641e-4242-8ec8-89bd1efaeff1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5cb4e692-641e-4242-8ec8-89bd1efaeff1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5cb4e692-641e-4242-8ec8-89bd1efaeff1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="De Clercqstraat 101h, 1053 AH Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Waxination</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 De Clercqstraat 101h, 1053 AH Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 341 9911">📞 +31 20 341 9911</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12703710231385155983&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="80ec8c89-ae30-42ac-ab92-79db87914014">✓ Approve</button>
+          <button class="btn btn-reject" data-id="80ec8c89-ae30-42ac-ab92-79db87914014">✕ Reject</button>
+          <button class="btn btn-demo" data-id="80ec8c89-ae30-42ac-ab92-79db87914014" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Claude Debussylaan 271, 1082 MC Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Delete waxing amsterdam</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Claude Debussylaan 271, 1082 MC Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 88 224 2223">📞 +31 88 224 2223</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9209262158382496778&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0bbf14eb-1000-4ff2-b581-47c7c89d995c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0bbf14eb-1000-4ff2-b581-47c7c89d995c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0bbf14eb-1000-4ff2-b581-47c7c89d995c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Maasstraat 56, 1078 HL Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Silky You</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Maasstraat 56, 1078 HL Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 369 7380">📞 +31 20 369 7380</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4678243875089334277&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="23e7b601-7b9c-4320-b92c-fb2595cf7b63">✓ Approve</button>
+          <button class="btn btn-reject" data-id="23e7b601-7b9c-4320-b92c-fb2595cf7b63">✕ Reject</button>
+          <button class="btn btn-demo" data-id="23e7b601-7b9c-4320-b92c-fb2595cf7b63" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Raadhuisstraat 41, 1016 DD Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Waxing Novia Amsterdam</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Raadhuisstraat 41, 1016 DD Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 412 9698">📞 +31 20 412 9698</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5341225454256601973&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="df2b987d-e20b-466d-84f2-f0a25cc4f2a1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="df2b987d-e20b-466d-84f2-f0a25cc4f2a1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="df2b987d-e20b-466d-84f2-f0a25cc4f2a1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Ceintuurbaan 398, 1073 EN Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Delete Waxing - Wax Salon in De Pijp, Amdsterdam</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ceintuurbaan 398, 1073 EN Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 88 224 2221">📞 +31 88 224 2221</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4255014703564837707&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9b129db1-92a5-467c-934f-9da279dc25bd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9b129db1-92a5-467c-934f-9da279dc25bd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9b129db1-92a5-467c-934f-9da279dc25bd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Eerste Constantijn Huygensstraat 43, 1054 BR Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Delete waxing</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Eerste Constantijn Huygensstraat 43, 1054 BR Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 88 224 2220">📞 +31 88 224 2220</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6039651919212772771&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cf62764e-923d-4125-9b24-1a7a34e6f90d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cf62764e-923d-4125-9b24-1a7a34e6f90d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cf62764e-923d-4125-9b24-1a7a34e6f90d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="IJdoornlaan 1701, 1034 BM Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Waxing Club</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 IJdoornlaan 1701, 1034 BM Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 337 5821">📞 +31 20 337 5821</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6479420480495429647&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3db8b708-019f-434f-8dbb-97e433e04998">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3db8b708-019f-434f-8dbb-97e433e04998">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3db8b708-019f-434f-8dbb-97e433e04998" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Comeniusstraat 805, 1065 CH Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Afrodite Waxsalon</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Comeniusstraat 805, 1065 CH Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 751 9852">📞 +31 20 751 9852</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6809277880665606944&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4c8bb1de-1e55-4d28-8a8e-5f1b0d98f904">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4c8bb1de-1e55-4d28-8a8e-5f1b0d98f904">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4c8bb1de-1e55-4d28-8a8e-5f1b0d98f904" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Klaprozenweg 36c2, 1032 KL Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>BB Studios</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Klaprozenweg 36c2, 1032 KL Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 6 39702563">📞 +31 6 39702563</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9043341563822979863&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="258ea189-e8e8-4f2a-b969-955fca03bbab">✓ Approve</button>
+          <button class="btn btn-reject" data-id="258ea189-e8e8-4f2a-b969-955fca03bbab">✕ Reject</button>
+          <button class="btn btn-demo" data-id="258ea189-e8e8-4f2a-b969-955fca03bbab" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Overtoom 492, 1054 JZ Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>LadyWax</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Overtoom 492, 1054 JZ Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 751 9950">📞 +31 20 751 9950</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10649747115344911372&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b55ae402-ab4c-4463-905f-dfd6f0e08cf1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b55ae402-ab4c-4463-905f-dfd6f0e08cf1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b55ae402-ab4c-4463-905f-dfd6f0e08cf1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Admiraal de Ruijterweg 402H, 1055 ND Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Cera revolution</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Admiraal de Ruijterweg 402H, 1055 ND Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 6 27407036">📞 +31 6 27407036</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=656860077712315404&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="709d8be7-4d7c-4b62-8c52-ceba37ac0787">✓ Approve</button>
+          <button class="btn btn-reject" data-id="709d8be7-4d7c-4b62-8c52-ceba37ac0787">✕ Reject</button>
+          <button class="btn btn-demo" data-id="709d8be7-4d7c-4b62-8c52-ceba37ac0787" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Buikslotermeerplein 170, 1025 EZ Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>delete-waxing</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Buikslotermeerplein 170, 1025 EZ Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 88 224 2224">📞 +31 88 224 2224</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4787773964580722924&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2dcb1543-eb3d-4171-b6d3-555c7f0a3b6a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2dcb1543-eb3d-4171-b6d3-555c7f0a3b6a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2dcb1543-eb3d-4171-b6d3-555c7f0a3b6a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Populierenweg 83A, 1092 EV Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Manon Willemina</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Populierenweg 83A, 1092 EV Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 6 28956230">📞 +31 6 28956230</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3046059638113482931&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="eb020ac4-7fc8-4241-8dde-4697d97f458b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="eb020ac4-7fc8-4241-8dde-4697d97f458b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="eb020ac4-7fc8-4241-8dde-4697d97f458b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Roetersstraat 41, 1018 WB Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Wax &amp; Laser studio Medusa Amsterdam</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Roetersstraat 41, 1018 WB Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 6 49750156">📞 +31 6 49750156</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12263381221933872745&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="703c55dd-3203-4407-b902-b9dade157378">✓ Approve</button>
+          <button class="btn btn-reject" data-id="703c55dd-3203-4407-b902-b9dade157378">✕ Reject</button>
+          <button class="btn btn-demo" data-id="703c55dd-3203-4407-b902-b9dade157378" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Commelinstraat 49 sous, 1093 TK Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bee's Wax and Beauty</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Commelinstraat 49 sous, 1093 TK Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 692 6341">📞 +31 20 692 6341</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8980063462980988919&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c52724db-6872-4d9f-aee5-dffbebea2ba0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c52724db-6872-4d9f-aee5-dffbebea2ba0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c52724db-6872-4d9f-aee5-dffbebea2ba0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Kinkerstraat 62 a, 1053 DZ Amsterdam, Netherlands"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Go NKD</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kinkerstraat 62 a, 1053 DZ Amsterdam, Netherlands</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+31 20 331 5992">📞 +31 20 331 5992</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1273358238580107465&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a6c045a8-ef29-45a7-befc-a5d691a784ed">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a6c045a8-ef29-45a7-befc-a5d691a784ed">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a6c045a8-ef29-45a7-befc-a5d691a784ed" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1 Sq. la Fontaine, 75016 Paris, France"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>INSTITUTE LORENA GRIM ... PARIS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1 Sq. la Fontaine, 75016 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 45 03 50 11">📞 +33 1 45 03 50 11</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14535861349028634110&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="06b448d7-880c-4561-a8af-66f87f3111f9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="06b448d7-880c-4561-a8af-66f87f3111f9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="06b448d7-880c-4561-a8af-66f87f3111f9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="12 Rue Fagon, 75013 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Beautician The fée'minin instinct</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 12 Rue Fagon, 75013 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 53 79 97 37">📞 +33 1 53 79 97 37</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14336239170482624765&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4e1b3598-f451-4194-8a2b-344c50e98157">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4e1b3598-f451-4194-8a2b-344c50e98157">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4e1b3598-f451-4194-8a2b-344c50e98157" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="28 Rue de Saint-Pétersbourg, 75008 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>CARAMEL WAX &amp; NAILS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 28 Rue de Saint-Pétersbourg, 75008 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 9 78 80 15 18">📞 +33 9 78 80 15 18</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8309470935677533837&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3f79843b-71d5-469e-b7de-e5133bac14c8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3f79843b-71d5-469e-b7de-e5133bac14c8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3f79843b-71d5-469e-b7de-e5133bac14c8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Centre commercial, Forum des Halles, 101 Porte Berger Niveau -3, 75001 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Benefit BrowBar Bar à Sourcils - Paris Forum</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 101 Porte Berger Niveau -3, 75001 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 40 13 72 25">📞 +33 1 40 13 72 25</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6066818954834353505&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="96c67847-163a-4230-ad52-b8493a8fbc00">✓ Approve</button>
+          <button class="btn btn-reject" data-id="96c67847-163a-4230-ad52-b8493a8fbc00">✕ Reject</button>
+          <button class="btn btn-demo" data-id="96c67847-163a-4230-ad52-b8493a8fbc00" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="13 Rue Réaumur, 75003 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>BLUE CORNER institut™ PARIS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 13 Rue Réaumur, 75003 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 82 28 39 29">📞 +33 1 82 28 39 29</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13954573755830956183&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="29056c78-14ac-44ac-b8a1-f26bade38fde">✓ Approve</button>
+          <button class="btn btn-reject" data-id="29056c78-14ac-44ac-b8a1-f26bade38fde">✕ Reject</button>
+          <button class="btn btn-demo" data-id="29056c78-14ac-44ac-b8a1-f26bade38fde" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="8 Rue Bachaumont, 75002 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sultana of Saba</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 8 Rue Bachaumont, 75002 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 40 41 90 95">📞 +33 1 40 41 90 95</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12857031154402671491&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2ab348f9-df90-4a19-a4e9-b607df7bbbc2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2ab348f9-df90-4a19-a4e9-b607df7bbbc2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2ab348f9-df90-4a19-a4e9-b607df7bbbc2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2 Rue Juliette Lamber, 75017 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Beauty Parlor Paris - Gold Beauty Lab</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 2 Rue Juliette Lamber, 75017 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 9 81 29 20 19">📞 +33 9 81 29 20 19</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2612421474376380316&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="79ff9c0c-675b-4e98-a9b9-d9a3e093c9d7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="79ff9c0c-675b-4e98-a9b9-d9a3e093c9d7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="79ff9c0c-675b-4e98-a9b9-d9a3e093c9d7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="109 Rue Saint-Lazare, 75009 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Benefit BrowBar Bar à Sourcils - Paris Passage Havre</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 109 Rue Saint-Lazare, 75009 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 53 32 83 70">📞 +33 1 53 32 83 70</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4149085759649734584&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="63ed1c62-ee72-4fce-82bb-93fe4f2c0fd6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="63ed1c62-ee72-4fce-82bb-93fe4f2c0fd6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="63ed1c62-ee72-4fce-82bb-93fe4f2c0fd6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="78 Rue Marguerite de Rochechouart, 75009 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mon Petit Institut</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 78 Rue Marguerite de Rochechouart, 75009 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 6 64 76 35 43">📞 +33 6 64 76 35 43</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16301780395398271624&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e695e439-2ec8-4737-89f0-5ac5cfa86dd9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e695e439-2ec8-4737-89f0-5ac5cfa86dd9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e695e439-2ec8-4737-89f0-5ac5cfa86dd9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="4 Pass. de la Canopée, 75001 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Benefit BrowBar Bar à Sourcils - Paris La Canopée</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 4 Pass. de la Canopée, 75001 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 40 13 85 00">📞 +33 1 40 13 85 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7277706508050453506&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="db7c4f43-f251-4416-b157-d10e8cff5f45">✓ Approve</button>
+          <button class="btn btn-reject" data-id="db7c4f43-f251-4416-b157-d10e8cff5f45">✕ Reject</button>
+          <button class="btn btn-demo" data-id="db7c4f43-f251-4416-b157-d10e8cff5f45" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="31 Rue Galande, 75005 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bonheur</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 31 Rue Galande, 75005 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 6 67 45 91 94">📞 +33 6 67 45 91 94</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10116733829587690542&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="52578b5b-5845-42fe-819f-dbf6bffe7510">✓ Approve</button>
+          <button class="btn btn-reject" data-id="52578b5b-5845-42fe-819f-dbf6bffe7510">✕ Reject</button>
+          <button class="btn btn-demo" data-id="52578b5b-5845-42fe-819f-dbf6bffe7510" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="74 Rue de Lourmel, 75015 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Elixir Beauty Paris</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 74 Rue de Lourmel, 75015 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 45 78 14 80">📞 +33 1 45 78 14 80</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11336378604452666015&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="59c23477-a31c-455b-9cc3-3e4585fbc342">✓ Approve</button>
+          <button class="btn btn-reject" data-id="59c23477-a31c-455b-9cc3-3e4585fbc342">✕ Reject</button>
+          <button class="btn btn-demo" data-id="59c23477-a31c-455b-9cc3-3e4585fbc342" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="99 Av. Simon Bolivar, 75019 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Beauties of the World</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 99 Av. Simon Bolivar, 75019 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 40 18 39 63">📞 +33 1 40 18 39 63</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17297792304922876504&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d64b3e88-c51e-4ebf-a5d4-0524fd873e06">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d64b3e88-c51e-4ebf-a5d4-0524fd873e06">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d64b3e88-c51e-4ebf-a5d4-0524fd873e06" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="10 Bd Saint-Germain, 75005 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>La Ritournelle</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 10 Bd Saint-Germain, 75005 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 43 54 29 05">📞 +33 1 43 54 29 05</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6700816002926126788&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bb349de1-5307-4c41-a6af-b2fa73478213">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bb349de1-5307-4c41-a6af-b2fa73478213">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bb349de1-5307-4c41-a6af-b2fa73478213" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="70-72 Av. des Champs-Élysées, 75008 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Benefit BrowBar Bar à Sourcils - Champs Elysees</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 70-72 Av. des Champs-Élysées, 75008 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 53 93 02 91">📞 +33 1 53 93 02 91</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10477055923020071131&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e96b1010-94a1-4f57-a93f-21f8611d61d9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e96b1010-94a1-4f57-a93f-21f8611d61d9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e96b1010-94a1-4f57-a93f-21f8611d61d9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="73 Rue Fondary, 75015 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Qi Qi Institute</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 73 Rue Fondary, 75015 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 80 06 13 93">📞 +33 1 80 06 13 93</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7518653998015500136&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5737fa81-0919-4c04-80a1-072d187f0546">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5737fa81-0919-4c04-80a1-072d187f0546">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5737fa81-0919-4c04-80a1-072d187f0546" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="10 Pass. du Grand Cerf, 75002 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Madame Z institut de beauté / soin visage et corps / Paris 1 / Paris 2 ‍ ️</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 10 Pass. du Grand Cerf, 75002 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 7 67 14 63 15">📞 +33 7 67 14 63 15</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5197246503120958114&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="065b8893-f6d6-4376-a4e8-61aedb513272">✓ Approve</button>
+          <button class="btn btn-reject" data-id="065b8893-f6d6-4376-a4e8-61aedb513272">✕ Reject</button>
+          <button class="btn btn-demo" data-id="065b8893-f6d6-4376-a4e8-61aedb513272" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="265 Rue du Faubourg Saint-Martin, 75010 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hammam Stalingrad</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 265 Rue du Faubourg Saint-Martin, 75010 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 53 26 72 02">📞 +33 1 53 26 72 02</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3171094934624302390&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="10c16e87-9c3f-47f6-9dfe-713fb4457562">✓ Approve</button>
+          <button class="btn btn-reject" data-id="10c16e87-9c3f-47f6-9dfe-713fb4457562">✕ Reject</button>
+          <button class="btn btn-demo" data-id="10c16e87-9c3f-47f6-9dfe-713fb4457562" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="38 Bis Rue Traversière, 75012 Paris, France"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>L Échappée Belle Institut de Beaute</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 38 Bis Rue Traversière, 75012 Paris, France</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+33 1 43 47 18 35">📞 +33 1 43 47 18 35</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5080399148064442782&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3da0713a-daa1-4058-9d07-5f3e738abaf6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3da0713a-daa1-4058-9d07-5f3e738abaf6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3da0713a-daa1-4058-9d07-5f3e738abaf6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Gran Via de les Corts Catalanes, 390, Despacho 1, Eixample, 08015 Barcelona, Spain"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tu Bienestar</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Eixample, 08015 Barcelona, Spain</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+34 654 42 49 51">📞 +34 654 42 49 51</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9220024774060289286&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2cf616e2-df54-486e-a86a-184ae97fc2f1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2cf616e2-df54-486e-a86a-184ae97fc2f1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2cf616e2-df54-486e-a86a-184ae97fc2f1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="C. de la Montera, Centro, 28013 Madrid, Spain"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tania Almeida Beauty | Depilación Brasileña Femenina</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Centro, 28013 Madrid, Spain</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+34 603 10 54 74">📞 +34 603 10 54 74</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18178821512600021439&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="788bdc2f-1ae3-4c67-92bf-6127cab935c5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="788bdc2f-1ae3-4c67-92bf-6127cab935c5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="788bdc2f-1ae3-4c67-92bf-6127cab935c5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="C. del Duque de Sesto, 3, Salamanca, 28009 Madrid, Spain"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>D'Essential Beauty</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Salamanca, 28009 Madrid, Spain</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+34 910 96 74 46">📞 +34 910 96 74 46</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13137268919624995270&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="88a931f4-bf9a-4b50-ae35-7116dcec8aef">✓ Approve</button>
+          <button class="btn btn-reject" data-id="88a931f4-bf9a-4b50-ae35-7116dcec8aef">✕ Reject</button>
+          <button class="btn btn-demo" data-id="88a931f4-bf9a-4b50-ae35-7116dcec8aef" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Via di S. Basilio, 60, 00187 Roma RM, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Nest Centro Estetico</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 60, 00187 Roma RM, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 06 4201 4289">📞 +39 06 4201 4289</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=829573538458418376&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="efbdd374-efd2-47a3-9f7e-4eae0f9c1e1d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="efbdd374-efd2-47a3-9f7e-4eae0f9c1e1d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="efbdd374-efd2-47a3-9f7e-4eae0f9c1e1d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Via Antonio Rosmini, 24, 00184 Roma RM, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sunbeam by Ibf</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 24, 00184 Roma RM, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5451230374116121734&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ca512d24-1d57-4afc-a524-634b26d9a853">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ca512d24-1d57-4afc-a524-634b26d9a853">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ca512d24-1d57-4afc-a524-634b26d9a853" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Via Macerata, 35, 00176 Roma RM, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MOI-MEME beautique - bio estetica</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 35, 00176 Roma RM, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 328 782 3052">📞 +39 328 782 3052</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8100992912650817895&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="da215ad5-e322-4df3-b7d3-85b3ab015b01">✓ Approve</button>
+          <button class="btn btn-reject" data-id="da215ad5-e322-4df3-b7d3-85b3ab015b01">✕ Reject</button>
+          <button class="btn btn-demo" data-id="da215ad5-e322-4df3-b7d3-85b3ab015b01" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Via Negroli, 40, 20133 Milano MI, Italy"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Guapa - Negroli - Cera Brasiliana e Trattamenti Viso</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 40, 20133 Milano MI, Italy</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+39 351 396 9021">📞 +39 351 396 9021</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16708615978238450360&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5b14172c-7944-4672-a5a2-34fc38d24530">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5b14172c-7944-4672-a5a2-34fc38d24530">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5b14172c-7944-4672-a5a2-34fc38d24530" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Ringvägen 139, 116 61 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Vaxning Södermalm</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ringvägen 139, 116 61 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 72 865 00 45">📞 +46 72 865 00 45</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17775521499619355311&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0e5c3ca2-8560-4882-a4bd-c332ce1c75d5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0e5c3ca2-8560-4882-a4bd-c332ce1c75d5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0e5c3ca2-8560-4882-a4bd-c332ce1c75d5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Valkyriegata 3, 0366 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Olio Beauty Majorstuen</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Valkyriegata 3, 0366 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16278735220019171169&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d8e7894b-5d6e-458f-a982-f775ec81040f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d8e7894b-5d6e-458f-a982-f775ec81040f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d8e7894b-5d6e-458f-a982-f775ec81040f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Stensberggata 12, 0170 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Glatt Mann Studio</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Stensberggata 12, 0170 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 95 14 03 87">📞 +47 95 14 03 87</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6024485941427276661&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1d149ed0-3a43-42e9-9336-babf65e93ec1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1d149ed0-3a43-42e9-9336-babf65e93ec1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1d149ed0-3a43-42e9-9336-babf65e93ec1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Stenersgata 1, 0050 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Olio Beauty Oslo City</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Stenersgata 1, 0050 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14044463847711949644&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c72073ff-a022-449f-8684-66e9fe95480b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c72073ff-a022-449f-8684-66e9fe95480b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c72073ff-a022-449f-8684-66e9fe95480b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
