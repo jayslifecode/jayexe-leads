@@ -1,0 +1,2973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-09-20</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-09-20</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">68</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="Artillerigatan 55, 114 45 Stockholm, Sweden">Artillerigatan 55, 114 45 Stockholm, Sweden</option><option value="Av. Albert 176, 1190 Brussels, Belgium">Av. Albert 176, 1190 Brussels, Belgium</option><option value="Av. Louise 50/7, 1050 Bruxelles, Belgium">Av. Louise 50/7, 1050 Bruxelles, Belgium</option><option value="Av. Louise 54, 1050 Ixelles, Belgium">Av. Louise 54, 1050 Ixelles, Belgium</option><option value="BOWLING GREEN, NY 10004, USA">BOWLING GREEN, NY 10004, USA</option><option value="Bahnhofstrasse 43, 8001 Zürich, Switzerland">Bahnhofstrasse 43, 8001 Zürich, Switzerland</option><option value="Bellerivestrasse 20, 8008 Zürich, Switzerland">Bellerivestrasse 20, 8008 Zürich, Switzerland</option><option value="Blegdamsvej 6, 2200 København, Denmark">Blegdamsvej 6, 2200 København, Denmark</option><option value="Bryggegata 6, 0250 Oslo, Norway">Bryggegata 6, 0250 Oslo, Norway</option><option value="Centralplan 15, 111 20 Stockholm, Sweden">Centralplan 15, 111 20 Stockholm, Sweden</option><option value="Dronning Eufemias gate 8, 0191 Oslo, Norway">Dronning Eufemias gate 8, 0191 Oslo, Norway</option><option value="Dublin 15, D15 K4PY, Ireland">Dublin 15, D15 K4PY, Ireland</option><option value="Dublin 2, D02 HX95, Ireland">Dublin 2, D02 HX95, Ireland</option><option value="Dublin 4, D04 C7H2, Ireland">Dublin 4, D04 C7H2, Ireland</option><option value="Dublin, D18 RF44, Ireland">Dublin, D18 RF44, Ireland</option><option value="Dublin, D24 E029, Ireland">Dublin, D24 E029, Ireland</option><option value="Dublin, OH 43017, USA">Dublin, OH 43017, USA</option><option value="Else-Züblin-Strasse 112, 8404 Winterthur, Switzerland">Else-Züblin-Strasse 112, 8404 Winterthur, Switzerland</option><option value="Engelbrektsgatan 5, 114 32 Stockholm, Sweden">Engelbrektsgatan 5, 114 32 Stockholm, Sweden</option><option value="Feldeggstrasse 4, 8008 Zürich, Switzerland">Feldeggstrasse 4, 8008 Zürich, Switzerland</option><option value="Filipstad Brygge 2, 0252 Oslo, Norway">Filipstad Brygge 2, 0252 Oslo, Norway</option><option value="Fridtjof Nansens plass 6, 0160 Oslo, Norway">Fridtjof Nansens plass 6, 0160 Oslo, Norway</option><option value="Gamle Drammensvei 35 A, 1369 Stabekk, Norway">Gamle Drammensvei 35 A, 1369 Stabekk, Norway</option><option value="Grev Turegatan 18, 114 46 Stockholm, Sweden">Grev Turegatan 18, 114 46 Stockholm, Sweden</option><option value="Henrik Ibsens gate 53, 0255 Oslo, Norway">Henrik Ibsens gate 53, 0255 Oslo, Norway</option><option value="Hieronymus Heyerdahls gate 1, 0160 Oslo, Norway">Hieronymus Heyerdahls gate 1, 0160 Oslo, Norway</option><option value="Holländargatan 9A, 111 36 Stockholm, Sweden">Holländargatan 9A, 111 36 Stockholm, Sweden</option><option value="Hovslagargatan 5A, 111 48 Stockholm, Sweden">Hovslagargatan 5A, 111 48 Stockholm, Sweden</option><option value="Humlegårdsgatan 4, 114 46 Stockholm, Sweden">Humlegårdsgatan 4, 114 46 Stockholm, Sweden</option><option value="Karenslyst Allé 4, 0278 Oslo, Norway">Karenslyst Allé 4, 0278 Oslo, Norway</option><option value="Kungsgatan 10, 111 43 Stockholm, Sweden">Kungsgatan 10, 111 43 Stockholm, Sweden</option><option value="Kungstensgatan 18, 113 57 Stockholm, Sweden">Kungstensgatan 18, 113 57 Stockholm, Sweden</option><option value="Lundegeilen 16, 4323 Sandnes, Norway">Lundegeilen 16, 4323 Sandnes, Norway</option><option value="Manhattan, NY 10017, USA">Manhattan, NY 10017, USA</option><option value="Munkedamsveien 59B, 0270 Oslo, Norway">Munkedamsveien 59B, 0270 Oslo, Norway</option><option value="Munkedamsveien 59b, 0270 Oslo, Norway">Munkedamsveien 59b, 0270 Oslo, Norway</option><option value="Mäster Samuelsgatan 42, 111 57 Stockholm, Sweden">Mäster Samuelsgatan 42, 111 57 Stockholm, Sweden</option><option value="Mäster Samuelsgatan 46, 111 57 Stockholm, Sweden">Mäster Samuelsgatan 46, 111 57 Stockholm, Sweden</option><option value="New York, NY 10001, USA">New York, NY 10001, USA</option><option value="New York, NY 10010, USA">New York, NY 10010, USA</option><option value="New York, NY 10017, USA">New York, NY 10017, USA</option><option value="New York, NY 10022, USA">New York, NY 10022, USA</option><option value="New York, NY 10128, USA">New York, NY 10128, USA</option><option value="Parkveien 53B, 0256 Oslo, Norway">Parkveien 53B, 0256 Oslo, Norway</option><option value="Pl. de l'Yser 08, 1000 Bruxelles, Belgium">Pl. de l'Yser 08, 1000 Bruxelles, Belgium</option><option value="Regeringsgatan 38, 111 56 Stockholm, Sweden">Regeringsgatan 38, 111 56 Stockholm, Sweden</option><option value="Rehnsgatan 11, 113 57 Stockholm, Sweden">Rehnsgatan 11, 113 57 Stockholm, Sweden</option><option value="Ringvägen 100, 118 60 Stockholm, Sweden">Ringvägen 100, 118 60 Stockholm, Sweden</option><option value="Rue Général Leman 25, 1040 Etterbeek, Belgium">Rue Général Leman 25, 1040 Etterbeek, Belgium</option><option value="Ruseløkkveien 30, 0251 Oslo, Norway">Ruseløkkveien 30, 0251 Oslo, Norway</option><option value="Seefeldstrasse 225, 8008 Zürich, Switzerland">Seefeldstrasse 225, 8008 Zürich, Switzerland</option><option value="Sibyllegatan 17, 114 42 Stockholm, Sweden">Sibyllegatan 17, 114 42 Stockholm, Sweden</option><option value="Skippergata 9, 0151 Oslo, Norway">Skippergata 9, 0151 Oslo, Norway</option><option value="Sq. Marie-Louise 35, 1000 Bruxelles, Belgium">Sq. Marie-Louise 35, 1000 Bruxelles, Belgium</option><option value="St. Olavs Gate 28, 0166 Oslo, Norway">St. Olavs Gate 28, 0166 Oslo, Norway</option><option value="Stortingsgata 26, 0161 Oslo, Norway">Stortingsgata 26, 0161 Oslo, Norway</option><option value="Strandvägen 7 (7A, 114 56 Stockholm, Sweden">Strandvägen 7 (7A, 114 56 Stockholm, Sweden</option><option value="Syracuse, NY 13204, USA">Syracuse, NY 13204, USA</option><option value="Tjuvholmen allé 19, 0252 Oslo, Norway">Tjuvholmen allé 19, 0252 Oslo, Norway</option><option value="Tjuvholmen allé 3, 0252 Oslo, Norway">Tjuvholmen allé 3, 0252 Oslo, Norway</option><option value="Tollbugata 11, 0152 Oslo, Norway">Tollbugata 11, 0152 Oslo, Norway</option><option value="Torsgatan 11, 111 23 Stockholm, Sweden">Torsgatan 11, 111 23 Stockholm, Sweden</option><option value="Vasagatan 15, 111 20 Stockholm, Sweden">Vasagatan 15, 111 20 Stockholm, Sweden</option><option value="Västra Trädgårdsgatan 15, 111 53 Stockholm, Sweden">Västra Trädgårdsgatan 15, 111 53 Stockholm, Sweden</option><option value="Wergelandsveien 1-3, 0167 Oslo, Norway">Wergelandsveien 1-3, 0167 Oslo, Norway</option><option value="Wiedner Hauptstraße 120-124/2.OG, 1050 Wien, Austria">Wiedner Hauptstraße 120-124/2.OG, 1050 Wien, Austria</option><option value="st. th, 1265 København, Denmark">st. th, 1265 København, Denmark</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">68</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="4 Exchequer St, Dublin 2, D02 HX95, Ireland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>the Loft sws Brow Bar</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dublin 2, D02 HX95, Ireland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+353 86 880 1350">📞 +353 86 880 1350</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=229226829404051593&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a6293940-51a8-4f46-b800-c4e7934cdfa6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a6293940-51a8-4f46-b800-c4e7934cdfa6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a6293940-51a8-4f46-b800-c4e7934cdfa6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="Else-Züblin-Strasse 112, 8404 Winterthur, Switzerland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>THE BROW STUDIO GmbH</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Else-Züblin-Strasse 112, 8404 Winterthur, Switzerland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+41 76 630 31 70">📞 +41 76 630 31 70</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8437740098783091191&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b996b4aa-d771-4012-a9db-f6af8788def6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b996b4aa-d771-4012-a9db-f6af8788def6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b996b4aa-d771-4012-a9db-f6af8788def6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="Rue Général Leman 25, 1040 Etterbeek, Belgium"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Novaskin Clinic</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rue Général Leman 25, 1040 Etterbeek, Belgium</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+32 2 582 85 83">📞 +32 2 582 85 83</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=293082937305953215&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3805c3b5-c216-46fd-94f1-7db63eb03ec6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3805c3b5-c216-46fd-94f1-7db63eb03ec6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3805c3b5-c216-46fd-94f1-7db63eb03ec6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="147 W 35th St S#611, New York, NY 10001, USA"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Brows Empire NYC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 New York, NY 10001, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 646-780-9191">📞 +1 646-780-9191</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7906750224990425023&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c35cea34-57b1-4173-a64b-f094ffd8d906">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c35cea34-57b1-4173-a64b-f094ffd8d906">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c35cea34-57b1-4173-a64b-f094ffd8d906" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="501 5th Ave Ste 1115 11th floor, New York, NY 10017, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Beauty World Manhattan - Permanent make-up NYC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 New York, NY 10017, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 646-627-6750">📞 +1 646-627-6750</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=858066077618439770&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="077a2192-f5e5-4a5c-85eb-b19bfd172854">✓ Approve</button>
+          <button class="btn btn-reject" data-id="077a2192-f5e5-4a5c-85eb-b19bfd172854">✕ Reject</button>
+          <button class="btn btn-demo" data-id="077a2192-f5e5-4a5c-85eb-b19bfd172854" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="Gamle Drammensvei 35 A, 1369 Stabekk, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Brun og blid Stabekk</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Gamle Drammensvei 35 A, 1369 Stabekk, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 48 22 70 00">📞 +47 48 22 70 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10753803835646901372&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bd5d74eb-1fa3-4f4f-8da7-aba6eed76b74">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bd5d74eb-1fa3-4f4f-8da7-aba6eed76b74">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bd5d74eb-1fa3-4f4f-8da7-aba6eed76b74" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="1726 2nd Ave, New York, NY 10128, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Upper East Side Tan - Tanning &amp; Red Light Therapy</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 New York, NY 10128, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 646-263-3390">📞 +1 646-263-3390</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5401767610670148846&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ad2f0bf0-166f-46ad-87ba-de743c9e82ae">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ad2f0bf0-166f-46ad-87ba-de743c9e82ae">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ad2f0bf0-166f-46ad-87ba-de743c9e82ae" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="Inside Bling Lash, 20 W 23rd St Fl 2, New York, NY 10010, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Tan Artist</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 New York, NY 10010, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 646-707-7171">📞 +1 646-707-7171</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7676442740476449091&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3f088633-b00f-4a6c-85bb-95d21883df04">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3f088633-b00f-4a6c-85bb-95d21883df04">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3f088633-b00f-4a6c-85bb-95d21883df04" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="Feldeggstrasse 4, 8008 Zürich, Switzerland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pestalozzi Rechtsanwälte AG</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Feldeggstrasse 4, 8008 Zürich, Switzerland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+41 44 217 91 11">📞 +41 44 217 91 11</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11578122885376833547&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8f4a9006-6926-4976-b8ca-b7cc6717089d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8f4a9006-6926-4976-b8ca-b7cc6717089d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8f4a9006-6926-4976-b8ca-b7cc6717089d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="Sq. Marie-Louise 35, 1000 Bruxelles, Belgium"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Avocat Pénaliste Bruxelles Juridis</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sq. Marie-Louise 35, 1000 Bruxelles, Belgium</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+32 2 886 16 65">📞 +32 2 886 16 65</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17486095339771665155&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f62be1e9-e6d9-40c2-844a-3ab716a48137">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f62be1e9-e6d9-40c2-844a-3ab716a48137">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f62be1e9-e6d9-40c2-844a-3ab716a48137" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="Av. Louise 54, 1050 Ixelles, Belgium"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Charline Delval - Avocate en droit des étrangers, droit international privé familial et droit de la nationalité belge</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Av. Louise 54, 1050 Ixelles, Belgium</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+32 490 46 85 20">📞 +32 490 46 85 20</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7759310583948781439&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="787225bf-a67d-4a15-a736-a8c93f55b116">✓ Approve</button>
+          <button class="btn btn-reject" data-id="787225bf-a67d-4a15-a736-a8c93f55b116">✕ Reject</button>
+          <button class="btn btn-demo" data-id="787225bf-a67d-4a15-a736-a8c93f55b116" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="Av. Louise 50/7, 1050 Bruxelles, Belgium"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Arthur &amp; Marin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Av. Louise 50/7, 1050 Bruxelles, Belgium</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+32 465 34 53 45">📞 +32 465 34 53 45</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17070927430817380260&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cb172dde-874e-426e-b95d-35ea41cf7e3b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cb172dde-874e-426e-b95d-35ea41cf7e3b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cb172dde-874e-426e-b95d-35ea41cf7e3b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="535 5th Ave Suite 2600, Manhattan, NY 10017, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ward Law New York</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manhattan, NY 10017, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 646-956-2797">📞 +1 646-956-2797</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1673720779306549689&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bc458a09-ba90-46df-bc82-1d7d440ae404">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bc458a09-ba90-46df-bc82-1d7d440ae404">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bc458a09-ba90-46df-bc82-1d7d440ae404" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="42 Broadway #1744, BOWLING GREEN, NY 10004, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fisher Stone, P.C.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 BOWLING GREEN, NY 10004, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 212-256-1877">📞 +1 212-256-1877</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3614550254005978319&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a9bfa83b-bbb6-438a-a343-f2d54462178a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a9bfa83b-bbb6-438a-a343-f2d54462178a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a9bfa83b-bbb6-438a-a343-f2d54462178a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="Ringvägen 100, 118 60 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Lamooi Accounting</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ringvägen 100, 118 60 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 400 120 88">📞 +46 8 400 120 88</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18032635033988139489&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fbe9ee51-b165-437d-8b92-13467a31c755">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fbe9ee51-b165-437d-8b92-13467a31c755">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fbe9ee51-b165-437d-8b92-13467a31c755" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="Torsgatan 11, 111 23 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Talenom</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Torsgatan 11, 111 23 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 505 736 10">📞 +46 8 505 736 10</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4115119707055843022&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="edda71d4-1a97-4228-90fe-e70a3cd5cca5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="edda71d4-1a97-4228-90fe-e70a3cd5cca5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="edda71d4-1a97-4228-90fe-e70a3cd5cca5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="Lundegeilen 16, 4323 Sandnes, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Efirma Regnskap AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Lundegeilen 16, 4323 Sandnes, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 21 38 38 21">📞 +47 21 38 38 21</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17416335702026044765&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9882fa55-48ff-4354-bba6-c3a1dd76a219">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9882fa55-48ff-4354-bba6-c3a1dd76a219">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9882fa55-48ff-4354-bba6-c3a1dd76a219" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="Suite 4, Inniscarra, Main St, Rathcoole, Dublin, D24 E029, Ireland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ireland Accountant - Dublin Accounting Firm</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dublin, D24 E029, Ireland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+353 818 003 373">📞 +353 818 003 373</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10334810868093663874&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="249528d3-ec9c-4298-adde-866079d5e4df">✓ Approve</button>
+          <button class="btn btn-reject" data-id="249528d3-ec9c-4298-adde-866079d5e4df">✕ Reject</button>
+          <button class="btn btn-demo" data-id="249528d3-ec9c-4298-adde-866079d5e4df" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="Pl. de l'Yser 08, 1000 Bruxelles, Belgium"
+        data-score="25"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="34.6 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">25</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kpm Tax &amp; Accounting Services</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Pl. de l'Yser 08, 1000 Bruxelles, Belgium</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6767693962119361221&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0909a4ff-bad3-4716-ae14-c46225e7a83a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0909a4ff-bad3-4716-ae14-c46225e7a83a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0909a4ff-bad3-4716-ae14-c46225e7a83a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="c/o Places Östermalm, Artillerigatan 55, 114 45 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Siegbahn Rådgivning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Artillerigatan 55, 114 45 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 73 937 30 90">📞 +46 73 937 30 90</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18370911366849019546&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="590f87bb-ad8b-4a06-9d1c-4c011d1c017b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="590f87bb-ad8b-4a06-9d1c-4c011d1c017b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="590f87bb-ad8b-4a06-9d1c-4c011d1c017b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Norrtullsgatan 6 (7A, Strandvägen 7 (7A, 114 56 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>LIFESTYLE|CAPITAL</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Strandvägen 7 (7A, 114 56 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 677 78 00">📞 +46 8 677 78 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4439865468679141207&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c8421c9d-5350-40ce-9be6-b4498aead609">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c8421c9d-5350-40ce-9be6-b4498aead609">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c8421c9d-5350-40ce-9be6-b4498aead609" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Vasagatan 15, 111 20 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Opti Sverige AB</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Vasagatan 15, 111 20 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 612 70 70">📞 +46 8 612 70 70</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10564555987725411173&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="32f8ac58-5b6c-4ccb-a171-33823b246720">✓ Approve</button>
+          <button class="btn btn-reject" data-id="32f8ac58-5b6c-4ccb-a171-33823b246720">✕ Reject</button>
+          <button class="btn btn-demo" data-id="32f8ac58-5b6c-4ccb-a171-33823b246720" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Engelbrektsgatan 5, 114 32 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fair Investments Sweden AB</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Engelbrektsgatan 5, 114 32 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 557 799 00">📞 +46 8 557 799 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14480178859631762795&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="39f5f08e-5f58-4d81-ab9d-27a71fd85b23">✓ Approve</button>
+          <button class="btn btn-reject" data-id="39f5f08e-5f58-4d81-ab9d-27a71fd85b23">✕ Reject</button>
+          <button class="btn btn-demo" data-id="39f5f08e-5f58-4d81-ab9d-27a71fd85b23" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Humlegårdsgatan 4, 114 46 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Akademisk Marknadsanalys Stockholm AB</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Humlegårdsgatan 4, 114 46 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 501 009 60">📞 +46 8 501 009 60</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3013923132082899113&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="366fd679-e07e-4fa3-9cfd-4a36bd4c787a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="366fd679-e07e-4fa3-9cfd-4a36bd4c787a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="366fd679-e07e-4fa3-9cfd-4a36bd4c787a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Grev Turegatan 18, 114 46 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Holmont &amp; Co</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Grev Turegatan 18, 114 46 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 70 871 20 80">📞 +46 70 871 20 80</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2558326021578179067&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f571378e-b2d0-4c20-953e-e4519a29157e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f571378e-b2d0-4c20-953e-e4519a29157e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f571378e-b2d0-4c20-953e-e4519a29157e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Mäster Samuelsgatan 46, 111 57 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ria Money Transfer &amp; Currency Exchange</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Mäster Samuelsgatan 46, 111 57 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 70 734 27 82">📞 +46 70 734 27 82</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2925044718847219212&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="438770d0-55ec-4338-ade3-6fee3510e06e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="438770d0-55ec-4338-ade3-6fee3510e06e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="438770d0-55ec-4338-ade3-6fee3510e06e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Rehnsgatan 11, 113 57 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ordna Bolån</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rehnsgatan 11, 113 57 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 20 25 26 26">📞 +46 20 25 26 26</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9100645415698573909&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1f069fec-9fa0-40b7-b486-bfa15ea94fe3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1f069fec-9fa0-40b7-b486-bfa15ea94fe3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1f069fec-9fa0-40b7-b486-bfa15ea94fe3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Kungsgatan 10, 111 43 Stockholm, Sweden"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Corpia AB</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kungsgatan 10, 111 43 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 400 203 59">📞 +46 8 400 203 59</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2589476849778976114&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cc391772-d03d-4933-9192-ce70d2e867ec">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cc391772-d03d-4933-9192-ce70d2e867ec">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cc391772-d03d-4933-9192-ce70d2e867ec" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Holländargatan 9A, 111 36 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>T&amp;A MULTISERVICE AB / Ria Money Transfer</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Holländargatan 9A, 111 36 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 73 669 70 98">📞 +46 73 669 70 98</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=985271001477024862&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="53307a27-15c2-4289-b63c-1800d1470c67">✓ Approve</button>
+          <button class="btn btn-reject" data-id="53307a27-15c2-4289-b63c-1800d1470c67">✕ Reject</button>
+          <button class="btn btn-demo" data-id="53307a27-15c2-4289-b63c-1800d1470c67" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Kungstensgatan 18, 113 57 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Deloitte Stockholm</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kungstensgatan 18, 113 57 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 75 246 20 00">📞 +46 75 246 20 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2698974681703745913&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="641f90d5-60b5-45e2-ad5e-017bf2313fba">✓ Approve</button>
+          <button class="btn btn-reject" data-id="641f90d5-60b5-45e2-ad5e-017bf2313fba">✕ Reject</button>
+          <button class="btn btn-demo" data-id="641f90d5-60b5-45e2-ad5e-017bf2313fba" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Västra Trädgårdsgatan 15, 111 53 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Alantra</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Västra Trädgårdsgatan 15, 111 53 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 70 508 67 25">📞 +46 70 508 67 25</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13048966951423059844&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="435aa60a-ea5a-4275-b884-cb9ba1b6b4d0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="435aa60a-ea5a-4275-b884-cb9ba1b6b4d0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="435aa60a-ea5a-4275-b884-cb9ba1b6b4d0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Sibyllegatan 17, 114 42 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Lyra Financial Wealth</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sibyllegatan 17, 114 42 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 550 025 00">📞 +46 8 550 025 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12626760613094203409&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ee7cc27f-bb6d-4941-8324-de86b0149f40">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ee7cc27f-bb6d-4941-8324-de86b0149f40">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ee7cc27f-bb6d-4941-8324-de86b0149f40" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Centralplan 15, 111 20 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mpya Finance</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Centralplan 15, 111 20 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 10 202 26 00">📞 +46 10 202 26 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17572020535558145640&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2fcf1350-ac32-49a5-b441-73f1d6d039d7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2fcf1350-ac32-49a5-b441-73f1d6d039d7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2fcf1350-ac32-49a5-b441-73f1d6d039d7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Regeringsgatan 38, 111 56 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>UBS Europe SE</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Regeringsgatan 38, 111 56 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 453 73 00">📞 +46 8 453 73 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2947428650161654106&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="622f3c97-9356-429d-afbd-c91f882b9c11">✓ Approve</button>
+          <button class="btn btn-reject" data-id="622f3c97-9356-429d-afbd-c91f882b9c11">✕ Reject</button>
+          <button class="btn btn-demo" data-id="622f3c97-9356-429d-afbd-c91f882b9c11" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Mäster Samuelsgatan 42, 111 57 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Redeye AB</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Mäster Samuelsgatan 42, 111 57 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 545 013 30">📞 +46 8 545 013 30</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17418106903138646405&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4978333b-994d-4f78-b38c-11dcdd7a88c9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4978333b-994d-4f78-b38c-11dcdd7a88c9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4978333b-994d-4f78-b38c-11dcdd7a88c9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hovslagargatan 5A, 111 48 Stockholm, Sweden"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Morgan Stanley</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hovslagargatan 5A, 111 48 Stockholm, Sweden</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+46 8 678 96 00">📞 +46 8 678 96 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3711422069797939472&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a3343ac8-c741-4a57-a6bd-2b8dcbeb93c7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a3343ac8-c741-4a57-a6bd-2b8dcbeb93c7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a3343ac8-c741-4a57-a6bd-2b8dcbeb93c7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Karenslyst Allé 4, 0278 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Connectum Capital Management AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Karenslyst Allé 4, 0278 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 22 12 46 40">📞 +47 22 12 46 40</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3951657830138633920&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="73485180-be6f-457e-b13c-0571358a84c3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="73485180-be6f-457e-b13c-0571358a84c3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="73485180-be6f-457e-b13c-0571358a84c3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="St. Olavs Gate 28, 0166 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Axo Finance</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 St. Olavs Gate 28, 0166 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 22 86 74 00">📞 +47 22 86 74 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2330425749862189752&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1fe4e5f1-743f-460a-a932-16bbc930a321">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1fe4e5f1-743f-460a-a932-16bbc930a321">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1fe4e5f1-743f-460a-a932-16bbc930a321" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Tollbugata 11, 0152 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Uno Finans AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Tollbugata 11, 0152 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 40 00 51 60">📞 +47 40 00 51 60</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5578952159217570485&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ac261bb1-c592-4dd6-b03a-bc128df4374a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ac261bb1-c592-4dd6-b03a-bc128df4374a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ac261bb1-c592-4dd6-b03a-bc128df4374a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Ruseløkkveien 30, 0251 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Söderberg &amp; Partners Wealth Management AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ruseløkkveien 30, 0251 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 22 44 77 00">📞 +47 22 44 77 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9324210470271012498&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ff8d8839-fb7b-483b-84f5-16dd6787a538">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ff8d8839-fb7b-483b-84f5-16dd6787a538">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ff8d8839-fb7b-483b-84f5-16dd6787a538" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Tjuvholmen allé 19, 0252 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Alpha Corporate Finance</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Tjuvholmen allé 19, 0252 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 21 03 75 00">📞 +47 21 03 75 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9026587985307570824&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4d11fc54-0ba5-47ba-b90f-0b6d330a1241">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4d11fc54-0ba5-47ba-b90f-0b6d330a1241">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4d11fc54-0ba5-47ba-b90f-0b6d330a1241" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Munkedamsveien 59b, 0270 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Norsk Refinansiering AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Munkedamsveien 59b, 0270 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 21 00 76 30">📞 +47 21 00 76 30</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12495678594999265305&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3399cb59-7ae4-48c6-a184-d9d13c7298d3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3399cb59-7ae4-48c6-a184-d9d13c7298d3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3399cb59-7ae4-48c6-a184-d9d13c7298d3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Skippergata 9, 0151 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Zensum AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Skippergata 9, 0151 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 23 96 52 00">📞 +47 23 96 52 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4251180051874083223&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a217b97f-4785-44f4-84d9-4b5e67dca7d0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a217b97f-4785-44f4-84d9-4b5e67dca7d0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a217b97f-4785-44f4-84d9-4b5e67dca7d0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Filipstad Brygge 2, 0252 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Norvestor Equity AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Filipstad Brygge 2, 0252 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 23 00 07 00">📞 +47 23 00 07 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6631921459931545498&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5dcaf951-47b2-4dbb-9776-22dd8fd760fe">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5dcaf951-47b2-4dbb-9776-22dd8fd760fe">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5dcaf951-47b2-4dbb-9776-22dd8fd760fe" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Tjuvholmen allé 3, 0252 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Colliers International Oslo</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Tjuvholmen allé 3, 0252 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 21 95 80 70">📞 +47 21 95 80 70</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12697709757767288042&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c19a6dec-711a-4843-ac92-99b88a82413e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c19a6dec-711a-4843-ac92-99b88a82413e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c19a6dec-711a-4843-ac92-99b88a82413e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Parkveien 53B, 0256 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>DHT Corporate Finance AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Parkveien 53B, 0256 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 67 10 15 01">📞 +47 67 10 15 01</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=836572415905504584&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="873d37ac-9402-4f1b-9a69-79347bb19039">✓ Approve</button>
+          <button class="btn btn-reject" data-id="873d37ac-9402-4f1b-9a69-79347bb19039">✕ Reject</button>
+          <button class="btn btn-demo" data-id="873d37ac-9402-4f1b-9a69-79347bb19039" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hieronymus Heyerdahls gate 1, 0160 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Verdane Capital Advisors AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hieronymus Heyerdahls gate 1, 0160 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 24 13 70 00">📞 +47 24 13 70 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=433657180952313374&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="51a35bef-1cc2-4824-b73c-371091c026cf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="51a35bef-1cc2-4824-b73c-371091c026cf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="51a35bef-1cc2-4824-b73c-371091c026cf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Fridtjof Nansens plass 6, 0160 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>CMC Markets Norway</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Fridtjof Nansens plass 6, 0160 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 22 01 97 02">📞 +47 22 01 97 02</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=816037985035405283&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="14a9f45c-8170-4dc8-a729-5d5d34a9dae2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="14a9f45c-8170-4dc8-a729-5d5d34a9dae2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="14a9f45c-8170-4dc8-a729-5d5d34a9dae2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Dronning Eufemias gate 8, 0191 Oslo, Norway"
+        data-score="30"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="41.5 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">30</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fearnley Securities</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dronning Eufemias gate 8, 0191 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 22 93 60 00">📞 +47 22 93 60 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12950645147234034050&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="379648f7-bde0-4d21-b73b-73d7b6e390e3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="379648f7-bde0-4d21-b73b-73d7b6e390e3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="379648f7-bde0-4d21-b73b-73d7b6e390e3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Wergelandsveien 1-3, 0167 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Howden Insurance brokerage AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Wergelandsveien 1-3, 0167 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 40 00 63 12">📞 +47 40 00 63 12</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6266976246611588497&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="46a6b66f-4e7c-4bcd-8532-32b2ff905145">✓ Approve</button>
+          <button class="btn btn-reject" data-id="46a6b66f-4e7c-4bcd-8532-32b2ff905145">✕ Reject</button>
+          <button class="btn btn-demo" data-id="46a6b66f-4e7c-4bcd-8532-32b2ff905145" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Henrik Ibsens gate 53, 0255 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Formuesforvaltning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Henrik Ibsens gate 53, 0255 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 24 12 44 00">📞 +47 24 12 44 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17295103668019665029&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6c235ccc-8708-45b6-a61e-fee2e61d122f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6c235ccc-8708-45b6-a61e-fee2e61d122f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6c235ccc-8708-45b6-a61e-fee2e61d122f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Stortingsgata 26, 0161 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>VANBRUUN</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Stortingsgata 26, 0161 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 21 56 98 37">📞 +47 21 56 98 37</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11337843222254885898&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9ddbbca2-5501-4016-aceb-45ac98653a22">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9ddbbca2-5501-4016-aceb-45ac98653a22">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9ddbbca2-5501-4016-aceb-45ac98653a22" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Karenslyst Allé 4, 0278 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>localmarket.no</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Karenslyst Allé 4, 0278 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 23 89 88 63">📞 +47 23 89 88 63</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10847480703980887025&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4d2e7100-2414-4e3c-a3ea-0c9706d1bfcf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4d2e7100-2414-4e3c-a3ea-0c9706d1bfcf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4d2e7100-2414-4e3c-a3ea-0c9706d1bfcf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="0250, Bryggegata 6, 0250 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Grieg Investor AS</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bryggegata 6, 0250 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 23 27 41 50">📞 +47 23 27 41 50</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8142577401950542725&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="53952da1-ddf5-4637-9d4e-0458f6b191cc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="53952da1-ddf5-4637-9d4e-0458f6b191cc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="53952da1-ddf5-4637-9d4e-0458f6b191cc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Munkedamsveien 59B, 0270 Oslo, Norway"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kepler Cheuvreux Oslo</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Munkedamsveien 59B, 0270 Oslo, Norway</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+47 23 13 90 80">📞 +47 23 13 90 80</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10198514351868634602&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9c53ed54-931b-47c6-b701-de8a99c2f7a5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9c53ed54-931b-47c6-b701-de8a99c2f7a5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9c53ed54-931b-47c6-b701-de8a99c2f7a5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Frederiksgade 9, st. th, 1265 København, Denmark"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Konsilium21</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 st. th, 1265 København, Denmark</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+45 22 98 01 78">📞 +45 22 98 01 78</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10690776200893039029&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fddb3197-40ec-4991-8edc-00421f82881e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fddb3197-40ec-4991-8edc-00421f82881e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fddb3197-40ec-4991-8edc-00421f82881e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Blegdamsvej 6, 2200 København, Denmark"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>COCOA Invest</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Blegdamsvej 6, 2200 København, Denmark</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7456 020455">📞 +44 7456 020455</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7241886443635518237&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1a08fa12-0850-4ff7-b87b-6cc61c87590d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1a08fa12-0850-4ff7-b87b-6cc61c87590d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1a08fa12-0850-4ff7-b87b-6cc61c87590d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Alexandra House, 3 Ballsbridge Park, Merrion Rd, Ballsbridge, Dublin 4, D04 C7H2, Ireland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Quigley Financial Brokers Dublin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dublin 4, D04 C7H2, Ireland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+353 53 914 4544">📞 +353 53 914 4544</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11877705123997867050&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="14b5084d-6d36-4487-9b09-eac75858a7c8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="14b5084d-6d36-4487-9b09-eac75858a7c8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="14b5084d-6d36-4487-9b09-eac75858a7c8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Fenero, Block D, Tyrrelstown Way, Tyrrelstown, Dublin 15, D15 K4PY, Ireland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Fenero Financial Advisors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dublin 15, D15 K4PY, Ireland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+353 1 687 7417">📞 +353 1 687 7417</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7667573320795778705&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="734db28d-688a-4794-b7c7-b0b31cb8baa1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="734db28d-688a-4794-b7c7-b0b31cb8baa1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="734db28d-688a-4794-b7c7-b0b31cb8baa1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="6099 Frantz Rd, Dublin, OH 43017, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Safe Harbor Wealth Advisors - Dublin</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dublin, OH 43017, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 614-760-0670">📞 +1 614-760-0670</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=65491570787046817&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7729ade0-83af-47c7-b9de-3e54ad33553e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7729ade0-83af-47c7-b9de-3e54ad33553e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7729ade0-83af-47c7-b9de-3e54ad33553e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Ste 1, The Cubes Offices Beacon South Quarter, Sandyford, Dublin, D18 RF44, Ireland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Financial Planning Matters Limited</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Dublin, D18 RF44, Ireland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+353 1 233 7723">📞 +353 1 233 7723</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4427165065042556812&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="648ae539-b1f5-453c-9004-a0751bc5537b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="648ae539-b1f5-453c-9004-a0751bc5537b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="648ae539-b1f5-453c-9004-a0751bc5537b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bahnhofstrasse 43, 8001 Zürich, Switzerland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Esfera Wealth AG</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bahnhofstrasse 43, 8001 Zürich, Switzerland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+41 44 213 62 40">📞 +41 44 213 62 40</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10927344985021765878&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="783c64db-890d-42d9-8be9-753e4dfe2829">✓ Approve</button>
+          <button class="btn btn-reject" data-id="783c64db-890d-42d9-8be9-753e4dfe2829">✕ Reject</button>
+          <button class="btn btn-demo" data-id="783c64db-890d-42d9-8be9-753e4dfe2829" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bellerivestrasse 20, 8008 Zürich, Switzerland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Marmot Finance</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bellerivestrasse 20, 8008 Zürich, Switzerland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+41 43 508 42 70">📞 +41 43 508 42 70</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5403306284285727215&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8357f146-82b8-4cd7-a470-1042322629f6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8357f146-82b8-4cd7-a470-1042322629f6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8357f146-82b8-4cd7-a470-1042322629f6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Seefeldstrasse 225, 8008 Zürich, Switzerland"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Alpen Partners AG - Zurich</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Seefeldstrasse 225, 8008 Zürich, Switzerland</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+41 58 105 75 00">📞 +41 58 105 75 00</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4599598385278587097&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e1d06318-dde1-49d6-9428-2de836ef76c7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e1d06318-dde1-49d6-9428-2de836ef76c7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e1d06318-dde1-49d6-9428-2de836ef76c7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Wiedner Hauptstraße 120-124/2.OG, 1050 Wien, Austria"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Swiss Life Select Österreich GmbH</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Wiedner Hauptstraße 120-124/2.OG, 1050 Wien, Austria</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+43 1 716990">📞 +43 1 716990</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17210383418765466433&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a0ee3e5e-9008-4646-bd34-11393431b735">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a0ee3e5e-9008-4646-bd34-11393431b735">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a0ee3e5e-9008-4646-bd34-11393431b735" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Av. Albert 176, 1190 Brussels, Belgium"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Navagne Management</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Av. Albert 176, 1190 Brussels, Belgium</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+32 472 30 67 41">📞 +32 472 30 67 41</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3586592491765824924&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="973fc0f4-8e14-4cbc-8622-fc2415ffe58d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="973fc0f4-8e14-4cbc-8622-fc2415ffe58d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="973fc0f4-8e14-4cbc-8622-fc2415ffe58d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="875 3rd Ave 23rd Floor, New York, NY 10022, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Eveready Financial</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 New York, NY 10022, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 888-212-1576">📞 +1 888-212-1576</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9541866609962163267&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b92c2914-0125-4624-8c03-1c366fff5746">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b92c2914-0125-4624-8c03-1c366fff5746">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b92c2914-0125-4624-8c03-1c366fff5746" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="225 Wilkinson St #107, Syracuse, NY 13204, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Excelsior Wealth Partners | Investment Advisors, Financial Planners</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Syracuse, NY 13204, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 315-303-1668">📞 +1 315-303-1668</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11574118924729725334&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9e88d9e3-87a6-4c4d-8fa1-80eef74db88a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9e88d9e3-87a6-4c4d-8fa1-80eef74db88a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9e88d9e3-87a6-4c4d-8fa1-80eef74db88a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
