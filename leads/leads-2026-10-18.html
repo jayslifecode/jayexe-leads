@@ -1,0 +1,3405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-10-18</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-10-18</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">80</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="1 Every St, Manchester M4 7LT, UK">1 Every St, Manchester M4 7LT, UK</option><option value="1 Hardman Blvd, Manchester M3 3AQ, UK">1 Hardman Blvd, Manchester M3 3AQ, UK</option><option value="1/50 Carlton Cres, Summer Hill NSW 2130, Australia">1/50 Carlton Cres, Summer Hill NSW 2130, Australia</option><option value="10 Little Lever St, Manchester M1 1HR, UK">10 Little Lever St, Manchester M1 1HR, UK</option><option value="11-12 George Rd, Birmingham B15 1NP, UK">11-12 George Rd, Birmingham B15 1NP, UK</option><option value="1138 Stratford Rd, Birmingham B28 8AE, UK">1138 Stratford Rd, Birmingham B28 8AE, UK</option><option value="118 Byres Rd, Glasgow G12 8TB, UK">118 Byres Rd, Glasgow G12 8TB, UK</option><option value="155 King St, Sydney NSW 2000, Australia">155 King St, Sydney NSW 2000, Australia</option><option value="166 Perry Wood Rd, Birmingham B42 2BH, UK">166 Perry Wood Rd, Birmingham B42 2BH, UK</option><option value="166 Plymouth Grove, Manchester M13 0AF, UK">166 Plymouth Grove, Manchester M13 0AF, UK</option><option value="170 Bonds Rd, Riverwood NSW 2210, Australia">170 Bonds Rd, Riverwood NSW 2210, Australia</option><option value="20 Store St, Sheffield S2 4DA, UK">20 Store St, Sheffield S2 4DA, UK</option><option value="20 Swan St, Manchester M4 5JW, UK">20 Swan St, Manchester M4 5JW, UK</option><option value="20-21 Crighton Pl, Edinburgh EH7 4NY, UK">20-21 Crighton Pl, Edinburgh EH7 4NY, UK</option><option value="214 Hagley Rd, Birmingham B16 9PH, UK">214 Hagley Rd, Birmingham B16 9PH, UK</option><option value="23 Ambleside Ave, Bristol BS10 6HA, UK">23 Ambleside Ave, Bristol BS10 6HA, UK</option><option value="23D Wilmslow Rd, Manchester M14 5TB, UK">23D Wilmslow Rd, Manchester M14 5TB, UK</option><option value="289 Icknield Port Rd, Birmingham B16 0AG, UK">289 Icknield Port Rd, Birmingham B16 0AG, UK</option><option value="29 Regent Terrace, Edinburgh EH7 5BS, UK">29 Regent Terrace, Edinburgh EH7 5BS, UK</option><option value="3 Hill St, Edinburgh EH2 3JP, UK">3 Hill St, Edinburgh EH2 3JP, UK</option><option value="30 Queensferry Rd, Edinburgh EH4 2HS, UK">30 Queensferry Rd, Edinburgh EH4 2HS, UK</option><option value="30 Shirlow St, Marrickville NSW 2204, Australia">30 Shirlow St, Marrickville NSW 2204, Australia</option><option value="327 Moseley Rd, Birmingham B12 0DX, UK">327 Moseley Rd, Birmingham B12 0DX, UK</option><option value="35b Russell Ave, Bristol BS15 9QF, UK">35b Russell Ave, Bristol BS15 9QF, UK</option><option value="43 Highfield Rd, Lindfield NSW 2070, Australia">43 Highfield Rd, Lindfield NSW 2070, Australia</option><option value="443 Chapel Rd, Bankstown NSW 2200, Australia">443 Chapel Rd, Bankstown NSW 2200, Australia</option><option value="50 Richmond St, Glasgow G1 1XP, UK">50 Richmond St, Glasgow G1 1XP, UK</option><option value="56a Stratford St N, Birmingham B11 1BP, UK">56a Stratford St N, Birmingham B11 1BP, UK</option><option value="7 Highfield Rd, Birmingham B28 0EL, UK">7 Highfield Rd, Birmingham B28 0EL, UK</option><option value="8 Aldred Rd, Sheffield S10 1PD, UK">8 Aldred Rd, Sheffield S10 1PD, UK</option><option value="94 Wykebeck Mount, Leeds LS9 0HW, UK">94 Wykebeck Mount, Leeds LS9 0HW, UK</option><option value="Aldershaw Rd, Birmingham B26 1HN, UK">Aldershaw Rd, Birmingham B26 1HN, UK</option><option value="Baildon, Shipley BD17 7PU, UK">Baildon, Shipley BD17 7PU, UK</option><option value="Balsall Heath, Birmingham B12 9NN, UK">Balsall Heath, Birmingham B12 9NN, UK</option><option value="Beattock Cl, Manchester M15 4JA, UK">Beattock Cl, Manchester M15 4JA, UK</option><option value="Bedminster, Bristol BS3 3LG, UK">Bedminster, Bristol BS3 3LG, UK</option><option value="Birmingham, AL 35242, USA">Birmingham, AL 35242, USA</option><option value="Birmingham, MI 48009, USA">Birmingham, MI 48009, USA</option><option value="Birmingham, Smethwick B66 4NF, UK">Birmingham, Smethwick B66 4NF, UK</option><option value="Bristol, VT 05443, USA">Bristol, VT 05443, USA</option><option value="Bunnerong Rd, Maroubra NSW 2036, Australia">Bunnerong Rd, Maroubra NSW 2036, Australia</option><option value="Chambers Ln, Sheffield S4 8DA, UK">Chambers Ln, Sheffield S4 8DA, UK</option><option value="Chorlton-cum-Hardy, Manchester M21 9DJ, UK">Chorlton-cum-Hardy, Manchester M21 9DJ, UK</option><option value="Clayton, Manchester M11 4WJ, UK">Clayton, Manchester M11 4WJ, UK</option><option value="Clifton, Bristol BS8 3BE, UK">Clifton, Bristol BS8 3BE, UK</option><option value="Didsbury, Manchester M20 1LH, UK">Didsbury, Manchester M20 1LH, UK</option><option value="Didsbury, Manchester M20 2DR, UK">Didsbury, Manchester M20 2DR, UK</option><option value="Didsbury, Manchester M20 6TR, UK">Didsbury, Manchester M20 6TR, UK</option><option value="Fallowfield, Manchester M14 7FB, UK">Fallowfield, Manchester M14 7FB, UK</option><option value="Floor 67/455 George St, Sydney NSW 2000, Australia">Floor 67/455 George St, Sydney NSW 2000, Australia</option><option value="Glasgow, KY 42141, USA">Glasgow, KY 42141, USA</option><option value="Gorton, Manchester M18 8TJ, UK">Gorton, Manchester M18 8TJ, UK</option><option value="Great Barr, Birmingham B42 1TF, UK">Great Barr, Birmingham B42 1TF, UK</option><option value="Hall Green, Birmingham B28 8AE, UK">Hall Green, Birmingham B28 8AE, UK</option><option value="Hallen Industrial Estate, Bristol BS10 7SE, UK">Hallen Industrial Estate, Bristol BS10 7SE, UK</option><option value="Harborne, Birmingham B17 0DB, UK">Harborne, Birmingham B17 0DB, UK</option><option value="Hillsborough, Sheffield S6 4HE, UK">Hillsborough, Sheffield S6 4HE, UK</option><option value="Hob Moor Rd, Birmingham B10 9HH, UK">Hob Moor Rd, Birmingham B10 9HH, UK</option><option value="Hotwells, Bristol BS8 4TX, UK">Hotwells, Bristol BS8 4TX, UK</option><option value="Jessop St, Wakefield WF2 7RP, UK">Jessop St, Wakefield WF2 7RP, UK</option><option value="Longsight, Manchester M13 0TA, UK">Longsight, Manchester M13 0TA, UK</option><option value="Lozells, Birmingham B19 2ER, UK">Lozells, Birmingham B19 2ER, UK</option><option value="Manchester Rd, Manchester M16 0FE, UK">Manchester Rd, Manchester M16 0FE, UK</option><option value="Manchester, MO 63021, USA">Manchester, MO 63021, USA</option><option value="Manchester, NH 03101, USA">Manchester, NH 03101, USA</option><option value="Manchester, NH 03103, USA">Manchester, NH 03103, USA</option><option value="Old Hall Ln, Manchester M13 0XT, UK">Old Hall Ln, Manchester M13 0XT, UK</option><option value="Prestwich, Manchester M25 1JF, UK">Prestwich, Manchester M25 1JF, UK</option><option value="Southville, Bristol BS3 1QA, UK">Southville, Bristol BS3 1QA, UK</option><option value="Stoke Gifford, Bristol BS16 1EJ, UK">Stoke Gifford, Bristol BS16 1EJ, UK</option><option value="Stretford, Manchester M16 0QA, UK">Stretford, Manchester M16 0QA, UK</option><option value="Trinity St, Smethwick B67 7AA, UK">Trinity St, Smethwick B67 7AA, UK</option><option value="Tyseley, Birmingham B11 2BE, UK">Tyseley, Birmingham B11 2BE, UK</option><option value="Unit 1/118 Wycombe St, Yagoona NSW 2199, Australia">Unit 1/118 Wycombe St, Yagoona NSW 2199, Australia</option><option value="Unit 2/27 Amax Ave, Girraween NSW 2145, Australia">Unit 2/27 Amax Ave, Girraween NSW 2145, Australia</option><option value="Unit 3/1 Cowpasture Pl, Wetherill Park NSW 2164, Australia">Unit 3/1 Cowpasture Pl, Wetherill Park NSW 2164, Australia</option><option value="Ward End, Birmingham B8 2NL, UK">Ward End, Birmingham B8 2NL, UK</option><option value="Washwood Heath, Birmingham B8 2EP, UK">Washwood Heath, Birmingham B8 2EP, UK</option><option value="Whalley Range, Manchester M16 8FA, UK">Whalley Range, Manchester M16 8FA, UK</option><option value="Withington, Manchester M20 1DJ, UK">Withington, Manchester M20 1DJ, UK</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">80</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="627 Green Valley Rd, Glasgow, KY 42141, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Barren County Glass Co Inc</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Glasgow, KY 42141, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 270-651-5321">📞 +1 270-651-5321</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6293039422778709054&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d5d56b48-7a4d-4cdf-ac82-c6e9dca3b1a1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d5d56b48-7a4d-4cdf-ac82-c6e9dca3b1a1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d5d56b48-7a4d-4cdf-ac82-c6e9dca3b1a1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="443 Chapel Rd, Bankstown NSW 2200, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Windscreen Repair Sydney</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 443 Chapel Rd, Bankstown NSW 2200, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 420 140 273">📞 +61 420 140 273</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9392372446017356677&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="57881f6c-6e18-46cf-8a87-f0a9dac6fc7c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="57881f6c-6e18-46cf-8a87-f0a9dac6fc7c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="57881f6c-6e18-46cf-8a87-f0a9dac6fc7c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="Unit 1/118 Wycombe St, Yagoona NSW 2199, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>New Image Autoglass</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 1/118 Wycombe St, Yagoona NSW 2199, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 405 696 264">📞 +61 405 696 264</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2531047213828093797&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f1bee8ce-be31-4360-b4e1-768a2d56aba9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f1bee8ce-be31-4360-b4e1-768a2d56aba9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f1bee8ce-be31-4360-b4e1-768a2d56aba9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="610 Park Ln, Manchester, MO 63021, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Spirit West Auto Body</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manchester, MO 63021, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 636-394-1712">📞 +1 636-394-1712</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5123085544832942778&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f205a9a2-3c09-45bd-a65b-452ec475e858">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f205a9a2-3c09-45bd-a65b-452ec475e858">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f205a9a2-3c09-45bd-a65b-452ec475e858" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="281 Willow St, Manchester, NH 03103, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Eastern Auto Body Frame &amp; Collision Specialist</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manchester, NH 03103, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 603-669-8573">📞 +1 603-669-8573</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9397924672833286189&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="93abf193-c674-4e9d-859d-1c2bd02a9624">✓ Approve</button>
+          <button class="btn btn-reject" data-id="93abf193-c674-4e9d-859d-1c2bd02a9624">✕ Reject</button>
+          <button class="btn btn-demo" data-id="93abf193-c674-4e9d-859d-1c2bd02a9624" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="Unit M1, Hallen Industrial Estate, Bristol BS10 7SE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bristol Bubbles Car Body Shop + Smart Repairs</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hallen Industrial Estate, Bristol BS10 7SE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7384 888708">📞 +44 7384 888708</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6111788906424396855&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="97a148ad-d279-4564-836c-075fc79720e6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="97a148ad-d279-4564-836c-075fc79720e6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="97a148ad-d279-4564-836c-075fc79720e6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="Camden Rd, Southville, Bristol BS3 1QA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>K S Bodyworks</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Southville, Bristol BS3 1QA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 117 966 5558">📞 +44 117 966 5558</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10075987279326630836&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="10770914-9a5c-4014-b46c-c678c8774b27">✓ Approve</button>
+          <button class="btn btn-reject" data-id="10770914-9a5c-4014-b46c-c678c8774b27">✕ Reject</button>
+          <button class="btn btn-demo" data-id="10770914-9a5c-4014-b46c-c678c8774b27" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="4-10 West St, Bedminster, Bristol BS3 3LG, UK"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Reed's car body repairs</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bedminster, Bristol BS3 3LG, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7525 641483">📞 +44 7525 641483</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8566077525897758721&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2c1793d3-2a65-4862-9583-ad30d6924c1d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2c1793d3-2a65-4862-9583-ad30d6924c1d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2c1793d3-2a65-4862-9583-ad30d6924c1d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="20-21 Crighton Pl, Edinburgh EH7 4NY, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Freak Body Shop</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 20-21 Crighton Pl, Edinburgh EH7 4NY, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16854689428601859725&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5711371a-88f7-4523-866b-58ba934fd186">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5711371a-88f7-4523-866b-58ba934fd186">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5711371a-88f7-4523-866b-58ba934fd186" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="20 Store St, Sheffield S2 4DA, UK"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Reshape ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 20 Store St, Sheffield S2 4DA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 114 275 4574">📞 +44 114 275 4574</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18079418609282667520&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="95b9fcaf-2b92-4503-99e4-64465d6bfb27">✓ Approve</button>
+          <button class="btn btn-reject" data-id="95b9fcaf-2b92-4503-99e4-64465d6bfb27">✕ Reject</button>
+          <button class="btn btn-demo" data-id="95b9fcaf-2b92-4503-99e4-64465d6bfb27" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="Unit 7,Elliot Business Park, Chambers Ln, Sheffield S4 8DA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Scuffs Etc Ltd - Vehicle body repair Specialists</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chambers Ln, Sheffield S4 8DA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7776 300300">📞 +44 7776 300300</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7096496062817735000&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ab53f7b8-8b79-4012-88f8-9d97ba9a9fe7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ab53f7b8-8b79-4012-88f8-9d97ba9a9fe7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ab53f7b8-8b79-4012-88f8-9d97ba9a9fe7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="Shop L-026 Lower Ground, Floor 67/455 George St, Sydney NSW 2000, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Body Shop Queen Victoria Building</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Floor 67/455 George St, Sydney NSW 2000, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 2 9102 2368">📞 +61 2 9102 2368</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3565244625870454399&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="11109035-fff7-4361-8443-8ffb46614778">✓ Approve</button>
+          <button class="btn btn-reject" data-id="11109035-fff7-4361-8443-8ffb46614778">✕ Reject</button>
+          <button class="btn btn-demo" data-id="11109035-fff7-4361-8443-8ffb46614778" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="44 Doncaster Ave, Withington, Manchester M20 1DJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>TCR Trafford Car Recovery Service</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Withington, Manchester M20 1DJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 524 5771">📞 +44 161 524 5771</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13299675294013741842&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="017db976-f9ef-436a-8fef-97fd1089f6ae">✓ Approve</button>
+          <button class="btn btn-reject" data-id="017db976-f9ef-436a-8fef-97fd1089f6ae">✕ Reject</button>
+          <button class="btn btn-demo" data-id="017db976-f9ef-436a-8fef-97fd1089f6ae" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="37 Walsden St, Clayton, Manchester M11 4WJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Quick 1 jumpstart &amp; Recovery</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Clayton, Manchester M11 4WJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7423 776002">📞 +44 7423 776002</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16867315612424917014&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e83e2537-0998-4365-ba19-75b8bdfc4d17">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e83e2537-0998-4365-ba19-75b8bdfc4d17">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e83e2537-0998-4365-ba19-75b8bdfc4d17" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="56a Stratford St N, Birmingham B11 1BP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Zak's 24/7 Recovery | Car Recovery | Van Recovery | 4X4 Commercial Breakdown Service | Accident Fast Response Birmingham</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 56a Stratford St N, Birmingham B11 1BP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7999 088818">📞 +44 7999 088818</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14169523502840540491&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b4c34599-f462-415b-8b18-0c64977edc37">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b4c34599-f462-415b-8b18-0c64977edc37">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b4c34599-f462-415b-8b18-0c64977edc37" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="289 Icknield Port Rd, Birmingham B16 0AG, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Simpsons breakdown recovery services Ltd.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 289 Icknield Port Rd, Birmingham B16 0AG, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7706 057962">📞 +44 7706 057962</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7538252664488705060&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1c37bcf7-38e8-426f-b1d1-6b00e226b3dd">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1c37bcf7-38e8-426f-b1d1-6b00e226b3dd">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1c37bcf7-38e8-426f-b1d1-6b00e226b3dd" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="480 Lovers Ln, Bristol, VT 05443, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>MotoFab Towing</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bristol, VT 05443, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 802-989-3720">📞 +1 802-989-3720</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2758301654699374087&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2f09aaba-128e-4cc1-8a84-793a7392b079">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2f09aaba-128e-4cc1-8a84-793a7392b079">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2f09aaba-128e-4cc1-8a84-793a7392b079" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="Unit 3/1 Cowpasture Pl, Wetherill Park NSW 2164, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Retriever Towing Sydney</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 3/1 Cowpasture Pl, Wetherill Park NSW 2164, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 2 9858 3344">📞 +61 2 9858 3344</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=947624396739585711&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c96e7b81-19c3-4f36-b751-c00a7fa8f279">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c96e7b81-19c3-4f36-b751-c00a7fa8f279">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c96e7b81-19c3-4f36-b751-c00a7fa8f279" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="170 Bonds Rd, Riverwood NSW 2210, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hurstville Towing Pty Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 170 Bonds Rd, Riverwood NSW 2210, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 2 9534 3377">📞 +61 2 9534 3377</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13329813093288775068&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="be4e7d5c-4972-4f8d-9a1a-158a01ef7067">✓ Approve</button>
+          <button class="btn btn-reject" data-id="be4e7d5c-4972-4f8d-9a1a-158a01ef7067">✕ Reject</button>
+          <button class="btn btn-demo" data-id="be4e7d5c-4972-4f8d-9a1a-158a01ef7067" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="85 Hancock St, Manchester, NH 03101, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Motorway Engineering Co</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manchester, NH 03101, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 603-668-6315">📞 +1 603-668-6315</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11881386585053738922&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="61907a40-a527-4de6-a63e-f0333ee78830">✓ Approve</button>
+          <button class="btn btn-reject" data-id="61907a40-a527-4de6-a63e-f0333ee78830">✕ Reject</button>
+          <button class="btn btn-demo" data-id="61907a40-a527-4de6-a63e-f0333ee78830" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="47 Otley Rd, Baildon, Shipley BD17 7PU, UK"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Archies motorcycle &amp; auto repairs &amp; mot</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Baildon, Shipley BD17 7PU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7989 532924">📞 +44 7989 532924</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12466440433741808886&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="aea93e62-8683-4fa7-b97e-863f225e26b4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="aea93e62-8683-4fa7-b97e-863f225e26b4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="aea93e62-8683-4fa7-b97e-863f225e26b4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Bunnerong Rd, Maroubra NSW 2036, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sydney Mobile Motorcycle and Scooter Repairs</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Bunnerong Rd, Maroubra NSW 2036, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 434 969 363">📞 +61 434 969 363</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10607256485546083866&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="03926d58-c696-49ea-b376-3b6e7623e1e2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="03926d58-c696-49ea-b376-3b6e7623e1e2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="03926d58-c696-49ea-b376-3b6e7623e1e2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="30 Shirlow St, Marrickville NSW 2204, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sabotage Motorcycles</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 30 Shirlow St, Marrickville NSW 2204, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 481 839 390">📞 +61 481 839 390</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15325672995271333100&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0942916f-c9b9-40fd-84ff-62b9662703f3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0942916f-c9b9-40fd-84ff-62b9662703f3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0942916f-c9b9-40fd-84ff-62b9662703f3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="43 Highfield Rd, Lindfield NSW 2070, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Full Throttle Mobile Mechanics</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 43 Highfield Rd, Lindfield NSW 2070, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8737843395099658128&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b09b52df-c612-47d5-9ef4-1848ad1c583a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b09b52df-c612-47d5-9ef4-1848ad1c583a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b09b52df-c612-47d5-9ef4-1848ad1c583a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 2/27 Amax Ave, Girraween NSW 2145, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>D Moto Motorcyle Engineering</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 2/27 Amax Ave, Girraween NSW 2145, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 490 486 322">📞 +61 490 486 322</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11978063249547693509&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="01387cb3-a4d3-4646-9ae8-32acdb042e3c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="01387cb3-a4d3-4646-9ae8-32acdb042e3c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="01387cb3-a4d3-4646-9ae8-32acdb042e3c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="RBS Building NatWest Entrepreneur Accelerator, 1 Hardman Blvd, Manchester M3 3AQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Manchester Tutors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1 Hardman Blvd, Manchester M3 3AQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3507 1630">📞 +44 20 3507 1630</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3175878686965323680&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5eb37c5b-8ad0-4627-a352-c86a29f50c3a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5eb37c5b-8ad0-4627-a352-c86a29f50c3a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5eb37c5b-8ad0-4627-a352-c86a29f50c3a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="St James &amp; Emmanuel Parish Centre, 6 Barlow Moor Rd, Didsbury, Manchester M20 6TR, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Choice Home Tutoring Manchester South</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Didsbury, Manchester M20 6TR, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 446 4157">📞 +44 161 446 4157</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4559257968406515501&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0339f51d-d84d-4762-8e3f-0d15fb621b71">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0339f51d-d84d-4762-8e3f-0d15fb621b71">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0339f51d-d84d-4762-8e3f-0d15fb621b71" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="First Floor, Swan Buildings, 20 Swan St, Manchester M4 5JW, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Eleven Plus Tutors in Manchester</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 20 Swan St, Manchester M4 5JW, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7482 640654">📞 +44 7482 640654</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3941707848112932548&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2dcb07da-4e69-4363-a588-be682d0a8e49">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2dcb07da-4e69-4363-a588-be682d0a8e49">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2dcb07da-4e69-4363-a588-be682d0a8e49" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="166 Plymouth Grove, Manchester M13 0AF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Prestige The Tuition Centre</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 166 Plymouth Grove, Manchester M13 0AF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7957 431131">📞 +44 7957 431131</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10211682966826531558&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f94ab728-0c00-4d29-a43d-32f053a3073d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f94ab728-0c00-4d29-a43d-32f053a3073d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f94ab728-0c00-4d29-a43d-32f053a3073d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="First Floor, Withington House Suites, 94 Withington Rd, Whalley Range, Manchester M16 8FA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sky-High Tuition</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Whalley Range, Manchester M16 8FA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 850 9192">📞 +44 161 850 9192</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15805144342355505137&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ab4535dc-c936-4ad4-8d0e-a962317c1d8d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ab4535dc-c936-4ad4-8d0e-a962317c1d8d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ab4535dc-c936-4ad4-8d0e-a962317c1d8d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Studio 10, 2nd Floor, 10 Little Lever St, Manchester M1 1HR, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tutor Trust</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 10 Little Lever St, Manchester M1 1HR, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 833 3055">📞 +44 161 833 3055</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6686231900476758915&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f6908214-15f2-4427-99c0-56e5aceb0077">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f6908214-15f2-4427-99c0-56e5aceb0077">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f6908214-15f2-4427-99c0-56e5aceb0077" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="113 Abbey Hey Ln, Gorton, Manchester M18 8TJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Dreamers' Learning</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Gorton, Manchester M18 8TJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7377 801545">📞 +44 7377 801545</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18261160244692887658&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6a026b9d-b0ae-43fc-a3ec-ef94d08966d4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6a026b9d-b0ae-43fc-a3ec-ef94d08966d4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6a026b9d-b0ae-43fc-a3ec-ef94d08966d4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="7 High Ln, Chorlton-cum-Hardy, Manchester M21 9DJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Chorlton Tuition Centre</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chorlton-cum-Hardy, Manchester M21 9DJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 860 6888">📞 +44 161 860 6888</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4304338855381488991&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dab7d318-2bdc-4ea8-8d3d-3c7e8baffb6d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dab7d318-2bdc-4ea8-8d3d-3c7e8baffb6d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dab7d318-2bdc-4ea8-8d3d-3c7e8baffb6d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="101 Beresford Rd, Longsight, Manchester M13 0TA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>A Plus Tuition Academy (Longsight Branch)</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Longsight, Manchester M13 0TA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 225 8396">📞 +44 161 225 8396</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15382361350906787629&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2bf7d13c-58b2-4198-94d8-9d50936fbd11">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2bf7d13c-58b2-4198-94d8-9d50936fbd11">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2bf7d13c-58b2-4198-94d8-9d50936fbd11" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Democracy House, 609b Stretford Rd, Old Trafford, Stretford, Manchester M16 0QA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Primus Education Tuition Centre</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Stretford, Manchester M16 0QA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7845 795469">📞 +44 7845 795469</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5175048940861568836&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ad7818f0-d078-4fdf-8fc9-a4abe565c5fb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ad7818f0-d078-4fdf-8fc9-a4abe565c5fb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ad7818f0-d078-4fdf-8fc9-a4abe565c5fb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Manchester Rd, Manchester M16 0FE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tutor Connect</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Manchester Rd, Manchester M16 0FE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7885 207086">📞 +44 7885 207086</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4749747738767495517&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4ca27069-d118-43ea-b45a-858956cea316">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4ca27069-d118-43ea-b45a-858956cea316">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4ca27069-d118-43ea-b45a-858956cea316" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Old Hall Ln, Manchester M13 0XT, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ace Tuition Manchester</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Old Hall Ln, Manchester M13 0XT, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7342 225782">📞 +44 7342 225782</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4033936439705126240&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9feacc01-c2fe-446a-a989-b4bf108948f3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9feacc01-c2fe-446a-a989-b4bf108948f3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9feacc01-c2fe-446a-a989-b4bf108948f3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Beattock Cl, Manchester M15 4JA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Super Tutoring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Beattock Cl, Manchester M15 4JA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7951 725687">📞 +44 7951 725687</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1342711286403544738&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7374da33-3173-4d8d-b3b0-9da62e5d186f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7374da33-3173-4d8d-b3b0-9da62e5d186f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7374da33-3173-4d8d-b3b0-9da62e5d186f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="23D Wilmslow Rd, Manchester M14 5TB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>SuperPrime ETC</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 23D Wilmslow Rd, Manchester M14 5TB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7535 953757">📞 +44 7535 953757</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9523726860420740724&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="05dbb351-e287-42b6-8785-d2c96e1ee81e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="05dbb351-e287-42b6-8785-d2c96e1ee81e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="05dbb351-e287-42b6-8785-d2c96e1ee81e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="F1, Grove House, 774-780 Wilmslow Rd, Didsbury, Manchester M20 2DR, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Explore Learning Didsbury</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Didsbury, Manchester M20 2DR, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 503 0100">📞 +44 161 503 0100</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10600981255351738256&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e687ae88-3402-48a1-be37-cd121f80fb55">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e687ae88-3402-48a1-be37-cd121f80fb55">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e687ae88-3402-48a1-be37-cd121f80fb55" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="192a Burton Rd, Didsbury, Manchester M20 1LH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kip McGrath Tutoring Centre Didsbury</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Didsbury, Manchester M20 1LH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 161 546 1601">📞 +44 161 546 1601</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12333559120739130337&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="44ea5d41-051c-4297-9c36-9b5584117047">✓ Approve</button>
+          <button class="btn btn-reject" data-id="44ea5d41-051c-4297-9c36-9b5584117047">✕ Reject</button>
+          <button class="btn btn-demo" data-id="44ea5d41-051c-4297-9c36-9b5584117047" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="The Place Fallowfield Library, Platt Ln, Fallowfield, Manchester M14 7FB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Evolve Tuition</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Fallowfield, Manchester M14 7FB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7492 491746">📞 +44 7492 491746</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13310410135926312624&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="01083d7f-45b7-402c-bdb2-f9d5f2ec8707">✓ Approve</button>
+          <button class="btn btn-reject" data-id="01083d7f-45b7-402c-bdb2-f9d5f2ec8707">✕ Reject</button>
+          <button class="btn btn-demo" data-id="01083d7f-45b7-402c-bdb2-f9d5f2ec8707" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1 Every St, Manchester M4 7LT, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mastermedprep</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1 Every St, Manchester M4 7LT, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2585917062420979148&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ee43877a-9732-429a-b746-d25be85fdc58">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ee43877a-9732-429a-b746-d25be85fdc58">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ee43877a-9732-429a-b746-d25be85fdc58" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="215 Bury Old Rd, Prestwich, Manchester M25 1JF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Strive Manchester Ltd</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Prestwich, Manchester M25 1JF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7860 559626">📞 +44 7860 559626</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11910016539111052500&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8f2f9b28-b2cb-4ab9-84c5-4a128d7680ea">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8f2f9b28-b2cb-4ab9-84c5-4a128d7680ea">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8f2f9b28-b2cb-4ab9-84c5-4a128d7680ea" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="960 E Maple Rd, Birmingham, MI 48009, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Tutoring Center Birmingham</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, MI 48009, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 248-494-6225">📞 +1 248-494-6225</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1224799194058957722&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="901ca77a-fa4e-4476-a6d0-97b15b5097a8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="901ca77a-fa4e-4476-a6d0-97b15b5097a8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="901ca77a-fa4e-4476-a6d0-97b15b5097a8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hob Moor Rd, Birmingham B10 9HH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>English Spark Tuition</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hob Moor Rd, Birmingham B10 9HH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7939 273703">📞 +44 7939 273703</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2355561405419874850&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c7206740-737b-490e-b879-071a3aa3cbbb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c7206740-737b-490e-b879-071a3aa3cbbb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c7206740-737b-490e-b879-071a3aa3cbbb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="30 Sandringham Ct, Walsall Rd, Great Barr, Birmingham B42 1TF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Ucademy Tutoring Birmingham</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Great Barr, Birmingham B42 1TF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 8050 4231">📞 +44 20 8050 4231</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11263160701602849749&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6d3da185-0b1d-4ae8-a994-0fef2a24f410">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6d3da185-0b1d-4ae8-a994-0fef2a24f410">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6d3da185-0b1d-4ae8-a994-0fef2a24f410" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="11-12 George Rd, Birmingham B15 1NP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tuition Tree | Birmingham’s Private Tuition for 11+, GCSEs and A-Levels in English, Maths and Science</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 11-12 George Rd, Birmingham B15 1NP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 121 270 2889">📞 +44 121 270 2889</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18397133570774493656&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0d8c8e23-19e3-4a1b-9400-9c6cb97b9aef">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0d8c8e23-19e3-4a1b-9400-9c6cb97b9aef">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0d8c8e23-19e3-4a1b-9400-9c6cb97b9aef" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Shopping Centre, 3-5 Wheeler St, Lozells, Birmingham B19 2ER, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>A Academy Tutorials</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Lozells, Birmingham B19 2ER, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7445 568206">📞 +44 7445 568206</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2100221840941655184&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1a8c526a-8f07-4368-8839-6c4f28bd0bc6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1a8c526a-8f07-4368-8839-6c4f28bd0bc6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1a8c526a-8f07-4368-8839-6c4f28bd0bc6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2800 Greystone Commercial Blvd Ste 3C, Birmingham, AL 35242, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Birmingham Tutoring Club</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, AL 35242, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 205-981-7155">📞 +1 205-981-7155</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17821582844543345005&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c7cfe30a-221a-4e64-ac9b-2d7ea14cc872">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c7cfe30a-221a-4e64-ac9b-2d7ea14cc872">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c7cfe30a-221a-4e64-ac9b-2d7ea14cc872" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="124 Waterloo Rd, Birmingham, Smethwick B66 4NF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>BMH Tutors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Birmingham, Smethwick B66 4NF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7308 508322">📞 +44 7308 508322</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11934477558625323058&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1783da82-9ef2-4b42-b4da-9325d03de18e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1783da82-9ef2-4b42-b4da-9325d03de18e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1783da82-9ef2-4b42-b4da-9325d03de18e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Trinity St, Smethwick B67 7AA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mr Singh's Tuition | Maths, English &amp; 11+ Tuition Centre in Birmingham &amp; Walsall</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Trinity St, Smethwick B67 7AA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7432 030435">📞 +44 7432 030435</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=567587328078780513&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c00e89ad-ffce-4da6-a435-d2200dae0890">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c00e89ad-ffce-4da6-a435-d2200dae0890">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c00e89ad-ffce-4da6-a435-d2200dae0890" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="327 Moseley Rd, Birmingham B12 0DX, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tuition Experts Birmingham Tutors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 327 Moseley Rd, Birmingham B12 0DX, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7477 861336">📞 +44 7477 861336</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14859041235441749406&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fda2dab3-9511-4dbd-a7db-dd5ceba76d0b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fda2dab3-9511-4dbd-a7db-dd5ceba76d0b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fda2dab3-9511-4dbd-a7db-dd5ceba76d0b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="166 Perry Wood Rd, Birmingham B42 2BH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Educational Tutoring Services - 11 Plus Tutor Birmingham, Walsall</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 166 Perry Wood Rd, Birmingham B42 2BH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7795 248045">📞 +44 7795 248045</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6217316073798827675&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="442eda9c-25ec-4c50-ad90-780ce725813d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="442eda9c-25ec-4c50-ad90-780ce725813d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="442eda9c-25ec-4c50-ad90-780ce725813d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 20, Fox &amp; Goose Shopping Centre, Washwood Heath, Birmingham B8 2EP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Dr. Hassan Tutoring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Washwood Heath, Birmingham B8 2EP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7861 103611">📞 +44 7861 103611</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4411182702944628523&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c1a64b50-cdd8-447e-85c8-ab4fb5d40a1c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c1a64b50-cdd8-447e-85c8-ab4fb5d40a1c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c1a64b50-cdd8-447e-85c8-ab4fb5d40a1c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1138 Stratford Rd, Birmingham B28 8AE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Birmingham Tuition Centre</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1138 Stratford Rd, Birmingham B28 8AE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 121 778 6669">📞 +44 121 778 6669</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3012487410556352225&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d2e48f61-bbd2-44e0-a2fe-d78a7e355ef9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d2e48f61-bbd2-44e0-a2fe-d78a7e355ef9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d2e48f61-bbd2-44e0-a2fe-d78a7e355ef9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Oasis Church, South St, Harborne, Birmingham B17 0DB, UK"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Little Rainbow Tutors Harborne</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Harborne, Birmingham B17 0DB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7887 377135">📞 +44 7887 377135</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14494557980498630607&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ffa85eb1-336e-4aa5-852f-763ab1ea0839">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ffa85eb1-336e-4aa5-852f-763ab1ea0839">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ffa85eb1-336e-4aa5-852f-763ab1ea0839" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="854 Washwood Heath Rd, Ward End, Birmingham B8 2NL, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>CES (UK) Ltd | GCSE Tutors | English | Physics | Maths | Birmingham</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Ward End, Birmingham B8 2NL, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 121 554 9833">📞 +44 121 554 9833</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3719523596036819740&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="24982936-43ca-4b27-8e1a-a08304e9e0af">✓ Approve</button>
+          <button class="btn btn-reject" data-id="24982936-43ca-4b27-8e1a-a08304e9e0af">✕ Reject</button>
+          <button class="btn btn-demo" data-id="24982936-43ca-4b27-8e1a-a08304e9e0af" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="7 Highfield Rd, Birmingham B28 0EL, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>A Plus Private Tuition Birmingham</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 7 Highfield Rd, Birmingham B28 0EL, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 121 285 3770">📞 +44 121 285 3770</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10357903006144999837&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8b9ce271-b9ff-4387-9bb7-d86c7ed44078">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8b9ce271-b9ff-4387-9bb7-d86c7ed44078">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8b9ce271-b9ff-4387-9bb7-d86c7ed44078" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2 Cannon Hill Rd, Balsall Heath, Birmingham B12 9NN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Elite Tuition Centre</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Balsall Heath, Birmingham B12 9NN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 121 769 3292">📞 +44 121 769 3292</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17823449507223874426&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="8c4573e4-dcb7-4f07-a199-037b2ad52670">✓ Approve</button>
+          <button class="btn btn-reject" data-id="8c4573e4-dcb7-4f07-a199-037b2ad52670">✕ Reject</button>
+          <button class="btn btn-demo" data-id="8c4573e4-dcb7-4f07-a199-037b2ad52670" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Redfern Rd, Tyseley, Birmingham B11 2BE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hunter Tutoring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Tyseley, Birmingham B11 2BE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7392 151554">📞 +44 7392 151554</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14088314218589876895&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1e8666a0-3d9a-498f-956a-aa84ad043cdf">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1e8666a0-3d9a-498f-956a-aa84ad043cdf">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1e8666a0-3d9a-498f-956a-aa84ad043cdf" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Aldershaw Rd, Birmingham B26 1HN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Primary School Tutoring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Aldershaw Rd, Birmingham B26 1HN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7591 061549">📞 +44 7591 061549</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11402411242946054671&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dd641712-07da-4527-b1cf-cc4fba8611d4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dd641712-07da-4527-b1cf-cc4fba8611d4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dd641712-07da-4527-b1cf-cc4fba8611d4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1112 Stratford Rd, Hall Green, Birmingham B28 8AE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Aletheia Academy - Tutors in Hall Green, Birmingham</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hall Green, Birmingham B28 8AE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 121 647 6726">📞 +44 121 647 6726</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5210806204426494394&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c4d8fef8-992b-44bf-b105-487499a92ac4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c4d8fef8-992b-44bf-b105-487499a92ac4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c4d8fef8-992b-44bf-b105-487499a92ac4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="The Studio, 214 Hagley Rd, Birmingham B16 9PH, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>My Tutor World</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 214 Hagley Rd, Birmingham B16 9PH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 121 740 1236">📞 +44 121 740 1236</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2487734622764029229&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7c9f4cd9-579b-49be-88cb-a5498efa3124">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7c9f4cd9-579b-49be-88cb-a5498efa3124">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7c9f4cd9-579b-49be-88cb-a5498efa3124" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Jessop St, Wakefield WF2 7RP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Headway Tutors Leeds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Jessop St, Wakefield WF2 7RP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 20 3507 1630">📞 +44 20 3507 1630</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5502145306338588537&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bc0d5c70-ed4c-4934-ae7a-ebe2d424eb70">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bc0d5c70-ed4c-4934-ae7a-ebe2d424eb70">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bc0d5c70-ed4c-4934-ae7a-ebe2d424eb70" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="94 Wykebeck Mount, Leeds LS9 0HW, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Leeds STEM Tutors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 94 Wykebeck Mount, Leeds LS9 0HW, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7395 389571">📞 +44 7395 389571</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10207990364741024627&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="95300103-5c78-4cfa-8547-37f71c73e22a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="95300103-5c78-4cfa-8547-37f71c73e22a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="95300103-5c78-4cfa-8547-37f71c73e22a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Inspire Hub, 50 Richmond St, Glasgow G1 1XP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>ExpertTutor.com</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 50 Richmond St, Glasgow G1 1XP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7731 308282">📞 +44 7731 308282</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5508868210090063141&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2e5603f3-ad06-4f54-8169-719e6686c65f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2e5603f3-ad06-4f54-8169-719e6686c65f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2e5603f3-ad06-4f54-8169-719e6686c65f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="118 Byres Rd, Glasgow G12 8TB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Spires Tutors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 118 Byres Rd, Glasgow G12 8TB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7731 971924">📞 +44 7731 971924</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14421487033456090363&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dfde06df-9d3b-44d9-b3e6-9cc85682260a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dfde06df-9d3b-44d9-b3e6-9cc85682260a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dfde06df-9d3b-44d9-b3e6-9cc85682260a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="35b Russell Ave, Bristol BS15 9QF, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Out of the Box Teaching</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 35b Russell Ave, Bristol BS15 9QF, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7786 628820">📞 +44 7786 628820</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15445657540232635916&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0c0cb05e-5af5-4d28-a7b2-629750edddc3">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0c0cb05e-5af5-4d28-a7b2-629750edddc3">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0c0cb05e-5af5-4d28-a7b2-629750edddc3" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="31 Pembroke Rd, Clifton, Bristol BS8 3BE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Clifton Tutors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Clifton, Bristol BS8 3BE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7507 699850">📞 +44 7507 699850</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10918579621489613259&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4a34c92a-9c33-4e00-82a4-f43d866ad055">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4a34c92a-9c33-4e00-82a4-f43d866ad055">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4a34c92a-9c33-4e00-82a4-f43d866ad055" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="4 Church Ln, Hotwells, Bristol BS8 4TX, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bristol Homestay Tuition</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hotwells, Bristol BS8 4TX, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7779 610898">📞 +44 7779 610898</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7478166174280105198&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b37cc0b9-bab4-4bf3-badf-9ad0bcda3425">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b37cc0b9-bab4-4bf3-badf-9ad0bcda3425">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b37cc0b9-bab4-4bf3-badf-9ad0bcda3425" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="23 Ambleside Ave, Bristol BS10 6HA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Westbury Tuition</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 23 Ambleside Ave, Bristol BS10 6HA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7989 132437">📞 +44 7989 132437</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6782955043674067648&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2649dc2a-f4e2-49c5-b451-42d9ea2e5019">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2649dc2a-f4e2-49c5-b451-42d9ea2e5019">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2649dc2a-f4e2-49c5-b451-42d9ea2e5019" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Coldharbour Ln, Stoke Gifford, Bristol BS16 1EJ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Headway Tutors Bristol</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Stoke Gifford, Bristol BS16 1EJ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7593 090018">📞 +44 7593 090018</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=597171973899260038&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2d5b4e80-c43e-4fbe-8242-5f299b7eee5d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2d5b4e80-c43e-4fbe-8242-5f299b7eee5d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2d5b4e80-c43e-4fbe-8242-5f299b7eee5d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="29 Regent Terrace, Edinburgh EH7 5BS, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Headway Tutors Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 29 Regent Terrace, Edinburgh EH7 5BS, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7593 090018">📞 +44 7593 090018</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5435476015280301179&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f1c42a79-947f-4d99-b334-03f5d67aad76">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f1c42a79-947f-4d99-b334-03f5d67aad76">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f1c42a79-947f-4d99-b334-03f5d67aad76" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Ste 2 Ground Floor, Orchard Brae House, 30 Queensferry Rd, Edinburgh EH4 2HS, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Manor Tutoring</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 30 Queensferry Rd, Edinburgh EH4 2HS, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 131 378 1316">📞 +44 131 378 1316</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=783809802121740198&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1cb3b445-b37e-4d14-823f-c239d9f128c4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1cb3b445-b37e-4d14-823f-c239d9f128c4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1cb3b445-b37e-4d14-823f-c239d9f128c4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="3 Hill St, Edinburgh EH2 3JP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>UpGrade Tutors</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 3 Hill St, Edinburgh EH2 3JP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7881 056563">📞 +44 7881 056563</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17741243129012924126&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="897c6dcb-c292-42f7-b8b0-2af4a85cc427">✓ Approve</button>
+          <button class="btn btn-reject" data-id="897c6dcb-c292-42f7-b8b0-2af4a85cc427">✕ Reject</button>
+          <button class="btn btn-demo" data-id="897c6dcb-c292-42f7-b8b0-2af4a85cc427" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="8 Aldred Rd, Sheffield S10 1PD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Conexus Tuition Sheffield</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 8 Aldred Rd, Sheffield S10 1PD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7950 818363">📞 +44 7950 818363</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13439053138580943806&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="95a229bf-9326-48a6-b918-94f1752ae938">✓ Approve</button>
+          <button class="btn btn-reject" data-id="95a229bf-9326-48a6-b918-94f1752ae938">✕ Reject</button>
+          <button class="btn btn-demo" data-id="95a229bf-9326-48a6-b918-94f1752ae938" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Hillsborough Trinity Methodist Church, Middlewood Rd, Hillsborough, Sheffield S6 4HE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kumon Maths &amp; English</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Hillsborough, Sheffield S6 4HE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7438 327681">📞 +44 7438 327681</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3334846287824349263&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b124898e-760c-47f5-89a7-a72bf0e16e30">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b124898e-760c-47f5-89a7-a72bf0e16e30">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b124898e-760c-47f5-89a7-a72bf0e16e30" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Level 7, The Trust Building, 155 King St, Sydney NSW 2000, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>VoulezVouloz</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 155 King St, Sydney NSW 2000, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 448 271 392">📞 +61 448 271 392</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17892581979566415563&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bab9bec3-1360-4349-9e6c-b94901c1a554">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bab9bec3-1360-4349-9e6c-b94901c1a554">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bab9bec3-1360-4349-9e6c-b94901c1a554" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1/50 Carlton Cres, Summer Hill NSW 2130, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>C3 Education Group Sydney Inner West Tutoring - Summer Hill</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1/50 Carlton Cres, Summer Hill NSW 2130, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 1300 235 437">📞 +61 1300 235 437</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14911613707463182935&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="853e23c3-bc75-4427-970f-fae8e25f0c52">✓ Approve</button>
+          <button class="btn btn-reject" data-id="853e23c3-bc75-4427-970f-fae8e25f0c52">✕ Reject</button>
+          <button class="btn btn-demo" data-id="853e23c3-bc75-4427-970f-fae8e25f0c52" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
