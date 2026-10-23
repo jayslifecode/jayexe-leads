@@ -1,0 +1,3261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Intel — 2026-10-23</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --surface2: #141428;
+      --border: rgba(255,255,255,0.07);
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #2d3748;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(245,158,11,0.15);
+      padding: 28px 24px 22px;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .header-stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Filters ── */
+    .filters-bar {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .fg select, .fg input[type="number"] {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      min-width: 130px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg select:focus, .fg input:focus {
+      border-color: rgba(245,158,11,0.4);
+    }
+
+    .fg input[type="number"] { min-width: 70px; }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover { border-color: var(--amber); color: var(--amber); }
+
+    .filter-count {
+      margin-left: auto;
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .filter-count span { color: var(--amber); font-weight: 700; }
+
+    /* ── Cards ── */
+    .cards-wrap {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lead-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 14px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: cardIn 0.4s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(245,158,11,0.2);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lead-card.hidden { display: none; }
+
+    /* card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-score { flex-shrink: 0; }
+    .score-ring { display: block; }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-identity h2 {
+      font-family: var(--serif);
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .meta-loc, .meta-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .meta-cat::before { content: '·'; margin-right: 8px; }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* contact row */
+    .card-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-chip {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 5px;
+      padding: 4px 9px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    a.contact-chip:hover { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+
+    .link-chip a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .link-chip a.link-demo { color: #8b5cf6; }
+    .link-chip:hover { color: var(--cyan); border-color: rgba(6,182,212,0.3); }
+
+    /* action row */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-approve {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      color: #10b981;
+    }
+    .btn-approve:hover { background: rgba(16,185,129,0.22); }
+
+    .btn-reject {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+    .btn-reject:hover { background: rgba(239,68,68,0.2); }
+
+    .btn-demo {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.25);
+      color: #8b5cf6;
+    }
+    .btn-demo:hover { background: rgba(139,92,246,0.22); }
+    .btn-demo.loading { opacity: 0.5; cursor: not-allowed; }
+    .btn-demo.done { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    /* empty state */
+    .no-leads {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="header-title">Lead Intel</div>
+        <div class="header-sub">↳ 2026-10-23</div>
+      </div>
+      <div class="header-stat">
+        <div class="stat-number" id="visible-count">76</div>
+        <div class="stat-label">leads found</div>
+      </div>
+    </div>
+  </header>
+
+  
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <div class="fg">
+        <label>Category</label>
+        <select id="filter-category">
+          <option value="">All categories</option>
+          <option value=""></option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="filter-location">
+          <option value="">All cities</option>
+          <option value="1 Summerhall Square, Edinburgh EH9 1PL, UK">1 Summerhall Square, Edinburgh EH9 1PL, UK</option><option value="108/5 Crewe Rd N, Edinburgh EH5 2NE, UK">108/5 Crewe Rd N, Edinburgh EH5 2NE, UK</option><option value="11 Chadwick Rd, Sheffield S13 8DE, UK">11 Chadwick Rd, Sheffield S13 8DE, UK</option><option value="12/1102 Beaudesert Rd, Acacia Ridge QLD 4110, Australia">12/1102 Beaudesert Rd, Acacia Ridge QLD 4110, Australia</option><option value="13 City Rd, Sheffield S2 5HE, UK">13 City Rd, Sheffield S2 5HE, UK</option><option value="13 Lawson St, Capalaba QLD 4157, Australia">13 Lawson St, Capalaba QLD 4157, Australia</option><option value="14 Moorsyde Ave, Sheffield S10 1QH, UK">14 Moorsyde Ave, Sheffield S10 1QH, UK</option><option value="1882/399 Melton Hwy, Taylors Lakes VIC 3038, Australia">1882/399 Melton Hwy, Taylors Lakes VIC 3038, Australia</option><option value="2/20 Hope St, Seven Hills NSW 2147, Australia">2/20 Hope St, Seven Hills NSW 2147, Australia</option><option value="22 Chesser Grove, Edinburgh EH14 1SZ, UK">22 Chesser Grove, Edinburgh EH14 1SZ, UK</option><option value="28 Old Perth Rd, Bassendean WA 6054, Australia">28 Old Perth Rd, Bassendean WA 6054, Australia</option><option value="314 Bay St, Brighton-Le-Sands NSW 2216, Australia">314 Bay St, Brighton-Le-Sands NSW 2216, Australia</option><option value="56 Duke St, Scarborough WA 6019, Australia">56 Duke St, Scarborough WA 6019, Australia</option><option value="56A O G Rd, Klemzig SA 5087, Australia">56A O G Rd, Klemzig SA 5087, Australia</option><option value="6 Broughton Rd, Edinburgh EH7 4LE, UK">6 Broughton Rd, Edinburgh EH7 4LE, UK</option><option value="60 Cumberland St, Edinburgh EH3 6RE, UK">60 Cumberland St, Edinburgh EH3 6RE, UK</option><option value="69a Mayfield Rd, Edinburgh EH9 3AA, UK">69a Mayfield Rd, Edinburgh EH9 3AA, UK</option><option value="7 Mortonhall Park Ave, Edinburgh EH17 8BP, UK">7 Mortonhall Park Ave, Edinburgh EH17 8BP, UK</option><option value="79 Doggett St, Newstead QLD 4006, Australia">79 Doggett St, Newstead QLD 4006, Australia</option><option value="85 Henderson Row, Edinburgh EH3 5BE, UK">85 Henderson Row, Edinburgh EH3 5BE, UK</option><option value="98 Craigentinny Rd, Edinburgh EH7 6RN, UK">98 Craigentinny Rd, Edinburgh EH7 6RN, UK</option><option value="Abernethy, Perth PH2 9JL, UK">Abernethy, Perth PH2 9JL, UK</option><option value="Beauchief, Sheffield S7 2QZ, UK">Beauchief, Sheffield S7 2QZ, UK</option><option value="Blackchapel Rd, Edinburgh EH15 3QU, UK">Blackchapel Rd, Edinburgh EH15 3QU, UK</option><option value="Canonmills, Edinburgh EH7 4DY, UK">Canonmills, Edinburgh EH7 4DY, UK</option><option value="Chicago, IL 60605, USA">Chicago, IL 60605, USA</option><option value="Chicago, IL 60607, USA">Chicago, IL 60607, USA</option><option value="Chicago, IL 60614, USA">Chicago, IL 60614, USA</option><option value="Church Rd, Doncaster VIC 3108, Australia">Church Rd, Doncaster VIC 3108, Australia</option><option value="East York, ON M4G 0A2, Canada">East York, ON M4G 0A2, Canada</option><option value="Etobicoke, ON M8V 1C5, Canada">Etobicoke, ON M8V 1C5, Canada</option><option value="Etobicoke, ON M8X 2X3, Canada">Etobicoke, ON M8X 2X3, Canada</option><option value="High Storrs Dr, Sheffield S11 7LL, UK">High Storrs Dr, Sheffield S11 7LL, UK</option><option value="Jaunty Rd, Sheffield S12 3DT, UK">Jaunty Rd, Sheffield S12 3DT, UK</option><option value="Kilburn, Perth PH1 4PT, UK">Kilburn, Perth PH1 4PT, UK</option><option value="Kirklands House, Edinburgh EH12 9BZ, UK">Kirklands House, Edinburgh EH12 9BZ, UK</option><option value="Leawood, KS 66224, USA">Leawood, KS 66224, USA</option><option value="Level 1/222 Evans Rd, Salisbury QLD 4107, Australia">Level 1/222 Evans Rd, Salisbury QLD 4107, Australia</option><option value="Luncarty, Perth PH1 3EN, UK">Luncarty, Perth PH1 3EN, UK</option><option value="Meersbrook, Sheffield S8 8PL, UK">Meersbrook, Sheffield S8 8PL, UK</option><option value="Meersbrook, Sheffield S8 9FP, UK">Meersbrook, Sheffield S8 9FP, UK</option><option value="Melbourne, FL 32901, USA">Melbourne, FL 32901, USA</option><option value="Mortonhall Park Loan, Edinburgh EH17 8SN, UK">Mortonhall Park Loan, Edinburgh EH17 8SN, UK</option><option value="North York, ON M2N 4Y4, Canada">North York, ON M2N 4Y4, Canada</option><option value="North York, ON M2N 6M9, Canada">North York, ON M2N 6M9, Canada</option><option value="North York, ON M5M 4B8, Canada">North York, ON M5M 4B8, Canada</option><option value="Norton, Sheffield S8 8GQ, UK">Norton, Sheffield S8 8GQ, UK</option><option value="Perth, ON K7H 1N3, Canada">Perth, ON K7H 1N3, Canada</option><option value="Rustlings Rd, Sheffield S11 7AB, UK">Rustlings Rd, Sheffield S11 7AB, UK</option><option value="Salt Lake City, UT 84106, USA">Salt Lake City, UT 84106, USA</option><option value="Scarborough, ON M1P 5J5, Canada">Scarborough, ON M1P 5J5, Canada</option><option value="Sheffield Lake, OH 44054, USA">Sheffield Lake, OH 44054, USA</option><option value="Sheffield, AL 35660, USA">Sheffield, AL 35660, USA</option><option value="Sheffield, OH 44054, USA">Sheffield, OH 44054, USA</option><option value="Shop 2/19 Arncliffe St, Wolli Creek NSW 2205, Australia">Shop 2/19 Arncliffe St, Wolli Creek NSW 2205, Australia</option><option value="Shop 3/617/621 Lower North East Rd, Campbelltown SA 5074, Australia">Shop 3/617/621 Lower North East Rd, Campbelltown SA 5074, Australia</option><option value="Shop 7/550 Greenhill Rd, Hazelwood Park SA 5066, Australia">Shop 7/550 Greenhill Rd, Hazelwood Park SA 5066, Australia</option><option value="Sighthill, Edinburgh EH11 4DB, UK">Sighthill, Edinburgh EH11 4DB, UK</option><option value="St Catherine's Rd, Perth PH1 5XD, UK">St Catherine's Rd, Perth PH1 5XD, UK</option><option value="Stannington, Sheffield S6 5BX, UK">Stannington, Sheffield S6 5BX, UK</option><option value="Toronto, ON M4Y 1K9, Canada">Toronto, ON M4Y 1K9, Canada</option><option value="Toronto, ON M5S 1W2, Canada">Toronto, ON M5S 1W2, Canada</option><option value="Toronto, ON M6R 1B3, Canada">Toronto, ON M6R 1B3, Canada</option><option value="Toronto, ON M6R 1V6, Canada">Toronto, ON M6R 1V6, Canada</option><option value="Unit 1/54 Park St, Campsie NSW 2194, Australia">Unit 1/54 Park St, Campsie NSW 2194, Australia</option><option value="Unit 3 A/29 Newland St, Bondi Junction NSW 2022, Australia">Unit 3 A/29 Newland St, Bondi Junction NSW 2022, Australia</option><option value="Unit 5/515 Walter Rd E, Morley WA 6062, Australia">Unit 5/515 Walter Rd E, Morley WA 6062, Australia</option><option value="Wichita, KS 67226, USA">Wichita, KS 67226, USA</option><option value="York, ON M6C 2K9, Canada">York, ON M6C 2K9, Canada</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Flag</label>
+        <select id="filter-flag">
+          <option value="">All flags</option>
+          <option value="no_website">No Website</option>
+          <option value="broken_website">Broken</option>
+          <option value="bad_design">Bad Design</option>
+          <option value="outdated_website">Outdated</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Min Score</label>
+        <input type="number" id="filter-min-score" min="0" max="100" value="0">
+      </div>
+      <div class="fg">
+        <label>Sort</label>
+        <select id="sort-order">
+          <option value="desc">Score ↓</option>
+          <option value="asc">Score ↑</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      <div class="filter-count"><span id="filter-label">76</span> shown</div>
+    </div>
+  </div>
+
+  <div class="cards-wrap">
+    
+      <div class="lead-card" style="animation-delay:0ms"
+        data-category=""
+        data-location="804 W Belden Ave, Chicago, IL 60614, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>DePaul Community Music Division</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60614, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 773-325-7262">📞 +1 773-325-7262</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18433491861456579315&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6acab331-5d4c-4ce6-bdf9-951bafee1f55">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6acab331-5d4c-4ce6-bdf9-951bafee1f55">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6acab331-5d4c-4ce6-bdf9-951bafee1f55" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:40ms"
+        data-category=""
+        data-location="2/20 Hope St, Seven Hills NSW 2147, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>On The Beat Music Academy</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 2/20 Hope St, Seven Hills NSW 2147, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16236995781364366406&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dae04632-43dd-426d-8d61-72ebf9fb8287">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dae04632-43dd-426d-8d61-72ebf9fb8287">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dae04632-43dd-426d-8d61-72ebf9fb8287" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:80ms"
+        data-category=""
+        data-location="Level 1/222 Evans Rd, Salisbury QLD 4107, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tarragindi Music Studios</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Level 1/222 Evans Rd, Salisbury QLD 4107, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 489 903 017">📞 +61 489 903 017</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11192305510562315331&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7aaca2c9-1fe0-48f3-a817-943963508c27">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7aaca2c9-1fe0-48f3-a817-943963508c27">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7aaca2c9-1fe0-48f3-a817-943963508c27" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:120ms"
+        data-category=""
+        data-location="273 Bloor St W, Toronto, ON M5S 1W2, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Royal Conservatory of Music</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M5S 1W2, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-408-2824">📞 +1 416-408-2824</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17488419783989027824&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="700cf443-b60c-4e29-a630-f59ed566093c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="700cf443-b60c-4e29-a630-f59ed566093c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="700cf443-b60c-4e29-a630-f59ed566093c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:160ms"
+        data-category=""
+        data-location="1455 W Fullerton Ave, Chicago, IL 60614, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Central Driving Academy</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60614, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 773-868-3927">📞 +1 773-868-3927</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13860366498775662536&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e9e204d6-7f29-4264-9b76-3c911eef10a7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e9e204d6-7f29-4264-9b76-3c911eef10a7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e9e204d6-7f29-4264-9b76-3c911eef10a7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:200ms"
+        data-category=""
+        data-location="1515 Elizabeth St Ste C, Melbourne, FL 32901, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Florida Safety Council</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Melbourne, FL 32901, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 407-896-1894">📞 +1 407-896-1894</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13585221435231127806&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1b422aff-08d9-48b0-b37a-9db4f5d37096">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1b422aff-08d9-48b0-b37a-9db4f5d37096">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1b422aff-08d9-48b0-b37a-9db4f5d37096" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:240ms"
+        data-category=""
+        data-location="1882/399 Melton Hwy, Taylors Lakes VIC 3038, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>i-DRIVE Melbourne Driving School</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1882/399 Melton Hwy, Taylors Lakes VIC 3038, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 420 758 340">📞 +61 420 758 340</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5210297434074003550&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ae037c7b-672a-4d41-9365-6bf70de2a07e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ae037c7b-672a-4d41-9365-6bf70de2a07e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ae037c7b-672a-4d41-9365-6bf70de2a07e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:280ms"
+        data-category=""
+        data-location="13 Lawson St, Capalaba QLD 4157, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Brisbane Bayside Driving School &amp; Heavy Vehicle Training</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 13 Lawson St, Capalaba QLD 4157, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 470 252 770">📞 +61 470 252 770</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10880808831956562723&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c1cc15e6-a05d-431d-aefe-e38986f8336d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c1cc15e6-a05d-431d-aefe-e38986f8336d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c1cc15e6-a05d-431d-aefe-e38986f8336d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:320ms"
+        data-category=""
+        data-location="250 Sheppard Ave E #204, North York, ON M2N 6M9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>AMB Driving School</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 North York, ON M2N 6M9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-222-9205">📞 +1 416-222-9205</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4103574525119993029&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1400dbcc-0172-4229-9046-14ef1d705a7e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1400dbcc-0172-4229-9046-14ef1d705a7e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1400dbcc-0172-4229-9046-14ef1d705a7e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:360ms"
+        data-category=""
+        data-location="3280 Bloor St W #1140, Etobicoke, ON M8X 2X3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Globe Driving Academy - Driving School Etobicoke</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Etobicoke, ON M8X 2X3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-351-8225">📞 +1 647-351-8225</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9953379075446768794&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="365231f8-e716-4cfc-9150-3f2542f88f55">✓ Approve</button>
+          <button class="btn btn-reject" data-id="365231f8-e716-4cfc-9150-3f2542f88f55">✕ Reject</button>
+          <button class="btn btn-demo" data-id="365231f8-e716-4cfc-9150-3f2542f88f55" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:400ms"
+        data-category=""
+        data-location="Unit 3 A/29 Newland St, Bondi Junction NSW 2022, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Eastern Suburbs Piano Tuition</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 3 A/29 Newland St, Bondi Junction NSW 2022, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 416 218 749">📞 +61 416 218 749</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16773016518610160559&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="342c74f2-fd30-4b15-ab3d-271c6c65045a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="342c74f2-fd30-4b15-ab3d-271c6c65045a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="342c74f2-fd30-4b15-ab3d-271c6c65045a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:440ms"
+        data-category=""
+        data-location="Unit 5/515 Walter Rd E, Morley WA 6062, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>International School of Music - Morley (ISM - Morley)</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 5/515 Walter Rd E, Morley WA 6062, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 498 343 689">📞 +61 498 343 689</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3464027516599251187&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c3156845-daeb-4821-9d5d-55d8926d9540">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c3156845-daeb-4821-9d5d-55d8926d9540">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c3156845-daeb-4821-9d5d-55d8926d9540" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:480ms"
+        data-category=""
+        data-location="273 Bloor St W, Toronto, ON M5S 1W2, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Royal Conservatory of Music</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M5S 1W2, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-408-2824">📞 +1 416-408-2824</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17488419783989027824&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="010047a1-723d-4734-8af8-764642f78c61">✓ Approve</button>
+          <button class="btn btn-reject" data-id="010047a1-723d-4734-8af8-764642f78c61">✕ Reject</button>
+          <button class="btn btn-demo" data-id="010047a1-723d-4734-8af8-764642f78c61" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:520ms"
+        data-category=""
+        data-location="111 Raglan Ave, York, ON M6C 2K9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Liz Craig, Pianist</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 York, ON M6C 2K9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-466-4198">📞 +1 647-466-4198</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5979563773861419394&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ace34729-a055-4327-b777-0bd542a1e1a9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ace34729-a055-4327-b777-0bd542a1e1a9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ace34729-a055-4327-b777-0bd542a1e1a9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:560ms"
+        data-category=""
+        data-location="69a Mayfield Rd, Edinburgh EH9 3AA, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Grange Dog Grooming</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 69a Mayfield Rd, Edinburgh EH9 3AA, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7411 437836">📞 +44 7411 437836</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7954459618783262660&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="12da4392-736e-4816-9224-427bf41b871d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="12da4392-736e-4816-9224-427bf41b871d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="12da4392-736e-4816-9224-427bf41b871d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:600ms"
+        data-category=""
+        data-location="98 Craigentinny Rd, Edinburgh EH7 6RN, UK"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Furrytails dog groomers</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 98 Craigentinny Rd, Edinburgh EH7 6RN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7835 261418">📞 +44 7835 261418</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15152207110822520368&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="094316b6-40b7-4101-ab0a-a7fda1be46aa">✓ Approve</button>
+          <button class="btn btn-reject" data-id="094316b6-40b7-4101-ab0a-a7fda1be46aa">✕ Reject</button>
+          <button class="btn btn-demo" data-id="094316b6-40b7-4101-ab0a-a7fda1be46aa" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:640ms"
+        data-category=""
+        data-location="Kirklands House, Edinburgh EH12 9BZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Rosie's Paws and Polish</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kirklands House, Edinburgh EH12 9BZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7940 097590">📞 +44 7940 097590</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10017667763426357582&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="bfd21a85-72d3-4f82-b259-de85e07c2728">✓ Approve</button>
+          <button class="btn btn-reject" data-id="bfd21a85-72d3-4f82-b259-de85e07c2728">✕ Reject</button>
+          <button class="btn btn-demo" data-id="bfd21a85-72d3-4f82-b259-de85e07c2728" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:680ms"
+        data-category=""
+        data-location="5275 Detroit Rd, Sheffield, OH 44054, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>EarthWise Pet - Sheffield</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sheffield, OH 44054, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 440-695-8370">📞 +1 440-695-8370</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=237206185517125052&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="71e6e826-8d68-42cf-b18a-ef6dfd0be61d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="71e6e826-8d68-42cf-b18a-ef6dfd0be61d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="71e6e826-8d68-42cf-b18a-ef6dfd0be61d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:720ms"
+        data-category=""
+        data-location="2205 N Southport Ave, Chicago, IL 60614, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Citizen Canine</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60614, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 773-935-3853">📞 +1 773-935-3853</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16045207703484290935&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dd11ccbe-2aba-46c2-a89d-5f6f8be0b6e4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dd11ccbe-2aba-46c2-a89d-5f6f8be0b6e4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dd11ccbe-2aba-46c2-a89d-5f6f8be0b6e4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:760ms"
+        data-category=""
+        data-location="2055 N Clybourn Ave, Chicago, IL 60614, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Kriser's Natural Pet</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60614, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 773-871-3663">📞 +1 773-871-3663</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=2782925903271997652&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="cfd2166c-1ace-4a35-a060-c1ea0b1b8335">✓ Approve</button>
+          <button class="btn btn-reject" data-id="cfd2166c-1ace-4a35-a060-c1ea0b1b8335">✕ Reject</button>
+          <button class="btn btn-demo" data-id="cfd2166c-1ace-4a35-a060-c1ea0b1b8335" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="5380 E Lake Rd, Sheffield Lake, OH 44054, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Roo’s Purrfect Paws</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sheffield Lake, OH 44054, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 440-228-3999">📞 +1 440-228-3999</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15320654212157249761&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="700dccdb-f2c4-4bb1-a619-93ffa7193e0d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="700dccdb-f2c4-4bb1-a619-93ffa7193e0d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="700dccdb-f2c4-4bb1-a619-93ffa7193e0d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2000 N Clybourn Ave Ste 100, Chicago, IL 60614, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Petco Grooming</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60614, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 773-665-1368">📞 +1 773-665-1368</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4338071335611131833&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="81e59f92-d160-4ad5-b134-7d2b66bc1ec9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="81e59f92-d160-4ad5-b134-7d2b66bc1ec9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="81e59f92-d160-4ad5-b134-7d2b66bc1ec9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="411 E 2nd St, Sheffield, AL 35660, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Dog World</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sheffield, AL 35660, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 256-383-3451">📞 +1 256-383-3451</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15716229882152026942&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f9d84d95-8863-4407-8726-eb8bdd6c3dad">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f9d84d95-8863-4407-8726-eb8bdd6c3dad">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f9d84d95-8863-4407-8726-eb8bdd6c3dad" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1526 S Wabash Ave, Chicago, IL 60605, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sydnee's Pet Grooming</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60605, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 312-265-1637">📞 +1 312-265-1637</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=989018511683564497&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="53c82381-0217-4016-9aa7-fefa6f21f74d">✓ Approve</button>
+          <button class="btn btn-reject" data-id="53c82381-0217-4016-9aa7-fefa6f21f74d">✕ Reject</button>
+          <button class="btn btn-demo" data-id="53c82381-0217-4016-9aa7-fefa6f21f74d" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1010 W Monroe St, Chicago, IL 60607, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sandy's Pet Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60607, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 872-320-8457">📞 +1 872-320-8457</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16090684163243754714&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6df15587-4975-4c2c-b842-abc6583781bc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6df15587-4975-4c2c-b842-abc6583781bc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6df15587-4975-4c2c-b842-abc6583781bc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="660 Wilmington Ave Suite 102, Salt Lake City, UT 84106, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Happi Pup Spa (formerly Sydnees Pet Grooming)</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Salt Lake City, UT 84106, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 385-229-4891">📞 +1 385-229-4891</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13859838331112588080&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f65d5aaa-85df-4061-8e6b-e6d7c2998f56">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f65d5aaa-85df-4061-8e6b-e6d7c2998f56">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f65d5aaa-85df-4061-8e6b-e6d7c2998f56" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Shop 2/19 Arncliffe St, Wolli Creek NSW 2205, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Puppuccino Pet Spa Wolli Creek</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Shop 2/19 Arncliffe St, Wolli Creek NSW 2205, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 481 966 676">📞 +61 481 966 676</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12192293920128106563&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="81f46de2-de58-4af0-8afb-8139195b7366">✓ Approve</button>
+          <button class="btn btn-reject" data-id="81f46de2-de58-4af0-8afb-8139195b7366">✕ Reject</button>
+          <button class="btn btn-demo" data-id="81f46de2-de58-4af0-8afb-8139195b7366" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="13656 Roe Ave, Leawood, KS 66224, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sydney's Pet Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Leawood, KS 66224, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 913-239-0110">📞 +1 913-239-0110</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15587364986126529803&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9b58156a-e1b0-427d-a2b7-7f85828ff22c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9b58156a-e1b0-427d-a2b7-7f85828ff22c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9b58156a-e1b0-427d-a2b7-7f85828ff22c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="11024 E 28th St N, Wichita, KS 67226, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sydney's Pet Resort and Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Wichita, KS 67226, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 316-928-2400">📞 +1 316-928-2400</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8768811217457008677&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="f4bed8a4-934f-44f5-bc2d-cbaa7b948cb5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="f4bed8a4-934f-44f5-bc2d-cbaa7b948cb5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="f4bed8a4-934f-44f5-bc2d-cbaa7b948cb5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="12/1102 Beaudesert Rd, Acacia Ridge QLD 4110, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Bella &amp; Beau Dog Grooming Boutique</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 12/1102 Beaudesert Rd, Acacia Ridge QLD 4110, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 7 3172 5172">📞 +61 7 3172 5172</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15021156781616723810&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="51dc8eaa-6508-4947-a6b9-8857bcd9dd34">✓ Approve</button>
+          <button class="btn btn-reject" data-id="51dc8eaa-6508-4947-a6b9-8857bcd9dd34">✕ Reject</button>
+          <button class="btn btn-demo" data-id="51dc8eaa-6508-4947-a6b9-8857bcd9dd34" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="79 Doggett St, Newstead QLD 4006, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Pet Pad</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 79 Doggett St, Newstead QLD 4006, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 7 3216 0888">📞 +61 7 3216 0888</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6471157162785912087&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="4724bb69-f5cd-4151-bbc4-819a62c066d7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="4724bb69-f5cd-4151-bbc4-819a62c066d7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="4724bb69-f5cd-4151-bbc4-819a62c066d7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="20 Arthur St, Perth, ON K7H 1N3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Movin' &amp; Groomins</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Perth, ON K7H 1N3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 613-200-2949">📞 +1 613-200-2949</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7732172086392125371&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fed5f71e-eb9a-44a0-b04e-c78d9e81e8bb">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fed5f71e-eb9a-44a0-b04e-c78d9e81e8bb">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fed5f71e-eb9a-44a0-b04e-c78d9e81e8bb" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="St Catherines Retail Park, St Catherine's Rd, Perth PH1 5XD, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Groom Room Perth</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 St Catherine's Rd, Perth PH1 5XD, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 345 850 9649">📞 +44 345 850 9649</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15313698021441141076&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="aa3fa9de-b0f8-4130-b5e2-2b103ed3dce8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="aa3fa9de-b0f8-4130-b5e2-2b103ed3dce8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="aa3fa9de-b0f8-4130-b5e2-2b103ed3dce8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="28 Old Perth Rd, Bassendean WA 6054, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Woolie Wolf Dog Grooming Studio</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 28 Old Perth Rd, Bassendean WA 6054, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 415 766 055">📞 +61 415 766 055</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10387674660500043406&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="03380ce6-7ac9-4548-b9d6-3a548b526125">✓ Approve</button>
+          <button class="btn btn-reject" data-id="03380ce6-7ac9-4548-b9d6-3a548b526125">✕ Reject</button>
+          <button class="btn btn-demo" data-id="03380ce6-7ac9-4548-b9d6-3a548b526125" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Shop 7/550 Greenhill Rd, Hazelwood Park SA 5066, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mavericks Dog Grooming</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Shop 7/550 Greenhill Rd, Hazelwood Park SA 5066, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 419 230 838">📞 +61 419 230 838</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=8638811219198703344&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="6459919f-a63c-4c8d-b4d3-6b82ad310a04">✓ Approve</button>
+          <button class="btn btn-reject" data-id="6459919f-a63c-4c8d-b4d3-6b82ad310a04">✕ Reject</button>
+          <button class="btn btn-demo" data-id="6459919f-a63c-4c8d-b4d3-6b82ad310a04" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="56A O G Rd, Klemzig SA 5087, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Cheeky Dog Salon</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 56A O G Rd, Klemzig SA 5087, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 415 079 494">📞 +61 415 079 494</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4933052457172435803&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3750a468-b2bf-4433-abb0-c16f2e8ee7b0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3750a468-b2bf-4433-abb0-c16f2e8ee7b0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3750a468-b2bf-4433-abb0-c16f2e8ee7b0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Shop 3/617/621 Lower North East Rd, Campbelltown SA 5074, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pup Boutique</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Shop 3/617/621 Lower North East Rd, Campbelltown SA 5074, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6431059924348247432&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="5793c4d7-aa24-476a-9958-0535d622cb4a">✓ Approve</button>
+          <button class="btn btn-reject" data-id="5793c4d7-aa24-476a-9958-0535d622cb4a">✕ Reject</button>
+          <button class="btn btn-demo" data-id="5793c4d7-aa24-476a-9958-0535d622cb4a" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="60 Brian Harrison Way Unit 103, Scarborough, ON M1P 5J5, Canada"
+        data-score="50"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="69.1 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">50</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pawny Tail Pet Grooming &amp; More</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Scarborough, ON M1P 5J5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-296-8818">📞 +1 647-296-8818</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13541309801367662383&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b5dee3e1-5149-4bc7-a42d-24ea5d9c90f2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b5dee3e1-5149-4bc7-a42d-24ea5d9c90f2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b5dee3e1-5149-4bc7-a42d-24ea5d9c90f2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1684 Queen St W, Toronto, ON M6R 1B3, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Juju Grooms</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6R 1B3, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-792-1684">📞 +1 416-792-1684</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=721030455784235175&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="add3a3c9-ab93-4ff3-9054-7e2382a17e42">✓ Approve</button>
+          <button class="btn btn-reject" data-id="add3a3c9-ab93-4ff3-9054-7e2382a17e42">✕ Reject</button>
+          <button class="btn btn-demo" data-id="add3a3c9-ab93-4ff3-9054-7e2382a17e42" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="12 Irwin Ave, Toronto, ON M4Y 1K9, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Tail Spin Dog Spa</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M4Y 1K9, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-920-7387">📞 +1 416-920-7387</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18439910435648483415&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0c05020e-8141-44a9-b620-90f420265be5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0c05020e-8141-44a9-b620-90f420265be5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0c05020e-8141-44a9-b620-90f420265be5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="138 B Willowdale Ave, North York, ON M2N 4Y4, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Groom Room All-Breed Pet Grooming Inc, since 1990 (Independently owned and operated)</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 North York, ON M2N 4Y4, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=133341635918828048&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="792c98a9-a286-4200-8784-be528da471ca">✓ Approve</button>
+          <button class="btn btn-reject" data-id="792c98a9-a286-4200-8784-be528da471ca">✕ Reject</button>
+          <button class="btn btn-demo" data-id="792c98a9-a286-4200-8784-be528da471ca" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2469 Lake Shore Blvd W, Etobicoke, ON M8V 1C5, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>BooBoo Pet Grooming Services</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Etobicoke, ON M8V 1C5, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-255-7387">📞 +1 416-255-7387</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14340724486217549647&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0487e69b-553c-4975-b353-7a216dc1ba42">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0487e69b-553c-4975-b353-7a216dc1ba42">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0487e69b-553c-4975-b353-7a216dc1ba42" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Blackchapel Rd, Edinburgh EH15 3QU, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pawsome Walkies Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Blackchapel Rd, Edinburgh EH15 3QU, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7952 292010">📞 +44 7952 292010</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14997984547666344421&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="077c5dba-0bfb-4951-b645-553c6a8dbe6e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="077c5dba-0bfb-4951-b645-553c6a8dbe6e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="077c5dba-0bfb-4951-b645-553c6a8dbe6e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="142, 6 Broughton Rd, Edinburgh EH7 4LE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Oh My Dog!</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 6 Broughton Rd, Edinburgh EH7 4LE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7970 201549">📞 +44 7970 201549</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13199303780683323516&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d22b6553-c8f4-4da7-9ad6-1f5a3f821dca">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d22b6553-c8f4-4da7-9ad6-1f5a3f821dca">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d22b6553-c8f4-4da7-9ad6-1f5a3f821dca" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="7 Mortonhall Park Ave, Edinburgh EH17 8BP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>FUR the love of paws</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 7 Mortonhall Park Ave, Edinburgh EH17 8BP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7595 496966">📞 +44 7595 496966</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16829418378826879778&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0318ca99-d86c-4891-a36c-edc636a90221">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0318ca99-d86c-4891-a36c-edc636a90221">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0318ca99-d86c-4891-a36c-edc636a90221" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="85 Henderson Row, Edinburgh EH3 5BE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Katy's Canines</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 85 Henderson Row, Edinburgh EH3 5BE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13766573118420319305&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9b1aacb7-e19a-45da-a7cb-036d62069f2c">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9b1aacb7-e19a-45da-a7cb-036d62069f2c">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9b1aacb7-e19a-45da-a7cb-036d62069f2c" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="60 Cumberland St, Edinburgh EH3 6RE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Huckleberry Adventure Days</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 60 Cumberland St, Edinburgh EH3 6RE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=6785973042264044588&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="dc60d97e-a3f9-4dd6-b3dc-a54df25cb5d4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="dc60d97e-a3f9-4dd6-b3dc-a54df25cb5d4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="dc60d97e-a3f9-4dd6-b3dc-a54df25cb5d4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Canonmills, Edinburgh EH7 4DY, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Do-good Dogs</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Canonmills, Edinburgh EH7 4DY, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7368 166570">📞 +44 7368 166570</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=10384814858221143212&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ca4b0351-b848-4b33-b744-3c67ef3652c0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ca4b0351-b848-4b33-b744-3c67ef3652c0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ca4b0351-b848-4b33-b744-3c67ef3652c0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="22 Chesser Grove, Edinburgh EH14 1SZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pawdlers Dog Walking</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 22 Chesser Grove, Edinburgh EH14 1SZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7500 896507">📞 +44 7500 896507</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17449382616265888099&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="98e5920b-14b9-4ea5-a822-61a47a7c9f44">✓ Approve</button>
+          <button class="btn btn-reject" data-id="98e5920b-14b9-4ea5-a822-61a47a7c9f44">✕ Reject</button>
+          <button class="btn btn-demo" data-id="98e5920b-14b9-4ea5-a822-61a47a7c9f44" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Mortonhall Park Loan, Edinburgh EH17 8SN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Edinburgh Urban Dog Walker</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Mortonhall Park Loan, Edinburgh EH17 8SN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7776 024408">📞 +44 7776 024408</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11896122155038524591&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3dc70ad1-b647-42ef-a5bd-dbc2040d5c4e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3dc70ad1-b647-42ef-a5bd-dbc2040d5c4e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3dc70ad1-b647-42ef-a5bd-dbc2040d5c4e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="11 Bankhead Broadway, Sighthill, Edinburgh EH11 4DB, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sociable Hounds</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Sighthill, Edinburgh EH11 4DB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7940 714436">📞 +44 7940 714436</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4392263738338714899&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="1ce587d0-9871-4d06-b5ab-86b242afc039">✓ Approve</button>
+          <button class="btn btn-reject" data-id="1ce587d0-9871-4d06-b5ab-86b242afc039">✕ Reject</button>
+          <button class="btn btn-demo" data-id="1ce587d0-9871-4d06-b5ab-86b242afc039" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="108/5 Crewe Rd N, Edinburgh EH5 2NE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Hiking Hounds Dog Walking Services</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 108/5 Crewe Rd N, Edinburgh EH5 2NE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7756 815835">📞 +44 7756 815835</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12633043170756230379&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="471afb09-cb5d-4093-83c6-46a136f820aa">✓ Approve</button>
+          <button class="btn btn-reject" data-id="471afb09-cb5d-4093-83c6-46a136f820aa">✕ Reject</button>
+          <button class="btn btn-demo" data-id="471afb09-cb5d-4093-83c6-46a136f820aa" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Lower Cairns Building, 1 Summerhall Square, Edinburgh EH9 1PL, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Walk &amp; Train Edinburgh</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 1 Summerhall Square, Edinburgh EH9 1PL, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9491425426024103324&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ce7cd353-6557-4aea-998f-b3f54444b02b">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ce7cd353-6557-4aea-998f-b3f54444b02b">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ce7cd353-6557-4aea-998f-b3f54444b02b" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1341 W Fullerton Ave Suite 500, Chicago, IL 60614, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>FANCY PAWS, INC.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60614, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 312-404-4698">📞 +1 312-404-4698</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=16087662194383599421&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3c4d7e2c-737c-4bf1-9727-1dc82a557b7f">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3c4d7e2c-737c-4bf1-9727-1dc82a557b7f">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3c4d7e2c-737c-4bf1-9727-1dc82a557b7f" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="1401 W Webster Ave, Chicago, IL 60614, USA"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>We're There Pet Care</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Chicago, IL 60614, USA</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 773-935-9983">📞 +1 773-935-9983</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=11520116002608543836&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b0aaed54-fb82-41ef-8d22-cb6059ea58dc">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b0aaed54-fb82-41ef-8d22-cb6059ea58dc">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b0aaed54-fb82-41ef-8d22-cb6059ea58dc" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="45 Chapman Cl, Stannington, Sheffield S6 5BX, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Paws 'n' Claws Animal Care</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Stannington, Sheffield S6 5BX, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7869 666037">📞 +44 7869 666037</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4478380011139087554&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="9fe9a677-0df8-4226-b80f-675f49bf7856">✓ Approve</button>
+          <button class="btn btn-reject" data-id="9fe9a677-0df8-4226-b80f-675f49bf7856">✕ Reject</button>
+          <button class="btn btn-demo" data-id="9fe9a677-0df8-4226-b80f-675f49bf7856" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Norton Park Rd, Norton, Sheffield S8 8GQ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>South Yorkshire Dog Walkers | Sheffield Dog Walking</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Norton, Sheffield S8 8GQ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7979 746415">📞 +44 7979 746415</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4376391858122446555&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e1e4c802-6dab-4210-978f-5f2461bd7aa7">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e1e4c802-6dab-4210-978f-5f2461bd7aa7">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e1e4c802-6dab-4210-978f-5f2461bd7aa7" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="11 Chadwick Rd, Sheffield S13 8DE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Life On Paws Dog Sitting Sheffield: Home Dog Care</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 11 Chadwick Rd, Sheffield S13 8DE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7714 649062">📞 +44 7714 649062</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13098959860278086943&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b1fd7aba-3651-4d6e-9f4c-558ea4ef77c1">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b1fd7aba-3651-4d6e-9f4c-558ea4ef77c1">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b1fd7aba-3651-4d6e-9f4c-558ea4ef77c1" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Abbey Ln, Beauchief, Sheffield S7 2QZ, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Herriott Petz</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Beauchief, Sheffield S7 2QZ, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7837 727577">📞 +44 7837 727577</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17304589314714181991&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2dc42038-a5a5-4c78-ab5b-cc7757bef4aa">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2dc42038-a5a5-4c78-ab5b-cc7757bef4aa">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2dc42038-a5a5-4c78-ab5b-cc7757bef4aa" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Meersbrook Park Rd, Meersbrook, Sheffield S8 9FP, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Three Eyed Dog</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Meersbrook, Sheffield S8 9FP, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7946 822497">📞 +44 7946 822497</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=102361999451506333&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="a8e7cf27-07c0-4325-9446-c1d098c6b279">✓ Approve</button>
+          <button class="btn btn-reject" data-id="a8e7cf27-07c0-4325-9446-c1d098c6b279">✕ Reject</button>
+          <button class="btn btn-demo" data-id="a8e7cf27-07c0-4325-9446-c1d098c6b279" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="13 City Rd, Sheffield S2 5HE, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Steel City Dog Walking</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 13 City Rd, Sheffield S2 5HE, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7773 630271">📞 +44 7773 630271</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=9329918808812486112&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="52b2ae98-6bfe-4312-be70-80aa4d4cd0c0">✓ Approve</button>
+          <button class="btn btn-reject" data-id="52b2ae98-6bfe-4312-be70-80aa4d4cd0c0">✕ Reject</button>
+          <button class="btn btn-demo" data-id="52b2ae98-6bfe-4312-be70-80aa4d4cd0c0" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Rustlings Rd, Sheffield S11 7AB, UK"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Paws Of Steel</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Rustlings Rd, Sheffield S11 7AB, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7526 298895">📞 +44 7526 298895</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=524219871694551035&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3ab14af2-7040-4e9c-8af2-04ad28babe64">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3ab14af2-7040-4e9c-8af2-04ad28babe64">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3ab14af2-7040-4e9c-8af2-04ad28babe64" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="14 Moorsyde Ave, Sheffield S10 1QH, UK"
+        data-score="30"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="41.5 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">30</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Barkers Buddies</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 14 Moorsyde Ave, Sheffield S10 1QH, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7543 208478">📞 +44 7543 208478</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=7629987963056126411&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ee7fe12a-8b75-4140-b491-a8d9982ee550">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ee7fe12a-8b75-4140-b491-a8d9982ee550">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ee7fe12a-8b75-4140-b491-a8d9982ee550" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="High Storrs Dr, Sheffield S11 7LL, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pawfield’s dog walker &amp; pet services.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 High Storrs Dr, Sheffield S11 7LL, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=3566019416052646005&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="ced9c6af-6e76-44f7-b4c6-b24706f70c15">✓ Approve</button>
+          <button class="btn btn-reject" data-id="ced9c6af-6e76-44f7-b4c6-b24706f70c15">✕ Reject</button>
+          <button class="btn btn-demo" data-id="ced9c6af-6e76-44f7-b4c6-b24706f70c15" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Jaunty Rd, Sheffield S12 3DT, UK"
+        data-score="40"
+        data-flag="no_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#f59e0b" stroke-width="3"
+      stroke-dasharray="55.3 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">40</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>The Woof Shack</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Jaunty Rd, Sheffield S12 3DT, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#f59e0b;border-color:#f59e0b22;background:#f59e0b11">NO WEBSITE</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7545 955654">📞 +44 7545 955654</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=18234944294817341952&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="e7ebb792-3003-48c3-aa40-3df71734db15">✓ Approve</button>
+          <button class="btn btn-reject" data-id="e7ebb792-3003-48c3-aa40-3df71734db15">✕ Reject</button>
+          <button class="btn btn-demo" data-id="e7ebb792-3003-48c3-aa40-3df71734db15" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Meersbrook park, Meersbrook, Sheffield S8 8PL, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sheffield K9 Academy</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Meersbrook, Sheffield S8 8PL, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7749 996514">📞 +44 7749 996514</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14170953782959238544&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="2fa37b9b-7c66-4b1e-ae7d-47a4e12eaf75">✓ Approve</button>
+          <button class="btn btn-reject" data-id="2fa37b9b-7c66-4b1e-ae7d-47a4e12eaf75">✕ Reject</button>
+          <button class="btn btn-demo" data-id="2fa37b9b-7c66-4b1e-ae7d-47a4e12eaf75" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="314 Bay St, Brighton-Le-Sands NSW 2216, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Pawsercise</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 314 Bay St, Brighton-Le-Sands NSW 2216, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 419 261 100">📞 +61 419 261 100</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=4679167507262745012&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="fabd3836-8d76-403e-8993-950a694111fe">✓ Approve</button>
+          <button class="btn btn-reject" data-id="fabd3836-8d76-403e-8993-950a694111fe">✕ Reject</button>
+          <button class="btn btn-demo" data-id="fabd3836-8d76-403e-8993-950a694111fe" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Unit 1/54 Park St, Campsie NSW 2194, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Sheriff About Town - Dog Walking &amp; Doggy Day Care in Sydney's Inner West</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Unit 1/54 Park St, Campsie NSW 2194, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 402 115 723">📞 +61 402 115 723</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=17826938484962696007&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="d03f83d6-9531-47b9-9315-fd7d75624f4e">✓ Approve</button>
+          <button class="btn btn-reject" data-id="d03f83d6-9531-47b9-9315-fd7d75624f4e">✕ Reject</button>
+          <button class="btn btn-demo" data-id="d03f83d6-9531-47b9-9315-fd7d75624f4e" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Church Rd, Doncaster VIC 3108, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Golden Pawz | In-Home Dog Boarding &amp; Pet Sitting</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Church Rd, Doncaster VIC 3108, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 413 378 238">📞 +61 413 378 238</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=1637877761826323459&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="0ffe5c66-1be7-444f-a855-99640ed6b0c2">✓ Approve</button>
+          <button class="btn btn-reject" data-id="0ffe5c66-1be7-444f-a855-99640ed6b0c2">✕ Reject</button>
+          <button class="btn btn-demo" data-id="0ffe5c66-1be7-444f-a855-99640ed6b0c2" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Toll Cottage, 3 Main St, Abernethy, Perth PH2 9JL, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Waggy Tails Perth</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Abernethy, Perth PH2 9JL, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7923 883518">📞 +44 7923 883518</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=5979868316755318741&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="c24e9abe-b49f-4f18-872c-53d48d6e21e4">✓ Approve</button>
+          <button class="btn btn-reject" data-id="c24e9abe-b49f-4f18-872c-53d48d6e21e4">✕ Reject</button>
+          <button class="btn btn-demo" data-id="c24e9abe-b49f-4f18-872c-53d48d6e21e4" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Kilburn, Perth PH1 4PT, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Solo Paws</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Kilburn, Perth PH1 4PT, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7774 294610">📞 +44 7774 294610</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12139463333061942603&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="810754c4-819e-4583-9822-012554a2c4c8">✓ Approve</button>
+          <button class="btn btn-reject" data-id="810754c4-819e-4583-9822-012554a2c4c8">✕ Reject</button>
+          <button class="btn btn-demo" data-id="810754c4-819e-4583-9822-012554a2c4c8" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="56 Duke St, Scarborough WA 6019, Australia"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Mudita Dog</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 56 Duke St, Scarborough WA 6019, Australia</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+61 401 275 787">📞 +61 401 275 787</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13913161078096226044&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="503fdcbc-6c0a-4d8a-b128-3344d807c8b6">✓ Approve</button>
+          <button class="btn btn-reject" data-id="503fdcbc-6c0a-4d8a-b128-3344d807c8b6">✕ Reject</button>
+          <button class="btn btn-demo" data-id="503fdcbc-6c0a-4d8a-b128-3344d807c8b6" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="Kirkhill Cottage, Redgorton, Luncarty, Perth PH1 3EN, UK"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Wet Nose Dog Walking Co.</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Luncarty, Perth PH1 3EN, UK</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+44 7494 461881">📞 +44 7494 461881</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=12643788448798104529&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="7527e014-394b-4548-935a-6834742b9536">✓ Approve</button>
+          <button class="btn btn-reject" data-id="7527e014-394b-4548-935a-6834742b9536">✕ Reject</button>
+          <button class="btn btn-demo" data-id="7527e014-394b-4548-935a-6834742b9536" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="162 Howard Park Ave, Toronto, ON M6R 1V6, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>WalkDogs.ca</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 Toronto, ON M6R 1V6, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=13394030973751498503&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="301c890c-b1e9-4cfc-b17c-f46ba47f8bb9">✓ Approve</button>
+          <button class="btn btn-reject" data-id="301c890c-b1e9-4cfc-b17c-f46ba47f8bb9">✕ Reject</button>
+          <button class="btn btn-demo" data-id="301c890c-b1e9-4cfc-b17c-f46ba47f8bb9" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="2181 Avenue Rd, North York, ON M5M 4B8, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>North York Dogs</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 North York, ON M5M 4B8, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 647-500-9813">📞 +1 647-500-9813</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=15561799267086917071&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="3ad58dcb-4234-4bae-8fd1-cdfd7cf0e4d5">✓ Approve</button>
+          <button class="btn btn-reject" data-id="3ad58dcb-4234-4bae-8fd1-cdfd7cf0e4d5">✕ Reject</button>
+          <button class="btn btn-demo" data-id="3ad58dcb-4234-4bae-8fd1-cdfd7cf0e4d5" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+      <div class="lead-card" style="animation-delay:800ms"
+        data-category=""
+        data-location="21 Burkebrook Pl, East York, ON M4G 0A2, Canada"
+        data-score="5"
+        data-flag="broken_website">
+        <div class="card-top">
+          <div class="card-score"><svg width="56" height="56" viewBox="0 0 56 56" class="score-ring">
+    <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" stroke-width="3"
+      stroke-dasharray="6.9 138.2"
+      stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <text x="28" y="33" text-anchor="middle" fill="#ef4444" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+  </svg></div>
+          <div class="card-identity">
+            <h2>Barks N Purrs Pet Services</h2>
+            <div class="card-meta">
+              <span class="meta-loc">📍 East York, ON M4G 0A2, Canada</span>
+              
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge" style="color:#ef4444;border-color:#ef444422;background:#ef444411">BROKEN</span>
+            <span class="badge" style="color:#64748b;border-color:#64748b22;background:#64748b11">PENDING</span>
+          </div>
+        </div>
+        <div class="card-contact">
+          <a class="contact-chip" href="tel:+1 416-943-9255">📞 +1 416-943-9255</a>
+          
+          <span class="contact-chip link-chip"><a href="https://maps.google.com/?cid=14082718098383644301&amp;g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA" target="_blank" rel="noopener noreferrer">↗ Maps</a></span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-approve" data-id="b59306bb-6151-412c-b65d-b384d9f62d59">✓ Approve</button>
+          <button class="btn btn-reject" data-id="b59306bb-6151-412c-b65d-b384d9f62d59">✕ Reject</button>
+          <button class="btn btn-demo" data-id="b59306bb-6151-412c-b65d-b384d9f62d59" onclick="approveDemoLead(this)">Approve for Demo</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    const GITHUB_OWNER = 'undefined';
+    const GITHUB_REPO = 'undefined';
+
+    function applyFilters() {
+      const category = document.getElementById('filter-category')?.value ?? '';
+      const location = document.getElementById('filter-location')?.value ?? '';
+      const flag = document.getElementById('filter-flag')?.value ?? '';
+      const minScore = parseInt(document.getElementById('filter-min-score')?.value ?? '0', 10);
+      const sortOrder = document.getElementById('sort-order')?.value ?? 'desc';
+
+      const cards = Array.from(document.querySelectorAll('.lead-card'));
+
+      cards.forEach(card => {
+        const el = card;
+        const cardCity = el.dataset.location?.split(',').slice(-3).join(',').trim() ?? '';
+        const matchCat = !category || el.dataset.category === category;
+        const matchLoc = !location || cardCity === location;
+        const matchFlag = !flag || el.dataset.flag === flag;
+        const score = parseInt(el.dataset.score ?? '0', 10);
+        const matchScore = score >= minScore;
+        el.classList.toggle('hidden', !(matchCat && matchLoc && matchFlag && matchScore));
+      });
+
+      const visible = cards.filter(c => !c.classList.contains('hidden'));
+      const countEl = document.getElementById('visible-count');
+      const labelEl = document.getElementById('filter-label');
+      if (countEl) countEl.textContent = visible.length.toString();
+      if (labelEl) labelEl.textContent = visible.length.toString();
+
+      const parent = cards[0]?.parentNode;
+      if (parent) {
+        visible
+          .sort((a, b) => {
+            const sa = parseInt(a.dataset.score ?? '0', 10);
+            const sb = parseInt(b.dataset.score ?? '0', 10);
+            return sortOrder === 'desc' ? sb - sa : sa - sb;
+          })
+          .forEach(card => parent.appendChild(card));
+      }
+    }
+
+    function resetFilters() {
+      ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'filter-min-score') el.value = '0';
+        else if (id === 'sort-order') el.value = 'desc';
+        else el.value = '';
+      });
+      applyFilters();
+    }
+
+    ['filter-category','filter-location','filter-flag','filter-min-score','sort-order'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', applyFilters);
+    });
+
+    async function approveDemoLead(btn) {
+      let token = localStorage.getItem('gh_token');
+      if (!token) {
+        token = prompt('Paste your GitHub personal access token (stored in browser localStorage only):');
+        if (!token) return;
+        localStorage.setItem('gh_token', token);
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'Approving...';
+
+      const leadId = btn.dataset.id;
+      const filePath = 'leads/leads-master.json';
+      const apiBase = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+      try {
+        const getRes = await fetch(apiBase, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!getRes.ok) throw new Error('GitHub GET failed: ' + getRes.status);
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // Files > 1MB return content: null — fetch raw content from download_url instead
+        let jsonText;
+        if (fileData.content) {
+          jsonText = atob(fileData.content.replace(/\n/g, ''));
+        } else {
+          const rawRes = await fetch(fileData.download_url);
+          jsonText = await rawRes.text();
+        }
+
+        const leads = JSON.parse(jsonText);
+        const updated = leads.map(l => l.id === leadId ? { ...l, status: 'demo_requested' } : l);
+
+        // encodeURIComponent+unescape handles non-ASCII chars in business names
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2))));
+
+        const putRes = await fetch(apiBase, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'chore: approve lead ' + leadId + ' for demo',
+            content: encoded,
+            sha,
+          })
+        });
+        if (!putRes.ok) throw new Error('GitHub PUT failed: ' + putRes.status);
+
+        btn.textContent = 'Approved ✓';
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+      } catch (err) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'Approve for Demo';
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
